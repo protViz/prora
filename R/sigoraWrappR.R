@@ -1,5 +1,7 @@
 # sigora wrapper functions
 
+library(tidyverse)
+
 getSymbolFromFasta <- function(df) {
   df %>%
     dplyr::filter(grepl(pattern = "sp", df$protein_Id)) %>%
@@ -22,7 +24,6 @@ sigoraWrappR <-
            GPSrepos = kegH,
            df,
            db = "") {
-    
     enriched <- df[df[, fc_col] >= fc_threshold,]
     sigora_res <-
       sigora(GPSrepo = GPSrepos,

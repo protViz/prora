@@ -2,17 +2,15 @@
 
 rm(list = ls())
 
-
 library(org.Hs.eg.db)
 library(sigora)
 library(tidyverse)
 library(GO.db)
 library(slam)
-#library(SRMService)
-source("sigoraWrappR.R")
+source("R/sigoraWrappR.R")
 
-
-fpath <- "examples/Contrasts_SignificanceValues_visittime_group_interactions_PIVOT.csv" 
+fpath <-
+  "examples/Contrasts_SignificanceValues_visittime_group_interactions_PIVOT.csv"
 
 dd <- read_csv(fpath)
 colnames(dd) <- make.names(colnames(dd))
@@ -38,15 +36,7 @@ sigora_example <-
 usethis::use_data(sigora_example, overwrite = TRUE)
 
 rmarkdown::render(
-  "sigora.Rmd",
-  #bookdown::html_document2(number_sections = FALSE),
-  params = list(results = sigora_example),
-  clean = TRUE
-)
-
-
-rmarkdown::render(
-  "sigora.Rmd",
+  "inst/rmardkown_reports/sigora.Rmd",
   bookdown::html_document2(number_sections = FALSE),
   params = list(results = sigora_example),
   clean = TRUE

@@ -52,6 +52,8 @@ The following analysis compares filters proteins based on a fold change threshol
 
 - Database used to produce GPS repository: `r res$database`
 
+- File used for the analysis: `r res$fpath`
+
 ### ORA results {.tabset .tabset-pills}
 
 #### Significantly enriched pathways
