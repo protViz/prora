@@ -1,21 +1,26 @@
-# sigora wrapper functions
-
-library(tidyverse)
-
-getSymbolFromFasta <- function(df) {
-  df %>%
-    dplyr::filter(grepl(pattern = "sp", df$protein_Id)) %>%
-    separate(col = protein_Id,
-             sep = "_",
-             into = c("begin", "end")) %>%
-    separate(
-      col = begin,
-      sep = "\\|",
-      into = c("prefix", "uniprotid", "Symbol")
-    ) %>%
-    dplyr::select(-prefix, -uniprotid, -end) %>%
-    return()
-}
+#' sigora Wrapper function
+#'
+#'
+#' Provides a wrapper for \code{sigora::sigora()} combined with \code{sigora::ora()} and returns a \code{list} used for the generation of an \code{.Rmd} report.
+#'
+#' @param input.file file path, will be reprinted in the report.
+#' @param fc_threshold fold change threshold above which (in absolute terms) a protein is considered differentially regulated
+#' @param fc_col Name of the fold change column, in case the input file contains multiple contrasts
+#' @param GPSrepos GPS repository used as background, can be generated via \code{sigoraWrappR()}
+#' @param df data.frame input (at least two columns, first column being gene symbols, other columns being fold changes)
+#' @param db database used for the generation of the GPS repository
+#'
+#' @return Returns a \code{list} containing the following elements:
+#' * 1
+#' * 2
+#' * 3
+#' @examples
+#' data("exampleContrastData", package = "fgczgseaora")
+#' df <- getSymbolFromFasta(exampleContrastData)
+#' sigoraWrappR(fc_col = colnames(df)[7], GPSrepos = sigora::kegH, df = df)
+#'
+#' @import tidyverse sigora org.Hs.eg.db GO.db reactome.db dplyr AnnotationDbi
+#' @export sigoraWrappR sigoraWrappR
 
 sigoraWrappR <-
   function(input.file = "",
@@ -26,11 +31,11 @@ sigoraWrappR <-
            db = "") {
     enriched <- df[df[, fc_col] >= fc_threshold,]
     sigora_res <-
-      sigora(GPSrepo = GPSrepos,
+      sigora::sigora(GPSrepo = GPSrepos,
              level = 5,
              queryList = enriched$Symbol)
     ora_res <-
-      ora(geneList = enriched$Symbol,
+      sigora::ora(geneList = enriched$Symbol,
           GPSrepo = GPSrepos)
     output <- list(
       sigora = sigora_res,
@@ -43,73 +48,3 @@ sigoraWrappR <-
     )
     return(output)
   }
-
-# Function for generating background GPS repository for sigora and ora
-
-makeGPS_wrappR <- function(ids, target = "KEGG") {
-  if (target == "KEGG") {
-    gp_db <- org.Hs.eg.db
-    target_column <- "PATH"
-    pn_table <- sigora::kegH$pathwaydescriptions
-    colnames(pn_table) <- c("pathwayID", "pathwayName")
-    pn_table$pathwayID <-
-      substr(pn_table$pathwayID, start = 4, stop = 8)
-    gp_table <- AnnotationDbi::mapIds(
-      gp_db,
-      keys = ids,
-      keytype = "SYMBOL",
-      column = target_column,
-      multiVals = "CharacterList"
-    ) %>% unlist %>% data.frame(Symbol = names(.), pathwayID = .)
-  } else {
-    if (target == "reactome") {
-      gp_db <- reactome.db
-      pn_db <- reactome.db
-      ids <- AnnotationDbi::mapIds(
-        # First map to ENTREZID
-        org.Hs.eg.db,
-        keys = ids,
-        keytype = "SYMBOL",
-        column = "ENTREZID",
-        multiVals = "CharacterList"
-      ) %>% unlist %>% na.omit
-      target_column <- "PATHID"
-      k0 = "ENTREZID"
-      k1 = "PATHID"
-      k2 = "PATHNAME"
-    } else
-      if (target == "GO") {
-        gp_db <- org.Hs.eg.db
-        pn_db <- GO.db
-        target_column = "GO"
-        k0 = "SYMBOL"
-        k1 = "GOID"
-        k2 = "TERM"
-      } else
-        return(message("Specify a valid target database (KEGG, reactome, GO)"))
-
-    gp_table <- mapIds(
-      gp_db,
-      keys = ids,
-      keytype = k0,
-      column = target_column,
-      multiVals = "CharacterList"
-    ) %>% unlist %>% data.frame(Symbol = names(.), pathwayID = .)
-
-    pn_table <- mapIds(
-      pn_db,
-      keys = as.character(gp_table$pathwayID),
-      multiVals = "CharacterList",
-      keytype = k1,
-      column = k2
-    ) %>% unlist %>% data.frame(pathwayID = names(.), pathwayName = .)
-  }
-
-  mkGPStable <- inner_join(pn_table, gp_table) %>% distinct
-
-  colnames(mkGPStable) <- c("pathwayId", "pathwayName", "gene")
-
-  out <- makeGPS(mkGPStable)
-
-  return(out)
-}

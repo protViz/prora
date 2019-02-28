@@ -10,7 +10,7 @@ library(slam)
 source("R/sigoraWrappR.R")
 
 fpath <-
-  "examples/Contrasts_SignificanceValues_visittime_group_interactions_PIVOT.csv"
+  "inst/example_data/Contrasts_SignificanceValues_visittime_group_interactions_PIVOT.csv"
 
 dd <- read_csv(fpath)
 colnames(dd) <- make.names(colnames(dd))
