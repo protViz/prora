@@ -1,0 +1,138 @@
+---
+title: "FGCZ Signature Over-Representation Analysis (sigORA)"
+author: "Functional Genomics Center Zurich"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+  html_document:
+    number_sections: no
+editor_options:
+  chunk_output_type: console
+params:
+  results: !r quote(SRMService::sigora_example)
+subtitle: Using the `sigora` package
+bibliography: bibliography.bib
+vignette: >
+  %\VignetteIndexEntry{FGCZ Two-Group Analysis} 
+  %\VignetteEncoding{UTF-8} 
+  %\VignetteEngine{knitr::rmarkdown}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  message = FALSE,
+  warning = FALSE
+)
+
+if(!exists("progress")){
+  progress <- function(howmuch, detail){
+    invisible(NULL)
+  }
+}
+
+res <- eval(params$results)
+
+library(tidyverse)
+library(knitr)
+```
+
+### Introduction
+
+The following analysis compares filters proteins based on a fold change threshold and uses signature over-representation analysis (*sigORA*) to identify dysregulated pathways. In principle, *sigORA* compares the weighted number of observed pairs of proteins (unique to a single pathway)  in the cluster of interest to the number one would expect to show up by chance (in this case the reference is comprised by the whole database, i.e. KEGG). These statistics are then translated into a *P*-value and adjusted for multiplicity, since potentially many pathways are tested [@Leong2009]. This then yields the reported *Q*-value in table \@ref(tab:resulttab). *sigORA* is implemented in the `R` package `sigora` [@Foroushani2013].
+
+### Parameters
+
+- Total number of proteins: `r nrow(res$data)`
+
+- Fold change threshold: `r res$fc_threshold`
+
+- Number of proteins after filtering: `r res$proteinsAfterFiltering`
+
+- GPS repository: `r res$GPSrepository`
+
+- Database used to produce GPS repository: `r res$database`
+
+### ORA results {.tabset .tabset-pills}
+
+#### Significantly enriched pathways
+
+```{r}
+res$ora %>% 
+  dplyr::select(pathwyid, description, success, pathwaySize, pvalues, Bonfer) %>% 
+  knitr::kable(caption = "ORA results: classical overrepresentation analysis using Fisher's exact test", 
+               align = "c",
+               col.names = c(
+                 "Pathway",
+                 "Description",
+                 "Successes",
+                 "Pathway Size",
+                 "P value",
+                 "Adj. P value"
+               ),
+               digits = 3)
+```
+
+
+### sigORA results {.tabset .tabset-pills}
+
+#### Significantly enriched pathways
+
+
+```{r resulttab}
+res$sigora$summary_results %>% 
+  dplyr::select(pathwy.id, description, pvalues, Bonferroni) %>% 
+  filter(Bonferroni <= 0.05) %>% 
+  knitr::kable(caption = "sigORA results: ORA using gene pair signatures", 
+               align = "c",
+               col.names = c(
+                 "Pathway",
+                 "Description",
+                 "P value",
+                 "Adj. P value"
+               ),
+               digits = 3)
+```
+
+#### All pathways matched
+
+```{r}
+res$sigora$summary_results %>% 
+  dplyr::select(pathwy.id, description, pvalues, Bonferroni) %>% 
+  knitr::kable(caption = "sigORA results: All matched pathways", 
+               align = "c",
+               col.names = c(
+                 "Pathway",
+                 "Description",
+                 "P value",
+                 "Adj. P value"
+               ),
+               digits = 3)
+```
+
+#### Weighting scheme
+
+```{r}
+res$sigora$detailed_results %>% 
+  knitr::kable(caption = "sigORA: Weighting scheme of gene pair signatures used",
+               align = "c",
+               col.names = c(
+                 "Gene 1",
+                 "Gene 2",
+                 "Pathway",
+                 "Weight"
+               ),
+               digits = 3)
+```
+
+
+### Data used
+
+```{r}
+colnames(res$data) <- c("Symbol", "Fold Change")
+res$data %>%
+  mutate(`Fold Change` = round(`Fold Change`, 2)) %>% 
+  DT::datatable(colnames = c("Symbol", "Fold Change"), width = 500, style = "bootstrap")
+```
+
+
+### References
