@@ -7,7 +7,8 @@ library(sigora)
 library(tidyverse)
 library(GO.db)
 library(slam)
-source("R/sigoraWrappR.R")
+library(fgczgseaora)
+# source("R/sigoraWrappR.R")
 
 fpath <-
   "inst/example_data/Contrasts_SignificanceValues_visittime_group_interactions_PIVOT.csv"
@@ -36,7 +37,7 @@ sigora_example <-
 usethis::use_data(sigora_example, overwrite = TRUE)
 
 rmarkdown::render(
-  "inst/rmardkown_reports/sigora.Rmd",
+  "inst/rmarkdown_reports/sigora.Rmd",
   bookdown::html_document2(number_sections = FALSE),
   params = list(results = sigora_example),
   clean = TRUE
