@@ -7,8 +7,8 @@
 #'
 #' @examples
 #' data("sigora_example", package = "fgczgseaora")
-#' data("GPStab_example", package = "fgczgseaora")
-#' sigora_heatmap(sigora_example, GPStab_example)
+#' data("GPStab", package = "fgczgseaora")
+#' sigora_heatmap(sigora_example, GPStab)
 #'
 #' @export sigora_heatmap sigora_heatmap
 #'

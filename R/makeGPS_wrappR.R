@@ -8,6 +8,7 @@
 #'
 #' @param ids Character vector of gene symbols (experimental background)
 #' @param target Character, database to be used to generate GPS repository ("KEGG", "GO", "reactome")
+#' @param dev Logical, if \code{TRUE} the function returns the \code{data.frame} \code{makeGPS} needs as input
 #' @return A GPS repository based on the self specified background in \code{ids}, see \code{\link[sigora]{makeGPS}} for more information.
 #'
 #' @seealso \code{\link[sigora]{makeGPS}}
