@@ -1,4 +1,8 @@
 #' UpSetR wrapper for sigora results
+#'
+#' @param sigora_res Object returned by the \code{\link{sigoraWrappR}} function
+#' @param GPS_table Object returned by \code{\link{makeGPS_wrappR}} function, setting \code{dev=TRUE}
+#'
 #' @export sigora_upsetR sigora_upsetR
 #' @import UpSetR
 
@@ -13,7 +17,7 @@ sigora_upsetR <- function(sigora_res, GPStable, ...) {
     return(tab4)
   }
 
-  test <- mergeR(sigora_example, GPStab)
+  test <- mergeR(sigora_res, GPStable)
 
   test %>%
     dplyr::select(pathwayId, gene) %>%

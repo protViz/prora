@@ -6,6 +6,11 @@
 \usage{
 sigora_upsetR(sigora_res, GPStable, ...)
 }
+\arguments{
+\item{sigora_res}{Object returned by the \code{\link{sigoraWrappR}} function}
+
+\item{GPS_table}{Object returned by \code{\link{makeGPS_wrappR}} function, setting \code{dev=TRUE}}
+}
 \description{
 UpSetR wrapper for sigora results
 }
