@@ -17,9 +17,9 @@ sigora_upsetR <- function(sigora_res, GPStable, ...) {
     return(tab4)
   }
 
-  test <- mergeR(sigora_res, GPStable)
+  df <- mergeR(sigora_res, GPStable)
 
-  test %>%
+  df %>%
     dplyr::select(pathwayId, gene) %>%
     dplyr::mutate(ID = 1:nrow(.)) %>%
     tidyr::spread(pathwayId, gene) %>%
