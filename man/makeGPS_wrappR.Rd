@@ -2,7 +2,8 @@
 % Please edit documentation in R/makeGPS_wrappR.R
 \name{makeGPS_wrappR}
 \alias{makeGPS_wrappR}
-\title{makeGPS Wrapper}
+\title{makeGPS Wrapper
+Function for generating background GPS repository for sigora and ora}
 \usage{
 makeGPS_wrappR(ids, target = "KEGG")
 }
@@ -12,9 +13,10 @@ makeGPS_wrappR(ids, target = "KEGG")
 \item{target}{Character, database to be used to generate GPS repository ("KEGG", "GO", "reactome")}
 }
 \value{
-A GPS repository based on the self specified background in \code{ids}, see \code{sigora::makeGPS()} for more information.
+A GPS repository based on the self specified background in \code{ids}, see \code{\link[sigora]{makeGPS}} for more information.
 }
 \description{
+makeGPS Wrapper
 Function for generating background GPS repository for sigora and ora
 }
 \examples{
@@ -23,5 +25,5 @@ myGPSrepo <- makeGPS_wrappR(ids = exampleSymbols, target = "KEGG")
 
 }
 \seealso{
-\code{sigora::makeGPS()}
+\code{\link[sigora]{makeGPS}}
 }

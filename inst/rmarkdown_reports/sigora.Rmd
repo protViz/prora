@@ -48,8 +48,6 @@ The following analysis compares filters proteins based on a fold change threshol
 
 - Number of proteins after filtering: `r res$proteinsAfterFiltering`
 
-- GPS repository: `r res$GPSrepository`
-
 - Database used to produce GPS repository: `r res$database`
 
 - File used for the analysis: `r res$fpath`
@@ -82,13 +80,15 @@ res$ora %>%
 
 ```{r resulttab}
 res$sigora$summary_results %>% 
-  dplyr::select(pathwy.id, description, pvalues, Bonferroni) %>% 
+  dplyr::select(pathwy.id, description, successes, PathwaySize, pvalues, Bonferroni) %>% 
   filter(Bonferroni <= 0.05) %>% 
   knitr::kable(caption = "sigORA results: ORA using gene pair signatures", 
                align = "c",
                col.names = c(
                  "Pathway",
                  "Description",
+                 "Successess",
+                 "Pathway Size",
                  "P value",
                  "Adj. P value"
                ),

@@ -14,7 +14,7 @@ sigoraWrappR(input.file = "", fc_threshold = 0.5, fc_col = "",
 
 \item{fc_col}{Name of the fold change column, in case the input file contains multiple contrasts}
 
-\item{GPSrepos}{GPS repository used as background, can be generated via \code{sigoraWrappR()}}
+\item{GPSrepos}{GPS repository used as background, can be generated via \code{\link{sigoraWrappR}}}
 
 \item{df}{data.frame input (at least two columns, first column being gene symbols, other columns being fold changes)}
 
@@ -22,9 +22,15 @@ sigoraWrappR(input.file = "", fc_threshold = 0.5, fc_col = "",
 }
 \value{
 Returns a \code{list} containing the following elements:
-* 1
-* 2
-* 3
+\itemize{
+   \item \code{sigora}: \code{data.frame} containing sigora results
+   \item \code{ora}: \code{data.frame} containing ora results
+   \item \code{fc_threshold}: fc_threshold used
+   \item \code{GPS_repository}: GPS repository used, to be reported
+   \item \code{database}: Database used for generating the GPS repository
+   \item \code{data}: \code{data.frame} containing gene symbols and fold changes
+   \item \code{proteinsAfterFiltering}: numeric, number of proteins after fc filtering
+}
 }
 \description{
 Provides a wrapper for \code{sigora::sigora()} combined with \code{sigora::ora()} and returns a \code{list} used for the generation of an \code{.Rmd} report.

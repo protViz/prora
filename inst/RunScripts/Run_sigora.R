@@ -8,10 +8,9 @@ library(tidyverse)
 library(GO.db)
 library(slam)
 library(fgczgseaora)
-# source("R/sigoraWrappR.R")
 
 fpath <-
-  "inst/example_data/Contrasts_SignificanceValues_visittime_group_interactions_PIVOT.csv"
+  "inst/example_data/Ex1_interactions.csv"
 
 dd <- read_csv(fpath)
 colnames(dd) <- make.names(colnames(dd))

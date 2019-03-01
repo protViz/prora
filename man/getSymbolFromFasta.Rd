@@ -7,7 +7,7 @@
 getSymbolFromFasta(df)
 }
 \arguments{
-\item{df}{\code{data.frame} with column called \code{protein_Id}}
+\item{df}{\code{data.frame} with FASTA headers in first column}
 }
 \value{
 Returns the whole \code{data.frame} with a column called \code{Symbol} containing gene symbols instead of Fasta headers. This format is easier to use for subsequent ID mappings using the \code{Annotationdbi} package.

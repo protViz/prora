@@ -1,9 +1,9 @@
 #' Translate Fasta header to gene Symbol
 #'
 #' @export getSymbolFromFasta getSymbolFromFasta
-#' @import tidyverse sigora org.Hs.eg.db GO.db reactome.db dplyr AnnotationDbi
+#' @import tidyverse sigora org.Hs.eg.db GO.db reactome.db dplyr AnnotationDbi tidyr
 #'
-#' @param df \code{data.frame} with column called \code{protein_Id}
+#' @param df \code{data.frame} with FASTA headers in first column
 #'
 #' @return Returns the whole \code{data.frame} with a column called \code{Symbol} containing gene symbols instead of Fasta headers. This format is easier to use for subsequent ID mappings using the \code{Annotationdbi} package.
 #'
@@ -12,12 +12,13 @@
 #' getSymbolFromFasta(exampleContrastData)
 
 getSymbolFromFasta <- function(df) {
+  colnames(df)[1] <- "protein_Id"
   df %>%
     dplyr::filter(grepl(pattern = "sp", df$protein_Id)) %>%
-    separate(col = protein_Id,
+    tidyr::separate(col = protein_Id,
              sep = "_",
              into = c("begin", "end")) %>%
-    separate(
+    tidyr::separate(
       col = begin,
       sep = "\\|",
       into = c("prefix", "uniprotid", "Symbol")

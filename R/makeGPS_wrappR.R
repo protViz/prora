@@ -1,17 +1,16 @@
 #' makeGPS Wrapper
-#'
 #' Function for generating background GPS repository for sigora and ora
 #'
 #' @export makeGPS_wrappR makeGPS_wrappR
 #'
-#' @import tidyverse sigora org.Hs.eg.db GO.db reactome.db dplyr AnnotationDbi
+#' @import tidyverse sigora org.Hs.eg.db GO.db reactome.db dplyr AnnotationDbi tidyr S4Vectors
 #'
 #'
 #' @param ids Character vector of gene symbols (experimental background)
 #' @param target Character, database to be used to generate GPS repository ("KEGG", "GO", "reactome")
-#' @return A GPS repository based on the self specified background in \code{ids}, see \code{sigora::makeGPS()} for more information.
+#' @return A GPS repository based on the self specified background in \code{ids}, see \code{\link[sigora]{makeGPS}} for more information.
 #'
-#' @seealso \code{sigora::makeGPS()}
+#' @seealso \code{\link[sigora]{makeGPS}}
 #'
 #' @examples
 #' data("exampleSymbols", package = "fgczgseaora")
@@ -44,7 +43,7 @@ makeGPS_wrappR <- function(ids, target = "KEGG") {
         keytype = "SYMBOL",
         column = "ENTREZID",
         multiVals = "CharacterList"
-      ) %>% unlist %>% na.omit
+      ) %>% unlist %>% S4Vectors::na.omit()
       target_column <- "PATHID"
       k0 = "ENTREZID"
       k1 = "PATHID"
@@ -77,7 +76,7 @@ makeGPS_wrappR <- function(ids, target = "KEGG") {
     ) %>% unlist %>% data.frame(pathwayID = names(.), pathwayName = .)
   }
 
-  mkGPStable <- inner_join(pn_table, gp_table) %>% distinct
+  mkGPStable <- dplyr::inner_join(pn_table, gp_table) %>% dplyr::distinct()
 
   colnames(mkGPStable) <- c("pathwayId", "pathwayName", "gene")
 
