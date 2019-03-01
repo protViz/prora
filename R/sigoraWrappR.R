@@ -23,6 +23,7 @@
 #'
 #' @examples
 #' data("exampleContrastData", package = "fgczgseaora")
+#' data("idmap", package = "sigora")
 #' df <- getSymbolFromFasta(exampleContrastData)
 #' sigoraWrappR(fc_col = colnames(df)[7], GPSrepos = sigora::kegH, df = df)
 #'
@@ -33,7 +34,7 @@ sigoraWrappR <-
   function(input.file = "",
            fc_threshold = 0.5,
            fc_col = "",
-           GPSrepos = kegH,
+           GPSrepos = sigora::kegH,
            df,
            db = "") {
     enriched <- df[df[, fc_col] >= fc_threshold,]
@@ -48,7 +49,7 @@ sigoraWrappR <-
       sigora = sigora_res,
       ora = ora_res,
       fc_threshold = fc_threshold,
-      GPSrepository = deparse(substitute(GPSrepos)),
+      GPSrepository = GPSrepos,
       database = db,
       data = df[, c("Symbol", fc_col)],
       proteinsAfterFiltering = nrow(df[df[, fc_col] >= fc_threshold,])

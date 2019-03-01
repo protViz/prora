@@ -5,7 +5,7 @@
 \title{sigora Wrapper function}
 \usage{
 sigoraWrappR(input.file = "", fc_threshold = 0.5, fc_col = "",
-  GPSrepos = kegH, df, db = "")
+  GPSrepos = sigora::kegH, df, db = "")
 }
 \arguments{
 \item{input.file}{file path, will be reprinted in the report.}
@@ -37,6 +37,7 @@ Provides a wrapper for \code{sigora::sigora()} combined with \code{sigora::ora()
 }
 \examples{
 data("exampleContrastData", package = "fgczgseaora")
+data("idmap", package = "sigora")
 df <- getSymbolFromFasta(exampleContrastData)
 sigoraWrappR(fc_col = colnames(df)[7], GPSrepos = sigora::kegH, df = df)
 

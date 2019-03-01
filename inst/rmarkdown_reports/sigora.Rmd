@@ -8,13 +8,11 @@ output:
 editor_options:
   chunk_output_type: console
 params:
-  results: !r quote(SRMService::sigora_example)
+  results: !r quote(fgczgseaora::sigora_example)
+  plot1: !r quote(fgczgseaora::p1)
+  GPStable: !r quote(fgczgseaora::GPStab_example)
 subtitle: Using the `sigora` package
 bibliography: bibliography.bib
-vignette: >
-  %\VignetteIndexEntry{FGCZ Two-Group Analysis} 
-  %\VignetteEncoding{UTF-8} 
-  %\VignetteEngine{knitr::rmarkdown}
 ---
 
 ```{r setup, include=FALSE}
@@ -31,6 +29,8 @@ if(!exists("progress")){
 }
 
 res <- eval(params$results)
+p1 <- eval(params$plot1)
+GPStab <- eval(params$GPStable)
 
 library(tidyverse)
 library(knitr)
@@ -124,6 +124,16 @@ res$sigora$detailed_results %>%
                  "Weight"
                ),
                digits = 3)
+```
+
+### Visualisation
+
+```{r fig.cap="Heatmap of fold change patterns in significantly enriched pathways identified by sigORA."}
+p1
+```
+
+```{r fig.cap="Intersection sizes between significantly enriched pathways identified by sigORA visualised using the UpSetR package."}
+sigora_upsetR(sigora_res = res$sigora, GPStab)
 ```
 
 

@@ -17,7 +17,7 @@
 #' myGPSrepo <- makeGPS_wrappR(ids = exampleSymbols, target = "KEGG")
 #'
 
-makeGPS_wrappR <- function(ids, target = "KEGG") {
+makeGPS_wrappR <- function(ids, target = "KEGG", dev = FALSE) {
   if (target == "KEGG") {
     gp_db <- org.Hs.eg.db
     target_column <- "PATH"
@@ -79,6 +79,8 @@ makeGPS_wrappR <- function(ids, target = "KEGG") {
   mkGPStable <- dplyr::inner_join(pn_table, gp_table) %>% dplyr::distinct()
 
   colnames(mkGPStable) <- c("pathwayId", "pathwayName", "gene")
+
+  if(dev) return(mkGPStable)
 
   out <- makeGPS(mkGPStable)
 

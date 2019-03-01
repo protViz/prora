@@ -8,5 +8,5 @@ Description: Implements gene pair signature based over representation analysis a
 License: -
 Encoding: UTF-8
 LazyData: true
-Imports: tidyverse, sigora, org.Hs.eg.db, GO.db, reactome.db, AnnotationDbi, dplyr
+Imports: tidyverse, sigora, org.Hs.eg.db, GO.db, reactome.db, AnnotationDbi, dplyr, tidyr, S4Vectors
 RoxygenNote: 6.1.1
