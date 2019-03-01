@@ -245,7 +245,7 @@ ORA (w/o background) yields `r ora_out` ($>3$) matches, sigora yields "only" `r 
 # Simulation
 
 ```{r fig.align='center', fig.cap="Comparison of ORA and sigORA. Number of significantly enriched pathways after randomly selecting 50 genes from three pathways from the KEGG database. Number of replicates: 100, P-value correction: Bonferroni.", fig.height=3.5, fig.width=3.5, echo=FALSE}
-load(file = "~/Dropbox/FGCZ/Figures/simulation_sigora.Rda")
+load(file = "Figures/simulation_sigora.Rda")
 par(mex=0.8)
 boxplot(sim_out, ylab = "# enriched pathways", pch = 20, las = 1)
 ```
@@ -253,7 +253,7 @@ boxplot(sim_out, ylab = "# enriched pathways", pch = 20, las = 1)
 # Comparison of `WebGestaltR` ORA, `sigORA` & `enrichR` (pulldown dataset)
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, include=FALSE}
-load("/Users/Lucas/Dropbox/FGCZ/Figures/webGestaltExample.rda")
+load("Figures/webGestaltExample.rda")
 
 ref <-
   select(
