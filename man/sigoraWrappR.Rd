@@ -4,12 +4,10 @@
 \alias{sigoraWrappR}
 \title{sigora Wrapper function}
 \usage{
-sigoraWrappR(input.file = "", fc_threshold = 0.5, fc_col = "",
+sigoraWrappR(fc_threshold = 0.5, fc_col = "",
   GPSrepos = sigora::kegH, df, db = "")
 }
 \arguments{
-\item{input.file}{file path, will be reprinted in the report.}
-
 \item{fc_threshold}{fold change threshold above which (in absolute terms) a protein is considered differentially regulated}
 
 \item{fc_col}{Name of the fold change column, in case the input file contains multiple contrasts}

@@ -27,7 +27,6 @@ myGPSrepo <-
 
 sigora_example <-
   sigoraWrappR(
-    input.file = fpath,
     fc_threshold = 0.3,
     # fold change threshold of which proteins to consider "differentially expressed"
     fc_col = "estimate.Age.class..Old...Young",

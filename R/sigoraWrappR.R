@@ -3,7 +3,6 @@
 #'
 #' Provides a wrapper for \code{sigora::sigora()} combined with \code{sigora::ora()} and returns a \code{list} used for the generation of an \code{.Rmd} report.
 #'
-#' @param input.file file path, will be reprinted in the report.
 #' @param fc_threshold fold change threshold above which (in absolute terms) a protein is considered differentially regulated
 #' @param fc_col Name of the fold change column, in case the input file contains multiple contrasts
 #' @param GPSrepos GPS repository used as background, can be generated via \code{\link{sigoraWrappR}}
@@ -31,8 +30,7 @@
 #' @export sigoraWrappR sigoraWrappR
 
 sigoraWrappR <-
-  function(input.file = "",
-           fc_threshold = 0.5,
+  function(fc_threshold = 0.5,
            fc_col = "",
            GPSrepos = sigora::kegH,
            df,
