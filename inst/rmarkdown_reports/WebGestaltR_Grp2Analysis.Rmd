@@ -4,7 +4,7 @@ author: "Functional Genomics Center Zurich"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 output:
   html_document:
-    number_sections: no
+    number_sections: false
 editor_options:
   chunk_output_type: console
 params:
@@ -107,15 +107,15 @@ Note that the geneset column directly refers the reader to the corresponding pat
 
 ```{r results, results='asis'}
 X <- WebGestaltRinput$webgestaltResults %>%
-  mutate(geneSet = pander::pandoc.link.return(link, text = geneSet)) %>%
-  select(geneSet, pValue, FDR, file.origin)
+  dplyr::mutate(geneSet = pander::pandoc.link.return(link, text = geneSet)) %>%
+  dplyr::select(geneSet, pValue, FDR, file.origin)
 
 for (i in unique(X$file.origin)) {
   cat("### Protein cluster ", i, "\n")
   
   X %>% 
-    filter(file.origin == i) %>%
-    select(-file.origin) %>% 
+    dplyr::filter(file.origin == i) %>%
+    dplyr::select(-file.origin) %>% 
     knitr::kable(
       x = .,
       align = "c",

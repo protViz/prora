@@ -133,7 +133,7 @@ p1
 ```
 
 ```{r fig.cap="Intersection sizes between significantly enriched pathways identified by sigORA visualised using the UpSetR package."}
-sigora_upsetR(sigora_res = res$sigora, GPStab)
+sigora_upsetR(sigora_res = res, GPStable = GPStab)
 ```
 
 

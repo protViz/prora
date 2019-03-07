@@ -4,11 +4,11 @@
 \alias{webGestaltWrapper}
 \title{Wrapper for WebGestaltR overrepresentation analysis in SRMService}
 \usage{
-webGestaltWrapper(grp2, enrichDatabase, organism, se_threshold,
-  work_dir = "output", nrNas, method)
+webGestaltWrapper(quant_data, enrichDatabase, organism, se_threshold,
+  work_dir = "output", nrNas, method, nclust = 2)
 }
 \arguments{
-\item{grp2}{grp2 S4 object}
+\item{quant_data}{data.frame of intensity values with protein identifiers as row names}
 
 \item{enrichDatabase}{Database used for over representation analysis}
 
@@ -17,6 +17,8 @@ webGestaltWrapper(grp2, enrichDatabase, organism, se_threshold,
 \item{se_threshold}{standard error of protein expressions over all conditions. Will be used as a filtering threshold.}
 
 \item{nrNas}{number of allowed NAs per protein. Protein matrix will be filtered using this threshold.}
+
+\item{nclust}{number of proteins clusters to consider in the analysis}
 
 \item{WebGestaltWrappR}{WebGestaltWrappR}
 }

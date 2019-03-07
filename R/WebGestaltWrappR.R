@@ -2,14 +2,16 @@
 #' @export webGestaltWrapper webGestaltWrapper
 #' @param WebGestaltWrappR WebGestaltWrappR
 #' @import dplyr quantable WebGestaltR SRMService
+#' @importFrom WebGestaltR WebGestaltRBatch
 #' @return list with results
-#' @param grp2 grp2 S4 object
+#' @param quant_data data.frame of intensity values with protein identifiers as row names
 #' @param enrichDatabase Database used for over representation analysis
 #' @param organism organism proteins in the grp2 object derive from
 #' @param nrNas number of allowed NAs per protein. Protein matrix will be filtered using this threshold.
 #' @param se_threshold standard error of protein expressions over all conditions. Will be used as a filtering threshold.
+#' @param nclust number of proteins clusters to consider in the analysis
 
-webGestaltWrapper <- function(grp2, enrichDatabase, organism, se_threshold, work_dir = "output", nrNas, method) {
+webGestaltWrapper <- function(quant_data, enrichDatabase, organism, se_threshold, work_dir = "output", nrNas, method, nclust = 2) {
 
   # Additional functions ------------------------------------------------------
 
@@ -43,17 +45,6 @@ webGestaltWrapper <- function(grp2, enrichDatabase, organism, se_threshold, work
     return(res)
   }
 
-  preprocess_df <- function(grp2) {
-    quant_data <- grp2$getNormalized()$data
-    quant_data <- quant_data[grepl("sp", row.names(quant_data)), ]
-    ref_protein_list <- data.frame(IDs = row.names(quant_data)) %>%
-      tidyr::separate(col = IDs,
-               sep = "\\|",
-               into = c("prefix","uniprotid","proteinname")) %>%
-      dplyr::select(uniprotid)
-    row.names(quant_data) <- make.unique(ref_protein_list$uniprotid)
-    return(quant_data)
-  }
 
   se_filter <- function(quant_data, se_threshold, nrNas) {
     se_observed <- apply(quant_data, 1, sd, na.rm = TRUE)
@@ -63,19 +54,17 @@ webGestaltWrapper <- function(grp2, enrichDatabase, organism, se_threshold, work
     return(quant_data_filtered)
   }
 
-  getProteinClustering <- function(quant_data_filtered, method, nclust) {
+  getProteinClustering <- function(quant_data_filtered, method, nclusts) {
     clustering <-
       quantable::simpleheatmap3(
         scale(t(quant_data_filtered), scale = FALSE),
         labCol = row.names(quant_data_filtered),
         plot = FALSE,
-        nrOfClustersCol = nclust,
+        nrOfClustersCol = nclusts,
         method = method
       )$Col
     return(clustering)
   }
-
-  quant_data <- preprocess_df(grp2)
 
 
   # Reference list ----------------------------------------------------------
@@ -88,7 +77,7 @@ webGestaltWrapper <- function(grp2, enrichDatabase, organism, se_threshold, work
 
   quant_data_filtered <- se_filter(quant_data, se_threshold, nrNas)
 
-  clustering <- getProteinClustering(quant_data_filtered, method, grp2$getNumberOfClusters())
+  clustering <- getProteinClustering(quant_data_filtered, method, nclust)
 
   sapply(
     unique(clustering$clusterID),
@@ -107,10 +96,11 @@ webGestaltWrapper <- function(grp2, enrichDatabase, organism, se_threshold, work
       enrichDatabase = enrichDatabase,
       interestGeneFolder = "output/ORA_inputFiles",
       referenceGeneFile = "output/referencelist.txt",
-      is.output = FALSE,
+      isOutput = FALSE,
       interestGeneType = "uniprotswissprot",
       referenceGeneType =  "uniprotswissprot",
-      outputDirectory = "output/"
+      outputDirectory = "output/",
+      isParallel = TRUE
     )
 
   aggregated_results <- aggregate_results(output)
@@ -120,7 +110,7 @@ webGestaltWrapper <- function(grp2, enrichDatabase, organism, se_threshold, work
     config <- list(
       normalisedData_unfiltered = quant_data,
       normalisedData_filtered = quant_data_filtered,
-      numberOfProteinClusters = grp2$getNumberOfClusters(),
+      numberOfProteinClusters = nclust,
       enrichDatabase = enrichDatabase,
       organism = organism,
       webgestaltResults = aggregated_results,

@@ -8,6 +8,18 @@ library(tidyverse)
 library(quantable)
 library(fgczgseaora)
 
+preprocess_df <- function(grp2) {
+  quant_data <- grp2$getNormalized()$data
+  quant_data <- quant_data[grepl("sp", row.names(quant_data)), ]
+  ref_protein_list <- data.frame(IDs = row.names(quant_data)) %>%
+    tidyr::separate(col = IDs,
+                    sep = "\\|",
+                    into = c("prefix","uniprotid","proteinname")) %>%
+    dplyr::select(uniprotid)
+  row.names(quant_data) <- make.unique(ref_protein_list$uniprotid)
+  return(quant_data)
+}
+
 ### Protein groups file
 packagedir <- path.package("fgczgseaora")
 
@@ -81,14 +93,17 @@ grp2$setMQProteinGroups(protein)
 grp2$setQValueThresholds(qvalue = qvalueThreshold, qfoldchange = qfoldchange)
 mqQuantMatrixGRP2 <- grp2
 
+dat <- preprocess_df(grp2)
+
 webGestaltExample <-
   webGestaltWrapper(
-    grp2 = grp2,
+    quant_data = dat,
     enrichDatabase = enrichDatabase,
     organism = organism,
     se_threshold = 1.5,
     nrNas = 5,
-    method = "complete"
+    method = "complete",
+    nclust = numberOfProteinClusters
   )
 
 usethis::use_data(webGestaltExample, overwrite = TRUE)
