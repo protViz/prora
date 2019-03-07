@@ -106,7 +106,7 @@ webGestaltExample <-
     nclust = numberOfProteinClusters
   )
 
-usethis::use_data(webGestaltExample, overwrite = TRUE)
+#usethis::use_data(webGestaltExample, overwrite = TRUE)
 
 #REMOVE to render
 rmarkdown::render(
