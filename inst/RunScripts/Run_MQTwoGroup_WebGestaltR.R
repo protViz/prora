@@ -79,7 +79,6 @@ write.table(annotation, file = file.path(resultdir, "annotationused.txt"))
 
 ####### END of user configuration ##
 
-# source("R/Grp2Analysis.R")
 grp2 <- Grp2Analysis(
   annotation,
   Experimentname,
