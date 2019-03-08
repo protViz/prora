@@ -1,7 +1,8 @@
 #' Translate Fasta header to gene Symbol
 #'
-#' @export getSymbolFromFasta getSymbolFromFasta
-#' @import tidyverse sigora org.Hs.eg.db GO.db reactome.db dplyr AnnotationDbi tidyr
+#' @export
+#' @importFrom dplyr filter select
+#' @importFrom tidyr separate
 #'
 #' @param df \code{data.frame} with FASTA headers in first column
 #'
@@ -9,9 +10,8 @@
 #'
 #' @examples
 #' data("exampleContrastData", package = "fgczgseaora")
-#' getSymbolFromFasta(exampleContrastData)
-
-getSymbolFromFasta <- function(df) {
+#' getSymbolFromSwissprotID(exampleContrastData)
+getSymbolFromSwissprotID <- function(df) {
   colnames(df)[1] <- "protein_Id"
   df %>%
     dplyr::filter(grepl(pattern = "sp", df$protein_Id)) %>%

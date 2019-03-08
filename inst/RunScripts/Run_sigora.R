@@ -15,7 +15,7 @@ fpath <-
 dd <- read_csv(fpath)
 colnames(dd) <- make.names(colnames(dd))
 
-ddd <- getSymbolFromFasta(dd)
+ddd <- getSymbolFromSwissprotID(dd)
 
 trgt <- "GO"
 
