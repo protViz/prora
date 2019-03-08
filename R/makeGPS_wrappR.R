@@ -18,11 +18,13 @@
 #' @seealso \code{\link[sigora]{makeGPS}}
 #'
 #' @examples
-#' data("exampleSymbols", package = "fgczgseaora")
-#' myGPSrepo <- makeGPS_wrappR(ids = exampleSymbols, target = "KEGG")
 #'
-
-makeGPS_wrappR <- function(ids, target = "KEGG", dev = FALSE) {
+#' data("exampleSymbols", package = "fgczgseaora")
+#' myGPSrepo <- makeGPS_wrappR(ids = exampleSymbols)
+#' myGPSrepo <- makeGPS_wrappR(ids = exampleSymbols, target = "GO")
+#' myGPSrepo <- makeGPS_wrappR(ids = exampleSymbols, target = "react")
+makeGPS_wrappR <- function(ids, target = c("KEGG","GO","reactome"), dev = FALSE) {
+  target <- match.arg(target)
   if (target == "KEGG") {
     gp_db <- org.Hs.eg.db
     target_column <- "PATH"
