@@ -4,6 +4,7 @@ rm(list = ls())
 library(WebGestaltR)
 library(tidyverse)
 library(fgczgseaora)
+library(conflicted)
 
 fpath <-
   "inst/example_data/Ex1_interactions.csv"
