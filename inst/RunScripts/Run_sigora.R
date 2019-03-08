@@ -38,9 +38,9 @@ sigora_example <-
 p1 <- sigora_heatmap(sigora_example, GPStab)
 
 
-#usethis::use_data(sigora_example, overwrite = TRUE)
-#usethis::use_data(p1, overwrite = TRUE)
-#usethis::use_data(GPStab, overwrite = TRUE)
+usethis::use_data(sigora_example, overwrite = TRUE)
+usethis::use_data(p1, overwrite = TRUE)
+usethis::use_data(GPStab, overwrite = TRUE)
 
 rmarkdown::render(
   "inst/rmarkdown_reports/sigora.Rmd",

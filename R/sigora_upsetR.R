@@ -19,14 +19,19 @@ sigora_upsetR <- function(sigora_res, GPStable, ...) {
 
   df <- mergeR(sigora_res, GPStable)
 
-  df %>%
+  if(any(dim(df)==0)) return(NULL)
+
+  toplot <- df %>%
     dplyr::select(pathwayId, gene) %>%
     dplyr::mutate(ID = 1:nrow(.)) %>%
     tidyr::spread(pathwayId, gene) %>%
     dplyr::select(-ID) %>%
     as.list() %>%
-    lapply(na.omit) %>%
-    UpSetR::fromList() %>%
+    lapply(na.omit)
+
+  if(length(toplot)==1) return(message("UpSetR plot cannot be displayed. Only one pathway enriched."))
+
+  UpSetR::fromList(toplot) %>%
     UpSetR::upset(mb.ratio = c(0.7, 0.3), ...=...)
 }
 

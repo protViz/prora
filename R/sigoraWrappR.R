@@ -35,7 +35,11 @@ sigoraWrappR <-
            GPSrepos = sigora::kegH,
            df,
            db = "") {
-    enriched <- df[df[, fc_col] >= fc_threshold,]
+    if(fc_threshold >= 0) {
+      enriched <- df[df[, fc_col] >= fc_threshold,]
+    } else {
+      enriched <- df[df[, fc_col] <= fc_threshold,]
+    }
     sigora_res <-
       sigora::sigora(GPSrepo = GPSrepos,
              level = 5,
