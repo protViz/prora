@@ -5,13 +5,14 @@ library(WebGestaltR)
 library(tidyverse)
 library(fgczgseaora)
 library(org.Hs.eg.db)
+library(conflicted)
 
 fpath <-
   "inst/example_data/Ex1_interactions.csv"
 
 dd <- read_csv(fpath)
 colnames(dd) <- make.names(colnames(dd))
-ddd <- getSymbolFromFasta(dd)
+ddd <- getSymbolFromSwissprotID(dd)
 
 outputDir <- "GSEA_output"
 dir.create(outputDir)
