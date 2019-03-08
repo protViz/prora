@@ -41,7 +41,7 @@ library(rlang)
 library(WebGestaltR)
 ```
 
-# Introduction
+## Introduction
 
 The following analysis compares protein clusters identified via unsupervised hierarchical clustering by applying an over-representation analysis (*ORA*) on the proteins compared to the background of all measured proteins in the dataset. In principle, *ORA* compares the number of observed proteins of a specific pathway in the cluster of interest to the number one would expect to show up by chance (hence a reference list). These statistics are then translated into a *P*-value and adjusted for multiplicity, since potentially many pathways are tested [@Leong2009]. This then yields the reported *Q*-value in table \@ref(tab:results). *ORA* is implemented in the `R` package `WebGestaltR` [@Wang2017].
 
@@ -51,7 +51,7 @@ The protein identification and quantification were performed using the _MaxQuant
 Table \@ref(tab:summary) summarises the results by indicating protein clusters, their size and the number of enriched pathways.
 
 
-## Experiment summary
+### Experiment summary
 
 The quantitative protein matrix contained the following number of proteins:
 
@@ -83,9 +83,9 @@ WebGestaltRinput$clusterIDs %>%
 
 \pagebreak
 
-# OR Analysis
+## OR Analysis
 
-## Protein clustering
+### Protein clustering
 
 ```{r heatmapData, fig.width=8, fig.height=5, dpi=300, fig.cap="Heatmap of normalized data after filtering for observed number of NAs and a standard error threshold.", fig.align='center'}
 stmMm <- WebGestaltRinput$normalisedData_filtered
@@ -101,7 +101,7 @@ tmp2 <- simpleheatmap3((scale(t(stmMm),scale = F)),
 progress(0.2, "Heatmaps")
 ```
 
-## ORA output {.tabset .tabset-pills}
+### ORA output {.tabset .tabset-pills}
 
 Note that the geneset column directly refers the reader to the corresponding pathway webpage. If no data is available on a cluster no significantly enriched pathway could be reported.
 
@@ -111,7 +111,7 @@ X <- WebGestaltRinput$webgestaltResults %>%
   dplyr::select(geneSet, pValue, FDR, file.origin)
 
 for (i in unique(X$file.origin)) {
-  cat("### Protein cluster ", i, "\n")
+  cat("#### Protein cluster ", i, "\n")
   
   X %>% 
     dplyr::filter(file.origin == i) %>%
@@ -129,7 +129,7 @@ for (i in unique(X$file.origin)) {
 }
 ```
 
-### Reference list
+#### Reference list
 
 ```{r}
 DT::datatable(WebGestaltRinput$reference_list, colnames = "UniprotID", width = 500, style = "bootstrap")
@@ -138,4 +138,4 @@ DT::datatable(WebGestaltRinput$reference_list, colnames = "UniprotID", width = 5
 
 \pagebreak
 
-# References
+## References

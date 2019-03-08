@@ -1,0 +1,83 @@
+---
+title: "FGCZ Gene Set Enrichment Analysis (GSEA)"
+author: "Functional Genomics Center Zurich"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+  html_document:
+    number_sections: false
+editor_options:
+  chunk_output_type: console
+params:
+  GSEA: !r quote(fgczgseaora::GSEA)
+subtitle: Using the `WebGestaltR` package
+bibliography: bibliography.bib
+link-citations: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  message = FALSE,
+  warning = FALSE
+)
+
+if(!exists("progress")){
+  progress <- function(howmuch, detail){
+    invisible(NULL)
+  }
+}
+
+res <- eval(params$GSEA_res)
+
+library(tidyverse)
+library(knitr)
+```
+
+### Introduction
+
+The following analysis compares the enrichment of particular gene/protein set members towards the upper and lower end of the provided ranked protein list (*e.g.* ranked by fold changes, *P*-values, *etc.*). This analysis is commonly referred to as *Gene Set Enrichment Analysis* and a more detailed description of the method can be found in @Subramanian15545. In principle, the protein list is ranked by the provided numerical column and an enrichment score is calculated based on the relative positions the members of a particular gene set take in the whole list. To calculate a *P*-value and a corresponding FDR, adjusted for multiplicity [@BH1995], a permutation test approach is used. The default number of permutations is $n_\text{perm}=1000$, since then the obtainable *P*-values have a lower limit of $P \geq 0.001$.
+
+### Parameters
+
+* Organism: `r GSEA$organism`
+
+* Target Database: `r GSEA$target`
+
+* Output Directory: `r GSEA$outputDir`
+
+### GSEA Results {.tabset .tabset-pills}
+
+#### Enriched Pathways
+
+```{r}
+GSEA$GSEA_res %>% 
+  mutate(set = paste0("[", geneSet, "](", link, ")")) %>% 
+  select(set, description, ES, NES, pValue, FDR) %>%
+  knitr::kable(
+    digits = 3,
+    col.names = c("Gene Set", "Description", "ES", "NES", "P-value", "Q-value"),
+    align = "c",
+    caption = "Table of significantly enriched gene sets. ES: Enrichment Score, NES: Normalised Enrichment Score"
+    )
+```
+
+#### Input Data
+
+```{r}
+colnames(GSEA$input_data) <- c("ID", "Rank")
+GSEA$input_data %>%
+  mutate(`Rank` = round(`Rank`, 2)) %>% 
+  arrange(Rank) %>% 
+  DT::datatable(colnames = c("ID", "Rank"), width = 500, style = "bootstrap")
+```
+
+### `WebGestaltR` Results
+
+```{r results='asis'}
+cat("Since `WebGestaltR` provides its own summary report, please refer to [this file](", file.path(getwd(), "../..", GSEA$outputDir) ,"/Project_GSEA_proj/Report_GSEA_proj.html)", sep = "")
+```
+
+
+### References
+
+
