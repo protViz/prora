@@ -105,9 +105,8 @@ webGestaltExample <-
     nclust = numberOfProteinClusters
   )
 
-#usethis::use_data(webGestaltExample, overwrite = TRUE)
+# usethis::use_data(webGestaltExample, overwrite = TRUE)
 
-#REMOVE to render
 rmarkdown::render(
   "inst/rmarkdown_reports/WebGestaltR_Grp2Analysis.Rmd",
   bookdown::html_document2(number_sections = FALSE),

@@ -22,7 +22,7 @@ sigora_heatmap <- function(sigora_res, GPStable) {
   tab3 <- dplyr::inner_join(GPStable, tab1)
   tab4 <- dplyr::inner_join(tab3, tab2) %>% filter(Bonferroni < 0.05)
   stopifnot(all(dim(tab4)>0))
-    ggplot(tab4, aes(x = pathwayId, y = gene, fill = fc)) +
+  ggplot(tab4, aes(x = pathwayId, y = gene, fill = fc)) +
     geom_tile() +
     scale_fill_gradient2(low = "blue", mid = "white", high = "red") +
     labs(

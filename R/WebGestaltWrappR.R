@@ -96,7 +96,7 @@ webGestaltWrapper <- function(quant_data, enrichDatabase, organism, se_threshold
       enrichDatabase = enrichDatabase,
       interestGeneFolder = "output/ORA_inputFiles",
       referenceGeneFile = "output/referencelist.txt",
-      isOutput = FALSE,
+      isOutput = TRUE,
       interestGeneType = "uniprotswissprot",
       referenceGeneType =  "uniprotswissprot",
       outputDirectory = "output/",

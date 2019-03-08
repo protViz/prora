@@ -4,6 +4,7 @@ rm(list = ls())
 library(WebGestaltR)
 library(tidyverse)
 library(fgczgseaora)
+library(org.Hs.eg.db)
 
 fpath <-
   "inst/example_data/Ex1_interactions.csv"
@@ -17,10 +18,13 @@ dir.create(outputDir)
 
 organism <- "hsapiens"
 ID_col <- "Symbol"
-fc_col <- "estimate.Age.class..Old...Young"
+# fc_col <- "estimate.Age.class..Old...Young"
+fc_col <- "estimate.Age.classOld..PathologyHF.iDCM...PathologyNone"
 target <- "geneontology_Biological_Process"
+map_col <- "GO"
 
-input <- ddd[, c(ID_col, fc_col)]
+input <- ddd[ , c(ID_col, fc_col)]
+colnames(input) <- c("ID", "Score")
 
 GSEA_res <-
   WebGestaltR(
@@ -37,15 +41,38 @@ GSEA_res <-
     projectName = "GSEA_proj"
   )
 
+mappingTable <- read_delim("GSEA_output/Project_GSEA_proj/interestingID_mappingTable_GSEA_proj.txt", delim = "\t")
+mappingTable$entrezgene <- as.character(mappingTable$entrezgene)
+
+merged_data <- AnnotationDbi::mapIds(org.Hs.eg.db,
+                             as.character(mappingTable$entrezgene),
+                             column = map_col,
+                             keytype = "ENTREZID",
+                             multiVals = "CharacterList") %>%
+  unlist() %>% data.frame(entrezgene = names(.), geneSet = .) %>%
+  dplyr::inner_join(., GSEA_res) %>%
+  dplyr::inner_join(., mappingTable)
+
+toplot <- merged_data %>%
+  dplyr::select(geneSet, geneSymbol) %>%
+  dplyr::mutate(IDD = 1:nrow(.)) %>%
+  tidyr::spread(geneSet, geneSymbol) %>%
+  dplyr::select(-IDD) %>%
+  as.list() %>%
+  lapply(na.omit)
+
+
 GSEA <- list(
   organism = organism,
   target = target,
   outputDir = outputDir,
   input_data = input,
-  GSEA_res = GSEA_res
+  GSEA_res = GSEA_res,
+  merged_data = merged_data,
+  upsetData = toplot
 )
 
-usethis::use_data(GSEA, overwrite = TRUE)
+# usethis::use_data(GSEA, overwrite = TRUE)
 
 rmarkdown::render(
   "inst/rmarkdown_reports/GSEA.Rmd",

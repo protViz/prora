@@ -5,7 +5,7 @@
 \title{sigora Wrapper function}
 \usage{
 sigoraWrappR(fc_threshold = 0.5, fc_col = "",
-  GPSrepos = sigora::kegH, df, db = "")
+  GPSrepos = sigora::kegH, df, db = "", greater_than = TRUE)
 }
 \arguments{
 \item{fc_threshold}{fold change threshold above which (in absolute terms) a protein is considered differentially regulated}
@@ -17,6 +17,8 @@ sigoraWrappR(fc_threshold = 0.5, fc_col = "",
 \item{df}{data.frame input (at least two columns, first column being gene symbols, other columns being fold changes)}
 
 \item{db}{database used for the generation of the GPS repository}
+
+\item{greater_than}{Logical. Whether fc_threshold should be applied as greater_than (default is \code{TRUE}) or strictly less than (\code{FALSE})}
 }
 \value{
 Returns a \code{list} containing the following elements:

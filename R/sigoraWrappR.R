@@ -8,6 +8,7 @@
 #' @param GPSrepos GPS repository used as background, can be generated via \code{\link{sigoraWrappR}}
 #' @param df data.frame input (at least two columns, first column being gene symbols, other columns being fold changes)
 #' @param db database used for the generation of the GPS repository
+#' @param greater_than Logical. Whether fc_threshold should be applied as greater_than (default is \code{TRUE}) or strictly less than (\code{FALSE})
 #'
 #' @return Returns a \code{list} containing the following elements:
 #' \itemize{
@@ -34,11 +35,12 @@ sigoraWrappR <-
            fc_col = "",
            GPSrepos = sigora::kegH,
            df,
-           db = "") {
-    if(fc_threshold >= 0) {
+           db = "",
+           greater_than = TRUE) {
+    if(greater_than) {
       enriched <- df[df[, fc_col] >= fc_threshold,]
     } else {
-      enriched <- df[df[, fc_col] <= fc_threshold,]
+      enriched <- df[df[, fc_col] < fc_threshold,]
     }
     sigora_res <-
       sigora::sigora(GPSrepo = GPSrepos,

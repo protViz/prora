@@ -35,7 +35,7 @@ library(knitr)
 
 ### Introduction
 
-The following analysis compares the enrichment of particular gene/protein set members towards the upper and lower end of the provided ranked protein list (*e.g.* ranked by fold changes, *P*-values, *etc.*). This analysis is commonly referred to as *Gene Set Enrichment Analysis* and a more detailed description of the method can be found in @Subramanian15545. In principle, the protein list is ranked by the provided numerical column and an enrichment score is calculated based on the relative positions the members of a particular gene set take in the whole list. To calculate a *P*-value and a corresponding FDR, adjusted for multiplicity [@BH1995], a permutation test approach is used. The default number of permutations is $n_\text{perm}=1000$, since then the obtainable *P*-values have a lower limit of $P \geq 0.001$.
+The following analysis compares the enrichment of particular gene/protein set members towards the upper and lower end of the provided ranked protein list (*e.g.* ranked by fold changes, *P*-values, henceforth denoted generally as *"score"*). This analysis is commonly referred to as *Gene Set Enrichment Analysis* and a more detailed description of the method can be found in @Subramanian15545. In principle, the protein list is ranked by the provided scores and an enrichment score is calculated based on the relative positions the members of a particular gene set take in the whole list. To calculate a *P*-value and a corresponding FDR, adjusted for multiplicity [@BH1995], a permutation test approach is used. The default number of permutations is $n_\text{perm}=1000$, since then the obtainable *P*-values have a lower limit of $P \geq 0.001$.
 
 ### Parameters
 
@@ -51,8 +51,8 @@ The following analysis compares the enrichment of particular gene/protein set me
 
 ```{r}
 GSEA$GSEA_res %>% 
-  mutate(set = paste0("[", geneSet, "](", link, ")")) %>% 
-  select(set, description, ES, NES, pValue, FDR) %>%
+  dplyr::mutate(set = paste0("[", geneSet, "](", link, ")")) %>% 
+  dplyr::select(set, description, ES, NES, pValue, FDR) %>%
   knitr::kable(
     digits = 3,
     col.names = c("Gene Set", "Description", "ES", "NES", "P-value", "Q-value"),
@@ -64,12 +64,37 @@ GSEA$GSEA_res %>%
 #### Input Data
 
 ```{r}
-colnames(GSEA$input_data) <- c("ID", "Rank")
+colnames(GSEA$input_data) <- c("ID", "Score")
 GSEA$input_data %>%
-  mutate(`Rank` = round(`Rank`, 2)) %>% 
-  arrange(Rank) %>% 
-  DT::datatable(colnames = c("ID", "Rank"), width = 500, style = "bootstrap")
+  dplyr::mutate(`Score` = round(`Score`, 2)) %>% 
+  dplyr::arrange(Score) %>% 
+  DT::datatable(colnames = c("ID", "Score"), width = 500, style = "bootstrap")
 ```
+
+### Visualisation
+
+```{r fig.cap="Heatmap of Score patterns in significantly enriched pathways identified by GSEA"}
+GSEA$merged_data %>% 
+  ggplot(aes(x = geneSet, y = geneSymbol, fill = score)) +
+    geom_tile() +
+    scale_fill_gradient2(low = "blue", mid = "white", high = "red") +
+    labs(
+      title = "Enrichment Patterns",
+      subtitle = "Scores of genes from significantly enriched pathways",
+      fill = "Score value"
+    ) +
+    xlab("Pathway") +
+    ylab("Gene") +
+    theme_bw()
+```
+
+```{r fig.cap="Intersection sizes between significantly enriched pathways identified by GSEA visualised using the `UpSetR` package"}
+if(length(GSEA$upsetData)==1) return(message("UpSetR plot cannot be displayed. Only one pathway enriched."))
+
+UpSetR::fromList(GSEA$upsetData) %>%
+    UpSetR::upset(mb.ratio = c(0.7, 0.3))
+```
+
 
 ### `WebGestaltR` Results
 
