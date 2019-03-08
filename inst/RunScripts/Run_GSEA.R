@@ -45,7 +45,7 @@ GSEA <- list(
   GSEA_res = GSEA_res
 )
 
-usethis::use_data(GSEA, overwrite = TRUE)
+#usethis::use_data(GSEA, overwrite = TRUE)
 
 rmarkdown::render(
   "inst/rmarkdown_reports/GSEA.Rmd",
