@@ -16,7 +16,11 @@ webGestaltWrapper(quant_data, enrichDatabase, organism, se_threshold,
 
 \item{se_threshold}{standard error of protein expressions over all conditions. Will be used as a filtering threshold.}
 
+\item{work_dir}{output directory to store \code{WebGestaltR} reports}
+
 \item{nrNas}{number of allowed NAs per protein. Protein matrix will be filtered using this threshold.}
+
+\item{method}{clustering method to be used in \code{simpleheatmap3}}
 
 \item{nclust}{number of proteins clusters to consider in the analysis}
 }

@@ -16,6 +16,8 @@
 #' @param nrNas number of allowed NAs per protein. Protein matrix will be filtered using this threshold.
 #' @param se_threshold standard error of protein expressions over all conditions. Will be used as a filtering threshold.
 #' @param nclust number of proteins clusters to consider in the analysis
+#' @param work_dir output directory to store \code{WebGestaltR} reports
+#' @param method clustering method to be used in \code{simpleheatmap3}
 
 webGestaltWrapper <- function(quant_data, enrichDatabase, organism, se_threshold, work_dir = "output", nrNas, method, nclust = 2) {
 

@@ -1,7 +1,8 @@
 #' UpSetR wrapper for sigora results
 #'
 #' @param sigora_res Object returned by the \code{\link{sigoraWrappR}} function
-#' @param GPS_table Object returned by \code{\link{makeGPS_wrappR}} function, setting \code{dev=TRUE}
+#' @param GPStable Object returned by \code{\link{makeGPS_wrappR}} function, setting \code{dev=TRUE}
+#' @param ... other parameters to \code{upset}
 #'
 #' @export sigora_upsetR sigora_upsetR
 #' @importFrom UpSetR fromList upset

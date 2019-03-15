@@ -9,7 +9,9 @@ sigora_upsetR(sigora_res, GPStable, ...)
 \arguments{
 \item{sigora_res}{Object returned by the \code{\link{sigoraWrappR}} function}
 
-\item{GPS_table}{Object returned by \code{\link{makeGPS_wrappR}} function, setting \code{dev=TRUE}}
+\item{GPStable}{Object returned by \code{\link{makeGPS_wrappR}} function, setting \code{dev=TRUE}}
+
+\item{...}{other parameters to \code{upset}}
 }
 \description{
 UpSetR wrapper for sigora results

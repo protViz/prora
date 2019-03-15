@@ -1,7 +1,7 @@
 #' Visualisation of expression patterns in significantly enriched pathways
 #'
 #' @param sigora_res Object returned by the \code{\link{sigoraWrappR}} function
-#' @param GPS_table Object returned by \code{\link{makeGPS_wrappR}} function, setting \code{dev=TRUE}
+#' @param GPStable Object returned by \code{\link{makeGPS_wrappR}} function, setting \code{dev=TRUE}
 #'
 #' @return Returns a \code{ggplot} object heatmap
 #'
