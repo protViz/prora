@@ -27,7 +27,7 @@
 #' df <- getSymbolFromSwissprotID(exampleContrastData)
 #' sigoraWrappR(fc_col = colnames(df)[7], GPSrepos = sigora::kegH, df = df)
 #'
-#' @import tidyverse sigora org.Hs.eg.db GO.db reactome.db dplyr AnnotationDbi tidyr
+#' @importFrom sigora sigora ora
 #' @export sigoraWrappR sigoraWrappR
 
 sigoraWrappR <-

@@ -12,7 +12,8 @@
 #'
 #' @export sigora_heatmap sigora_heatmap
 #'
-#' @import ggplot2
+#' @importFrom ggplot2 ggplot aes geom_tile scale_fill_gradient2 labs xlab ylab theme_bw
+#' @importFrom magrittr %>%
 
 sigora_heatmap <- function(sigora_res, GPStable) {
   tab1 <- sigora_res$sigora$summary_results

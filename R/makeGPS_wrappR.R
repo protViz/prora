@@ -10,6 +10,7 @@
 #' @importFrom sigora makeGPS
 #' @importFrom S4Vectors na.omit
 #' @importFrom AnnotationDbi mapIds
+#' @importFrom magrittr %>%
 #' @param ids Character vector of gene symbols (experimental background)
 #' @param target Character, database to be used to generate GPS repository ("KEGG", "GO", "reactome")
 #' @param dev Logical, if \code{TRUE} the function returns the \code{data.frame} \code{makeGPS} needs as input

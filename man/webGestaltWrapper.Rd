@@ -2,7 +2,7 @@
 % Please edit documentation in R/WebGestaltWrappR.R
 \name{webGestaltWrapper}
 \alias{webGestaltWrapper}
-\title{Wrapper for WebGestaltR overrepresentation analysis in SRMService}
+\title{Wrapper for WebGestaltR overrepresentation analysis}
 \usage{
 webGestaltWrapper(quant_data, enrichDatabase, organism, se_threshold,
   work_dir = "output", nrNas, method, nclust = 2)
@@ -19,12 +19,10 @@ webGestaltWrapper(quant_data, enrichDatabase, organism, se_threshold,
 \item{nrNas}{number of allowed NAs per protein. Protein matrix will be filtered using this threshold.}
 
 \item{nclust}{number of proteins clusters to consider in the analysis}
-
-\item{WebGestaltWrappR}{WebGestaltWrappR}
 }
 \value{
 list with results
 }
 \description{
-Wrapper for WebGestaltR overrepresentation analysis in SRMService
+Wrapper for WebGestaltR overrepresentation analysis
 }

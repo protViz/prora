@@ -3,6 +3,7 @@
 #' @export
 #' @importFrom dplyr filter select
 #' @importFrom tidyr separate
+#' @importFrom magrittr %>%
 #'
 #' @param df \code{data.frame} with FASTA headers in first column
 #'

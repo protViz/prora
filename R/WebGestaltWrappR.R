@@ -1,9 +1,15 @@
-#' Wrapper for WebGestaltR overrepresentation analysis in SRMService
+#' Wrapper for WebGestaltR overrepresentation analysis
+#'
 #' @export webGestaltWrapper webGestaltWrapper
-#' @param WebGestaltWrappR WebGestaltWrappR
-#' @import dplyr quantable WebGestaltR SRMService
+#'
+#' @importFrom dplyr filter select mutate
+#' @importFrom readr write_tsv
+#' @importFrom quantable simpleheatmap3
 #' @importFrom WebGestaltR WebGestaltRBatch
+#' @importFrom magrittr %>%
+#'
 #' @return list with results
+#'
 #' @param quant_data data.frame of intensity values with protein identifiers as row names
 #' @param enrichDatabase Database used for over representation analysis
 #' @param organism organism proteins in the grp2 object derive from
@@ -19,7 +25,7 @@ webGestaltWrapper <- function(quant_data, enrichDatabase, organism, se_threshold
     df %>%
       dplyr::filter(clusterID == ID) %>%
       dplyr::select(colID) %>%
-      write_tsv(
+      readr::write_tsv(
         path = paste(output.dir, "/protein_cluster_", ID, ".txt", sep = ""),
         col_names = F
       )
@@ -31,12 +37,13 @@ webGestaltWrapper <- function(quant_data, enrichDatabase, organism, se_threshold
   }
 
   aggregate_results <- function(output) {
-    makedataframe <- function(ll){ if (is.null(ll$enrichResult) || grepl("ERROR", ll$enrichResult))
-      return(NULL)
-      else {
-        tmp <- as.data.frame(ll$enrichResult)
-        tmp %>%
-          dplyr::mutate(file.origin = parse_number(tools::file_path_sans_ext(basename(ll$filename))))
+    makedataframe <- function(ll){
+      if (is.null(ll$enrichResult) || grepl("ERROR", ll$enrichResult)) {
+        return(NULL)
+      } else {
+          tmp <- as.data.frame(ll$enrichResult)
+          tmp %>%
+            dplyr::mutate(file.origin = parse_number(tools::file_path_sans_ext(basename(ll$filename))))
       }
     }
 

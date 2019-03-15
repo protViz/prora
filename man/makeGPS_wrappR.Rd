@@ -5,7 +5,7 @@
 \title{makeGPS Wrapper
 Function for generating background GPS repository for sigora and ora}
 \usage{
-makeGPS_wrappR(ids, target = "KEGG", dev = FALSE)
+makeGPS_wrappR(ids, target = c("KEGG", "GO", "reactome"), dev = FALSE)
 }
 \arguments{
 \item{ids}{Character vector of gene symbols (experimental background)}
@@ -22,9 +22,11 @@ makeGPS Wrapper
 Function for generating background GPS repository for sigora and ora
 }
 \examples{
-data("exampleSymbols", package = "fgczgseaora")
-myGPSrepo <- makeGPS_wrappR(ids = exampleSymbols, target = "KEGG")
 
+data("exampleSymbols", package = "fgczgseaora")
+myGPSrepo <- makeGPS_wrappR(ids = exampleSymbols)
+myGPSrepo <- makeGPS_wrappR(ids = exampleSymbols, target = "GO")
+myGPSrepo <- makeGPS_wrappR(ids = exampleSymbols, target = "react")
 }
 \seealso{
 \code{\link[sigora]{makeGPS}}

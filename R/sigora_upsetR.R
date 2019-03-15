@@ -4,7 +4,11 @@
 #' @param GPS_table Object returned by \code{\link{makeGPS_wrappR}} function, setting \code{dev=TRUE}
 #'
 #' @export sigora_upsetR sigora_upsetR
-#' @import UpSetR
+#' @importFrom UpSetR fromList upset
+#' @importFrom dplyr inner_join filter select mutate
+#' @importFrom tidyr spread
+#' @importFrom S4Vectors na.omit
+#' @importFrom magrittr %>%
 
 sigora_upsetR <- function(sigora_res, GPStable, ...) {
   mergeR <- function(sigora_res, GPStable) {
@@ -29,7 +33,7 @@ sigora_upsetR <- function(sigora_res, GPStable, ...) {
     as.list() %>%
     lapply(na.omit)
 
-  if(length(toplot)==1) return(message("UpSetR plot cannot be displayed. Only one pathway enriched."))
+  if(length(toplot)==1) stop("UpSetR plot cannot be displayed. Only one pathway enriched.")
 
   UpSetR::fromList(toplot) %>%
     UpSetR::upset(mb.ratio = c(0.7, 0.3), ...=...)
