@@ -35,7 +35,7 @@ library(knitr)
 
 ### Introduction
 
-The following analysis compares the enrichment of particular gene/protein set members towards the upper and lower end of the provided ranked protein list (*e.g.* ranked by fold changes, *P*-values, henceforth denoted generally as *"score"*). This analysis is commonly referred to as *Gene Set Enrichment Analysis* and a more detailed description of the method can be found in @Subramanian15545. In principle, the protein list is ranked by the provided scores and an enrichment score is calculated based on the relative positions the members of a particular gene set take in the whole list. To calculate a *P*-value and a corresponding FDR, adjusted for multiplicity [@BH1995], a permutation test approach is used. The default number of permutations is $n_\text{perm}=1000$, since then the obtainable *P*-values have a lower limit of $P \geq 0.001$.
+The following analysis compares the enrichment of particular gene/protein set members towards the upper and lower end of the provided ranked protein list (*e.g.* ranked by fold changes, *P*-values, henceforth denoted generally as *"score"*). This analysis is commonly referred to as *Gene Set Enrichment Analysis* and a more detailed description of the method can be found in @Subramanian15545. In principle, the protein list is ranked by the provided scores and an enrichment score is calculated based on the relative positions the members of a particular gene set take in the whole list. To calculate a *P*-value and a corresponding FDR, adjusted for multiplicity [@BH1995], a permutation test approach is used. The default number of permutations `WebGestaltR` uses is $n_\text{perm}=1000$ \footnote{Note that due to run time issues the number of permutations is 10 per default in the `fgczgseaora` run scripts. If more accurate results are required `nperm` has to be adjusted accordingly in the run script.}.
 
 ### Parameters
 
@@ -43,14 +43,17 @@ The following analysis compares the enrichment of particular gene/protein set me
 
 * Target Database: `r GSEA$target`
 
-* Output Directory: `r GSEA$outputDir`
+* Output Directory: `r GSEA$output_dir`
+
+* Number of permutations: `r GSEA$nperm`
 
 ### GSEA Results {.tabset .tabset-pills}
 
 #### Enriched Pathways
 
 ```{r}
-GSEA$GSEA_res %>% 
+GSEA$merged_data %>% 
+  distinct(geneSet, .keep_all = TRUE) %>% 
   dplyr::mutate(set = paste0("[", geneSet, "](", link, ")")) %>% 
   dplyr::select(set, description, ES, NES, pValue, FDR) %>%
   knitr::kable(
@@ -73,33 +76,41 @@ GSEA$input_data %>%
 
 ### Visualisation
 
-```{r fig.cap="Heatmap of Score patterns in significantly enriched pathways identified by GSEA"}
+```{r fig.cap="Heatmap of Score patterns in significantly enriched pathways identified by GSEA", fig.asp=2}
 GSEA$merged_data %>% 
-  ggplot(aes(x = geneSet, y = geneSymbol, fill = score)) +
-    geom_tile() +
-    scale_fill_gradient2(low = "blue", mid = "white", high = "red") +
-    labs(
-      title = "Enrichment Patterns",
-      subtitle = "Scores of genes from significantly enriched pathways",
-      fill = "Score value"
-    ) +
-    xlab("Pathway") +
-    ylab("Gene") +
-    theme_bw()
+  distinct(geneSet, .keep_all = TRUE) %>% 
+  top_n(n = 10, wt = abs(NES)) %>% 
+  dplyr::select(geneSet) %>% 
+  inner_join(., GSEA$merged_data, by = "geneSet") -> out
+
+out %>% 
+  dplyr::select(userId, geneSet, score) %>% 
+  spread(key = geneSet, value = score) -> out2
+fields::image.plot(t(as.matrix(out2[,-1])), axes = FALSE)
+axis(side = 1, at = seq(0, 1, length.out = ncol(out2)-1), labels = colnames(out2)[-1], lwd = 0, lwd.ticks = 0, las = 2, cex.axis = 0.8)
+axis(side = 2, at = seq(0, 1, length.out = nrow(out2)), labels = out2$userId, lwd = 0, lwd.ticks = 0, las = 1, cex.axis = 0.5)
 ```
 
 ```{r fig.cap="Intersection sizes between significantly enriched pathways identified by GSEA visualised using the `UpSetR` package"}
+toplot <- out %>%
+  dplyr::select(geneSet, geneSymbol) %>%
+  dplyr::mutate(IDD = 1:nrow(.)) %>%
+  tidyr::spread(geneSet, geneSymbol) %>%
+  dplyr::select(-IDD) %>%
+  as.list() %>%
+  lapply(na.omit)
+
 if(length(GSEA$upsetData)==1) return(message("UpSetR plot cannot be displayed. Only one pathway enriched."))
 
-UpSetR::fromList(GSEA$upsetData) %>%
-    UpSetR::upset(mb.ratio = c(0.7, 0.3))
+UpSetR::fromList(toplot) %>%
+    UpSetR::upset(mb.ratio = c(0.7, 0.3), order.by = "freq", nsets = -1)
 ```
 
 
 ### `WebGestaltR` Results
 
 ```{r results='asis'}
-cat("Since `WebGestaltR` provides its own summary report, please refer to [this file](", file.path(getwd(), "../..", GSEA$outputDir) ,"/Project_GSEA_proj/Report_GSEA_proj.html)", sep = "")
+cat("Since `WebGestaltR` provides its own summary report, please refer to [this file](", file.path("./Project_GSEA_proj/Report_GSEA_proj.html)", sep = ""), ".")
 ```
 
 

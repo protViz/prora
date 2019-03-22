@@ -15,16 +15,16 @@ fpath <-
 dd <- read_csv(fpath)
 colnames(dd) <- make.names(colnames(dd))
 
-ddd <- getSymbolFromSwissprotID(dd)
+ddd <- getUniprotFromFastaHeader(dd)
 
 trgt <- "GO"
 fc_col <- "estimate.Age.class..Old...Young"
 
 GPStab <-
-  makeGPS_wrappR(ddd$Symbol, target = trgt, dev = TRUE)
+  makeGPS_wrappR(ddd$UniprotID, target = trgt, dev = TRUE)
 
 myGPSrepo <-
-  makeGPS_wrappR(ddd$Symbol, target = trgt) # Produce GPS repository from background
+  makeGPS_wrappR(ddd$UniprotID, target = trgt) # Produce GPS repository from background
 
 sigora_example <-
   sigoraWrappR(

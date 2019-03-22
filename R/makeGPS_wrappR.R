@@ -36,7 +36,7 @@ makeGPS_wrappR <- function(ids, target = c("KEGG","GO","reactome"), dev = FALSE)
     gp_table <- AnnotationDbi::mapIds(
       gp_db,
       keys = ids,
-      keytype = "SYMBOL",
+      keytype = "UNIPROT",
       column = target_column,
       multiVals = "CharacterList"
     ) %>% unlist %>% data.frame(Symbol = names(.), pathwayID = .)
@@ -48,7 +48,7 @@ makeGPS_wrappR <- function(ids, target = c("KEGG","GO","reactome"), dev = FALSE)
         # First map to ENTREZID
         org.Hs.eg.db,
         keys = ids,
-        keytype = "SYMBOL",
+        keytype = "UNIPROT",
         column = "ENTREZID",
         multiVals = "CharacterList"
       ) %>% unlist %>% S4Vectors::na.omit()
@@ -61,7 +61,7 @@ makeGPS_wrappR <- function(ids, target = c("KEGG","GO","reactome"), dev = FALSE)
         gp_db <- org.Hs.eg.db
         pn_db <- GO.db
         target_column = "GO"
-        k0 = "SYMBOL"
+        k0 = "UNIPROT"
         k1 = "GOID"
         k2 = "TERM"
       } else

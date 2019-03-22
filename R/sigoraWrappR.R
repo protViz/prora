@@ -45,9 +45,9 @@ sigoraWrappR <-
     sigora_res <-
       sigora::sigora(GPSrepo = GPSrepos,
              level = 5,
-             queryList = enriched$Symbol)
+             queryList = enriched$UniprotID)
     ora_res <-
-      sigora::ora(geneList = enriched$Symbol,
+      sigora::ora(geneList = enriched$UniprotID,
           GPSrepo = GPSrepos)
     output <- list(
       sigora = sigora_res,
@@ -55,7 +55,7 @@ sigoraWrappR <-
       fc_threshold = fc_threshold,
       GPSrepository = GPSrepos,
       database = db,
-      data = df[, c("Symbol", fc_col)],
+      data = df[, c("UniprotID", fc_col)],
       proteinsAfterFiltering = nrow(df[df[, fc_col] >= fc_threshold,])
     )
     return(output)
