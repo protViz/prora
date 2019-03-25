@@ -24,9 +24,11 @@ Function for generating background GPS repository for sigora and ora
 \examples{
 
 #data("exampleSymbols", package = "fgczgseaora")
+if(FALSE){
 myGPSrepo <- makeGPS_wrappR(ids = fgczgseaora::exampleSymbols)
 myGPSrepo <- makeGPS_wrappR(ids = fgczgseaora::exampleSymbols, target = "GO")
 myGPSrepo <- makeGPS_wrappR(ids = fgczgseaora::exampleSymbols, target = "react")
+}
 }
 \seealso{
 \code{\link[sigora]{makeGPS}}

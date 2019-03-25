@@ -21,9 +21,11 @@
 #' @examples
 #'
 #' #data("exampleSymbols", package = "fgczgseaora")
+#' if(FALSE){
 #' myGPSrepo <- makeGPS_wrappR(ids = fgczgseaora::exampleSymbols)
 #' myGPSrepo <- makeGPS_wrappR(ids = fgczgseaora::exampleSymbols, target = "GO")
 #' myGPSrepo <- makeGPS_wrappR(ids = fgczgseaora::exampleSymbols, target = "react")
+#' }
 makeGPS_wrappR <- function(ids, target = c("KEGG","GO","reactome"), dev = FALSE) {
   target <- match.arg(target)
   if (target == "KEGG") {

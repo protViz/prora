@@ -38,7 +38,8 @@ Provides a wrapper for \code{sigora::sigora()} combined with \code{sigora::ora()
 \examples{
 data("exampleContrastData", package = "fgczgseaora")
 data("idmap", package = "sigora")
+if(FALSE){
 df <- getSymbolFromSwissprotID(exampleContrastData)
 sigoraWrappR(fc_col = colnames(df)[7], GPSrepos = sigora::kegH, df = df)
-
+}
 }
