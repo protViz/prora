@@ -21,5 +21,4 @@ Visualisation of expression patterns in significantly enriched pathways
 data("sigora_example", package = "fgczgseaora")
 data("GPStab", package = "fgczgseaora")
 sigora_heatmap(sigora_example, GPStab)
-
 }

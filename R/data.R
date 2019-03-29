@@ -8,14 +8,14 @@
 #' @format A \code{data.frame} with 2304 rows and 18 variables
 NULL
 
-#' Examplary gene symbols
+#' Examplary Uniprot IDs
 #'
 #' Gene symbols for running examples to produce GPS repositories using \code{\link{makeGPS_wrappR}}
 #'
 #' @docType data
-#' @name exampleSymbols
-#' @usage data(exampleSymbols)
-#' @format A character vector containing 2292 gene symbols
+#' @name exampleUniprotIDs
+#' @usage data(exampleUniprotIDs)
+#' @format A character vector containing 2292 Uniprot IDs
 NULL
 
 #' Exemplary GPS table

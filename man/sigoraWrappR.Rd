@@ -14,7 +14,7 @@ sigoraWrappR(fc_threshold = 0.5, fc_col = "",
 
 \item{GPSrepos}{GPS repository used as background, can be generated via \code{\link{sigoraWrappR}}}
 
-\item{df}{data.frame input (at least two columns, first column being gene symbols, other columns being fold changes)}
+\item{df}{input data.frame (at least two columns, first column containing IDs, other columns numerical ranks, i.e. fold changes)}
 
 \item{db}{database used for the generation of the GPS repository}
 
@@ -28,7 +28,7 @@ Returns a \code{list} containing the following elements:
    \item \code{fc_threshold}: fc_threshold used
    \item \code{GPS_repository}: GPS repository used, to be reported
    \item \code{database}: Database used for generating the GPS repository
-   \item \code{data}: \code{data.frame} containing gene symbols and fold changes
+   \item \code{data}: \code{data.frame} containing Uniprot IDs and fold changes
    \item \code{proteinsAfterFiltering}: numeric, number of proteins after fc filtering
 }
 }
@@ -38,7 +38,8 @@ Provides a wrapper for \code{sigora::sigora()} combined with \code{sigora::ora()
 \examples{
 data("exampleContrastData", package = "fgczgseaora")
 data("idmap", package = "sigora")
-df <- getSymbolFromSwissprotID(exampleContrastData)
-sigoraWrappR(fc_col = colnames(df)[7], GPSrepos = sigora::kegH, df = df)
+df <- getUniprotFromFastaHeader(exampleContrastData)
+myGPSrepo <- makeGPS_wrappR(ids = df$UniprotID)
+res <- sigoraWrappR(fc_col = colnames(df)[3], GPSrepos = myGPSrepo, df = df, fc_threshold = 0.5)
 
 }
