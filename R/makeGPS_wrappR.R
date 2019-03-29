@@ -20,10 +20,10 @@
 #'
 #' @examples
 #'
-#' data("exampleSymbols", package = "fgczgseaora")
-#' myGPSrepo <- makeGPS_wrappR(ids = exampleSymbols)
-#' myGPSrepo <- makeGPS_wrappR(ids = exampleSymbols, target = "GO")
-#' myGPSrepo <- makeGPS_wrappR(ids = exampleSymbols, target = "react")
+#' data("exampleUniprotIDs", package = "fgczgseaora")
+#' myGPSrepo <- makeGPS_wrappR(ids = exampleUniprotIDs)
+#' myGPSrepo <- makeGPS_wrappR(ids = exampleUniprotIDs, target = "GO")
+#' myGPSrepo <- makeGPS_wrappR(ids = exampleUniprotIDs, target = "react")
 makeGPS_wrappR <- function(ids, target = c("KEGG","GO","reactome"), dev = FALSE) {
   target <- match.arg(target)
   if (target == "KEGG") {

@@ -9,7 +9,6 @@
 #' data("sigora_example", package = "fgczgseaora")
 #' data("GPStab", package = "fgczgseaora")
 #' sigora_heatmap(sigora_example, GPStab)
-#'
 #' @export sigora_heatmap sigora_heatmap
 #'
 #' @importFrom ggplot2 ggplot aes geom_tile scale_fill_gradient2 labs xlab ylab theme_bw
@@ -21,8 +20,8 @@ sigora_heatmap <- function(sigora_res, GPStable) {
   colnames(tab1)[1] <- "pathwayId"
   colnames(tab2) <- c("gene", "fc")
   tab3 <- dplyr::inner_join(GPStable, tab1)
-  tab4 <- dplyr::inner_join(tab3, tab2) %>% filter(Bonferroni < 0.05)
-  stopifnot(all(dim(tab4)>0))
+  tab4 <- dplyr::inner_join(tab3, tab2) %>% dplyr::filter(Bonferroni < 0.05)
+  stopifnot(all(dim(tab4) > 0))
   ggplot(tab4, aes(x = pathwayId, y = gene, fill = fc)) +
     geom_tile() +
     scale_fill_gradient2(low = "blue", mid = "white", high = "red") +
@@ -33,6 +32,6 @@ sigora_heatmap <- function(sigora_res, GPStable) {
     ) +
     xlab("Pathway") +
     ylab("Gene") +
-    theme_bw() %>% return()
+    theme_bw() %>%
+    return()
 }
-

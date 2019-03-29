@@ -110,9 +110,8 @@ UpSetR::fromList(toplot) %>%
 ### `WebGestaltR` Results
 
 ```{r results='asis'}
-cat("Since `WebGestaltR` provides its own summary report, please refer to [this file](", file.path("./Project_GSEA_proj/Report_GSEA_proj.html)", sep = ""), ".")
+cat("Since `WebGestaltR` provides its own summary report, please refer to [this file](", file.path("./Project_GSEA_proj/Report_GSEA_proj.html"), ").", sep = "")
 ```
-
 
 ### References
 

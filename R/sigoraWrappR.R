@@ -6,7 +6,7 @@
 #' @param fc_threshold fold change threshold above which (in absolute terms) a protein is considered differentially regulated
 #' @param fc_col Name of the fold change column, in case the input file contains multiple contrasts
 #' @param GPSrepos GPS repository used as background, can be generated via \code{\link{sigoraWrappR}}
-#' @param df data.frame input (at least two columns, first column being gene symbols, other columns being fold changes)
+#' @param df input data.frame (at least two columns, first column containing IDs, other columns numerical ranks, i.e. fold changes)
 #' @param db database used for the generation of the GPS repository
 #' @param greater_than Logical. Whether fc_threshold should be applied as greater_than (default is \code{TRUE}) or strictly less than (\code{FALSE})
 #'
@@ -17,15 +17,16 @@
 #'    \item \code{fc_threshold}: fc_threshold used
 #'    \item \code{GPS_repository}: GPS repository used, to be reported
 #'    \item \code{database}: Database used for generating the GPS repository
-#'    \item \code{data}: \code{data.frame} containing gene symbols and fold changes
+#'    \item \code{data}: \code{data.frame} containing Uniprot IDs and fold changes
 #'    \item \code{proteinsAfterFiltering}: numeric, number of proteins after fc filtering
 #' }
 #'
 #' @examples
 #' data("exampleContrastData", package = "fgczgseaora")
 #' data("idmap", package = "sigora")
-#' df <- getSymbolFromSwissprotID(exampleContrastData)
-#' sigoraWrappR(fc_col = colnames(df)[7], GPSrepos = sigora::kegH, df = df)
+#' df <- getUniprotFromFastaHeader(exampleContrastData)
+#' myGPSrepo <- makeGPS_wrappR(ids = df$UniprotID)
+#' res <- sigoraWrappR(fc_col = colnames(df)[3], GPSrepos = myGPSrepo, df = df, fc_threshold = 0.5)
 #'
 #' @importFrom sigora sigora ora
 #' @export sigoraWrappR sigoraWrappR
@@ -56,7 +57,7 @@ sigoraWrappR <-
       GPSrepository = GPSrepos,
       database = db,
       data = df[, c("UniprotID", fc_col)],
-      proteinsAfterFiltering = nrow(df[df[, fc_col] >= fc_threshold,])
+      proteinsAfterFiltering = nrow(df[df[, fc_col] >= fc_threshold, ])
     )
     return(output)
   }
