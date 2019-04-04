@@ -35,5 +35,3 @@ checkIDmappingEfficiency <- function(IDs, keytype) {
   row.names(out) <- c("Number", "Percent Mapped")
   return(out)
 }
-
-# checkIDmappingEfficiency(IDs = dd$UniprotID, keytype = "UNIPROT")
