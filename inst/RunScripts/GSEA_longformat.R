@@ -6,6 +6,8 @@ library(org.Hs.eg.db)
 library(conflicted)
 
 fpath <- "inst/example_data/Contrasts_SignificanceValues_f_Cells_Treatment.csv"
+fpath <- "d:/projects/p2695_ULF/results_Draft/Contrasts_SignificanceValues_f_Cells_Treatment.csv"
+
 
 dd <- read_csv(fpath)
 colnames(dd) <- make.names(colnames(dd))
@@ -24,9 +26,9 @@ contrs <- ddd %>%
   pull()
 
 for (this.contrast in contrs) {
-
+  path <- make.names(this.contrast)
   if(!dir.exists(this.contrast)){
-    dir.create(this.contrast)
+    dir.create(path)
   }
 
   ranktable <- ddd %>%
@@ -40,14 +42,14 @@ for (this.contrast in contrs) {
       enrichDatabase = target,
       interestGene = ranktable,
       interestGeneType = "uniprotswissprot",
-      outputDirectory = this.contrast,
+      outputDirectory = path,
       isOutput = TRUE,
       perNum = nperm,
       projectName = "GSEA_proj"
     )
 
   mappingTable <-
-    read_delim(file.path(this.contrast, "Project_GSEA_proj/interestingID_mappingTable_GSEA_proj.txt"),
+    read_delim(file.path(path, "Project_GSEA_proj/interestingID_mappingTable_GSEA_proj.txt"),
                delim = "\t")
   mappingTable %>% mutate(entrezgene = as.character(entrezgene)) -> mappingTable
   GSEA_res_sep <- GSEA_res %>% separate_rows(leadingEdgeId, sep=";")
@@ -63,8 +65,8 @@ for (this.contrast in contrs) {
     nperm = nperm
   )
 
-  rmarkdownPath <- file.path(this.contrast, "GSEA.Rmd")
-  bibpath <- file.path(this.contrast, "bibliography.bib")
+  rmarkdownPath <- file.path(path, "GSEA.Rmd")
+  bibpath <- file.path(path, "bibliography.bib")
   file.copy(
     file.path(find.package("fgczgseaora"), "rmarkdown_reports/GSEA.Rmd"),
     rmarkdownPath,
