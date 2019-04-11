@@ -57,7 +57,10 @@ The following analysis compares filters proteins based on a fold change threshol
 #### Significantly enriched pathways
 
 ```{r}
-res$ora %>% 
+if (any(dim(res$ora) == 0)) {
+  message("No significantly enriched pathways.")
+} else {
+  res$ora %>% 
   dplyr::select(pathwyid, description, success, pathwaySize, pvalues, Bonfer) %>% 
   knitr::kable(caption = "ORA results: classical overrepresentation analysis using Fisher's exact test", 
                align = "c",
@@ -70,6 +73,7 @@ res$ora %>%
                  "Adj. P value"
                ),
                digits = 3)
+}
 ```
 
 
@@ -129,11 +133,15 @@ res$sigora$detailed_results %>%
 ### Visualisation
 
 ```{r fig.cap="Heatmap of fold change patterns in significantly enriched pathways identified by sigORA.", fig.width=10, fig.height=20}
-p1
+if (is_character(p1)) {
+  message("No pathways to visualise")
+} else {
+  p1
+}
 ```
 
 ```{r fig.cap="Intersection sizes between significantly enriched pathways identified by sigORA visualised using the UpSetR package"}
-sigora_upsetR(sigora_res = res, GPStable = GPStab)
+try(sigora_upsetR(sigora_res = res, GPStable = GPStab))
 ```
 
 
