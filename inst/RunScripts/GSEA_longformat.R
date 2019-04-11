@@ -25,8 +25,10 @@ contrs <- ddd %>%
 
 for (this.contrast in contrs) {
 
-  if(!dir.exists(this.contrast)){
-    dir.create(this.contrast)
+  fpath <- make.names(this.contrast)
+
+  if(!dir.exists(fpath)){
+    dir.create(fpath)
   }
 
   ranktable <- ddd %>%
@@ -40,14 +42,14 @@ for (this.contrast in contrs) {
       enrichDatabase = target,
       interestGene = ranktable,
       interestGeneType = "uniprotswissprot",
-      outputDirectory = this.contrast,
+      outputDirectory = fpath,
       isOutput = TRUE,
       perNum = nperm,
       projectName = "GSEA_proj"
     )
 
   mappingTable <-
-    read_delim(file.path(this.contrast, "Project_GSEA_proj/interestingID_mappingTable_GSEA_proj.txt"),
+    read_delim(file.path(fpath, "Project_GSEA_proj/interestingID_mappingTable_GSEA_proj.txt"),
                delim = "\t")
   mappingTable %>% mutate(entrezgene = as.character(entrezgene)) -> mappingTable
   GSEA_res_sep <- GSEA_res %>% separate_rows(leadingEdgeId, sep=";")
@@ -58,13 +60,13 @@ for (this.contrast in contrs) {
     organism = organism,
     target = target,
     input_data = ranktable,
-    output_dir = this.contrast,
+    output_dir = fpath,
     merged_data = merged_data,
     nperm = nperm
   )
 
-  rmarkdownPath <- file.path(this.contrast, "GSEA.Rmd")
-  bibpath <- file.path(this.contrast, "bibliography.bib")
+  rmarkdownPath <- file.path(fpath, "GSEA.Rmd")
+  bibpath <- file.path(fpath, "bibliography.bib")
   file.copy(
     file.path(find.package("fgczgseaora"), "rmarkdown_reports/GSEA.Rmd"),
     rmarkdownPath,
