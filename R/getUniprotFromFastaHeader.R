@@ -16,8 +16,8 @@ getUniprotFromFastaHeader <- function(df, idcolumn = "protein_Id") {
   df %>%
     dplyr::filter(grepl(pattern = "sp", !!sym(idcolumn))) %>%
     tidyr::separate(col = !!sym(idcolumn),
-             sep = "_",
-             into = c("begin", "end")) %>%
+                    sep = "_",
+                    into = c("begin", "end")) %>%
     tidyr::separate(
       col = begin,
       sep = "\\|",
