@@ -4,7 +4,7 @@
 \alias{getUniprotFromFastaHeader}
 \title{Translate Fasta header to UniprotSwissprot ID}
 \usage{
-getUniprotFromFastaHeader(df)
+getUniprotFromFastaHeader(df, idcolumn = "protein_Id")
 }
 \arguments{
 \item{df}{\code{data.frame} with FASTA headers in first column}

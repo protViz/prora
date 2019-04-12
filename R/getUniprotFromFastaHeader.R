@@ -12,11 +12,10 @@
 #' @examples
 #' data("exampleContrastData", package = "fgczgseaora")
 #' getUniprotFromFastaHeader(exampleContrastData)
-getUniprotFromFastaHeader <- function(df) {
-  colnames(df)[1] <- "protein_Id"
+getUniprotFromFastaHeader <- function(df, idcolumn = "protein_Id") {
   df %>%
-    dplyr::filter(grepl(pattern = "sp", df$protein_Id)) %>%
-    tidyr::separate(col = protein_Id,
+    dplyr::filter(grepl(pattern = "sp", !!sym(idcolumn))) %>%
+    tidyr::separate(col = !!sym(idcolumn),
              sep = "_",
              into = c("begin", "end")) %>%
     tidyr::separate(

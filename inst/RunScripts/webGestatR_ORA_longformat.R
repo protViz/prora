@@ -43,8 +43,10 @@ apply_threshold <-
 
 for (this.contrast in contrs) {
 
-  if (!dir.exists(this.contrast)) {
-    dir.create(this.contrast)
+  fpath <- make.names(this.contrast)
+
+  if (!dir.exists(fpath)) {
+    dir.create(fpath)
   }
 
   dat <- ddd %>%
@@ -67,7 +69,7 @@ for (this.contrast in contrs) {
       referenceGene = ddd$UniprotID,
       interestGeneType = "uniprotswissprot",
       referenceGeneType = "uniprotswissprot",
-      outputDirectory = this.contrast,
+      outputDirectory = fpath,
       isOutput = TRUE,
       perNum = nperm,
       projectName = "GSEA_proj"
