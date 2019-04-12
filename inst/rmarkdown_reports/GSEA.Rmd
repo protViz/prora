@@ -52,16 +52,19 @@ The following analysis compares the enrichment of particular gene/protein set me
 #### Enriched Pathways
 
 ```{r}
-GSEA$merged_data %>% 
+genesets <- GSEA$merged_data %>% 
   distinct(geneSet, .keep_all = TRUE) %>% 
   dplyr::mutate(set = paste0("[", geneSet, "](", link, ")")) %>% 
-  dplyr::select(set, description, ES, NES, pValue, FDR) %>%
-  knitr::kable(
-    digits = 3,
-    col.names = c("Gene Set", "Description", "ES", "NES", "P-value", "Q-value"),
-    align = "c",
-    caption = "Table of significantly enriched gene sets. ES: Enrichment Score, NES: Normalised Enrichment Score"
-    )
+  dplyr::select(set, description, ES, NES, pValue, FDR)
+
+genesets <- genesets %>% arrange(NES)
+#DT::datatable(genesets)
+knitr::kable(genesets,
+             digits = 3,
+             col.names = c("Gene Set", "Description", "ES", "NES", "P-value","Q-value"),
+             align = "c",
+             caption = "Table of significantly enriched gene sets. ES: Enrichment Score, NES: Normalised Enrichment Score"
+)
 ```
 
 #### Input Data
@@ -77,11 +80,17 @@ GSEA$input_data %>%
 ### Visualisation
 
 ```{r fig.cap="Heatmap of Score patterns in significantly enriched pathways identified by GSEA", fig.asp=2}
-GSEA$merged_data %>% 
-  distinct(geneSet, .keep_all = TRUE) %>% 
-  top_n(n = 10, wt = abs(NES)) %>% 
-  dplyr::select(geneSet) %>% 
-  inner_join(., GSEA$merged_data, by = "geneSet") -> out
+
+gettop <- function(data, n=10){
+  data %>% 
+    distinct(geneSet, .keep_all = TRUE) %>%
+    top_n(n = n, wt = abs(NES)) %>% 
+    dplyr::select(geneSet) %>% 
+    inner_join(., data, by = "geneSet") -> out
+  return(out)
+}
+
+out <- gettop(GSEA$merged_data)
 
 out %>% 
   dplyr::select(userId, geneSet, score) %>% 
@@ -92,18 +101,21 @@ axis(side = 2, at = seq(0, 1, length.out = nrow(out2)), labels = out2$userId, lw
 ```
 
 ```{r fig.cap="Intersection sizes between significantly enriched pathways identified by GSEA visualised using the `UpSetR` package"}
-toplot <- out %>%
+toplot <- GSEA$merged_data %>%
   dplyr::select(geneSet, geneSymbol) %>%
-  dplyr::mutate(IDD = 1:nrow(.)) %>%
+  rowid_to_column("IDD")
+toplot <- toplot %>%
   tidyr::spread(geneSet, geneSymbol) %>%
-  dplyr::select(-IDD) %>%
+  dplyr::select(-IDD) 
+
+toplot <- toplot %>%
   as.list() %>%
   lapply(na.omit)
 
 if(length(GSEA$upsetData)==1) return(message("UpSetR plot cannot be displayed. Only one pathway enriched."))
 
 UpSetR::fromList(toplot) %>%
-    UpSetR::upset(mb.ratio = c(0.7, 0.3), order.by = "freq", nsets = -1)
+  UpSetR::upset(mb.ratio = c(0.7, 0.3), order.by = "freq", nsets = 20)
 ```
 
 
