@@ -5,12 +5,11 @@ library(fgczgseaora)
 library(org.Hs.eg.db)
 library(conflicted)
 
-fpath <- "inst/example_data/Contrasts_SignificanceValues_f_Cells_Treatment.csv"
-fpath <- "d:/projects/p2695_ULF/results_Draft/Contrasts_SignificanceValues_f_Cells_Treatment.csv"
-
+fpath <- "d:/projects/p2695_ULF/results_Draft/modelling_results/Contrasts_f_Cells_Treatment_Interaction.csv"
 
 dd <- read_csv(fpath)
 colnames(dd) <- make.names(colnames(dd))
+
 ddd <- getUniprotFromFastaHeader(dd)
 
 organism <- "hsapiens"
@@ -26,9 +25,12 @@ contrs <- ddd %>%
   pull()
 
 for (this.contrast in contrs) {
-  path <- make.names(this.contrast)
-  if(!dir.exists(this.contrast)){
-    dir.create(path)
+  this.contrast <- contrs[1]
+
+  fpath <- make.names(this.contrast)
+
+  if(!dir.exists(target)){
+    dir.create(target)
   }
 
   ranktable <- ddd %>%
@@ -42,15 +44,19 @@ for (this.contrast in contrs) {
       enrichDatabase = target,
       interestGene = ranktable,
       interestGeneType = "uniprotswissprot",
-      outputDirectory = path,
+      outputDirectory = target,
       isOutput = TRUE,
       perNum = nperm,
-      projectName = "GSEA_proj"
+      projectName = fpath
     )
 
+  f_mappingTable <- file.path(target,
+                              paste0("Project_",fpath),
+                              paste0("interestingID_mappingTable_", fpath,".txt"))
   mappingTable <-
-    read_delim(file.path(path, "Project_GSEA_proj/interestingID_mappingTable_GSEA_proj.txt"),
+    read_delim(f_mappingTable,
                delim = "\t")
+
   mappingTable %>% mutate(entrezgene = as.character(entrezgene)) -> mappingTable
   GSEA_res_sep <- GSEA_res %>% separate_rows(leadingEdgeId, sep=";")
   merged_data <- inner_join(mappingTable, GSEA_res_sep,
@@ -60,18 +66,21 @@ for (this.contrast in contrs) {
     organism = organism,
     target = target,
     input_data = ranktable,
-    output_dir = this.contrast,
+    output_dir = fpath,
     merged_data = merged_data,
     nperm = nperm
   )
 
-  rmarkdownPath <- file.path(path, "GSEA.Rmd")
-  bibpath <- file.path(path, "bibliography.bib")
+  rmarkdownPath <- file.path(target, paste0("Project_",fpath), "GSEA.Rmd")
+  bibpath <- file.path(target,paste0("Project_",fpath), "bibliography.bib")
+
+
   file.copy(
     file.path(find.package("fgczgseaora"), "rmarkdown_reports/GSEA.Rmd"),
     rmarkdownPath,
     overwrite = TRUE
   )
+
   file.copy(
     file.path(find.package("fgczgseaora"), "rmarkdown_reports/bibliography.bib"),
     bibpath,
@@ -84,5 +93,5 @@ for (this.contrast in contrs) {
     params = list(GSEA = GSEA),
     clean = TRUE
   )
-}
 
+}
