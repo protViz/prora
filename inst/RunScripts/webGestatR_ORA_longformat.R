@@ -5,26 +5,23 @@ library(fgczgseaora)
 library(org.Hs.eg.db)
 library(conflicted)
 
+
+# Setup -------------------------------------------------------------------
+
 fpath <- "inst/example_data/Contrasts_SignificanceValues_f_Cells_Treatment.csv"
 
 dd <- read_csv(fpath)
 colnames(dd) <- make.names(colnames(dd))
 ddd <- getUniprotFromFastaHeader(dd)
 
-organism <- "hsapiens"
-ID_col <- "UniprotID"
-target <- "geneontology_Biological_Process"
-map_col <- "GO"
-threshold <- 0.5
-direction <- "greater.than"
-nperm <- 10
-
-contrast_col <- "lhs"
-fc_col <- "estimate"
+con_col <- "lhs"
 
 contrs <- ddd %>%
-  distinct(!!sym(contrast_col)) %>%
+  distinct(!!sym(con_col)) %>%
   pull()
+
+
+# Functions ---------------------------------------------------------------
 
 apply_threshold <-
   function(df,
@@ -41,16 +38,25 @@ apply_threshold <-
     return(out)
   }
 
-for (this.contrast in contrs) {
+runWebGestaltORAlong <- function(contrast,
+                                 organism = "hsapiens",
+                                 ID_col = "UniprotID",
+                                 target = "geneontology_Biological_Process",
+                                 map_col = "GO",
+                                 threshold = 0.5,
+                                 direction = "greater.than",
+                                 nperm = 10,
+                                 contrast_col = con_col,
+                                 fc_col = "estimate",
+                                 outdir = "WebGestalt_ORA") {
+  fpath <- make.names(contrast)
 
-  fpath <- make.names(this.contrast)
-
-  if(!dir.exists(target)){
-    dir.create(target)
+  if(!dir.exists(outdir)){
+    dir.create(outdir)
   }
 
   dat <- ddd %>%
-    dplyr::filter(!!sym(contrast_col) == this.contrast) %>%
+    dplyr::filter(!!sym(contrast_col) == contrast) %>%
     dplyr::select(!!sym(ID_col), Score = !!sym(fc_col))
 
   ranktable <-
@@ -69,11 +75,14 @@ for (this.contrast in contrs) {
       referenceGene = ddd$UniprotID,
       interestGeneType = "uniprotswissprot",
       referenceGeneType = "uniprotswissprot",
-      outputDirectory = target,
+      outputDirectory = outdir,
       isOutput = TRUE,
       perNum = nperm,
       projectName = fpath
     )
-
 }
 
+
+# Run ---------------------------------------------------------------------
+
+sapply(contrs, runWebGestaltORAlong)

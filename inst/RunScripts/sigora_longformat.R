@@ -9,6 +9,9 @@ library(GO.db)
 library(slam)
 library(fgczgseaora)
 
+
+# Setup -------------------------------------------------------------------
+
 fpath <- "inst/example_data/Contrasts_SignificanceValues_f_Cells_Treatment.csv"
 
 dd <- read_csv(fpath)
@@ -16,69 +19,90 @@ colnames(dd) <- make.names(colnames(dd))
 
 ddd <- getUniprotFromFastaHeader(dd)
 
-trgt <- "GO"
-contrast_col <- "lhs"
-fc_col <- "estimate"
-fc_threshold <- 0.5
+con_col = "lhs"
 
 contrs <- ddd %>%
-  distinct(!!sym(contrast_col)) %>%
+  distinct(!!sym(con_col)) %>%
   pull()
 
-for (this.contrast in contrs) {
-  fpath <- make.names(this.contrast)
 
-  if(!dir.exists(trgt)){
-    dir.create(trgt)
-  }
+# Function ----------------------------------------------------------------
 
-  if(!dir.exists(file.path(trgt, fpath))){
-    dir.create(file.path(trgt, fpath))
-  }
+runSIGORAlong <-
+  function(contrast,
+           trgt = "GO",
+           fc_col = "estimate",
+           fc_threshold = 0.5,
+           outdir = "sigORA",
+           contrast_col = con_col) {
 
-  dat <- ddd %>%
-    dplyr::filter(!!sym(contrast_col) == this.contrast)
+    fpath <- make.names(contrast)
 
-  GPStab <-
-    makeGPS_wrappR(dat$UniprotID, target = trgt, dev = TRUE)
+    if (!dir.exists(outdir)) {
+      dir.create(outdir)
+    }
 
-  myGPSrepo <-
-    makeGPS_wrappR(dat$UniprotID, target = trgt)
+    if (!dir.exists(file.path(outdir, fpath))) {
+      dir.create(file.path(outdir, fpath))
+    }
 
-  sigora_res <-
-    sigoraWrappR(
-      fc_threshold = fc_threshold,
-      fc_col = fc_col,
-      df = dat,
-      GPSrepos = myGPSrepo,
-      db = trgt,
-      greater_than = TRUE
+    dat <- ddd %>%
+      dplyr::filter(!!sym(contrast_col) == contrast)
+
+    GPStab <-
+      makeGPS_wrappR(dat$UniprotID, target = trgt, dev = TRUE)
+
+    myGPSrepo <-
+      makeGPS_wrappR(dat$UniprotID, target = trgt)
+
+    sigora_res <-
+      sigoraWrappR(
+        fc_threshold = fc_threshold,
+        fc_col = fc_col,
+        df = dat,
+        GPSrepos = myGPSrepo,
+        db = trgt,
+        greater_than = TRUE
+      )
+
+    p1 <- try(sigora_heatmap(sigora_example, GPStab))
+
+    rmarkdownPath <- file.path(outdir, fpath, "sigora.Rmd")
+
+    bibpath <- file.path(outdir, fpath, "bibliography.bib")
+
+    file.copy(
+      file.path(
+        find.package("fgczgseaora"),
+        "rmarkdown_reports/sigora.Rmd"
+      ),
+      rmarkdownPath,
+      overwrite = TRUE
     )
 
-  p1 <- try(sigora_heatmap(sigora_example, GPStab))
+    file.copy(
+      file.path(
+        find.package("fgczgseaora"),
+        "rmarkdown_reports/bibliography.bib"
+      ),
+      bibpath,
+      overwrite = TRUE
+    )
 
-  rmarkdownPath <- file.path(trgt, fpath, "sigora.Rmd")
+    rmarkdown::render(
+      rmarkdownPath,
+      bookdown::html_document2(number_sections = FALSE),
+      params = list(
+        results = sigora_res,
+        plot1 = p1,
+        GPStable = GPStab
+      ),
+      clean = TRUE
+    )
+  }
 
-  bibpath <- file.path(trgt, fpath, "bibliography.bib")
 
-  file.copy(
-    file.path(find.package("fgczgseaora"), "rmarkdown_reports/sigora.Rmd"),
-    rmarkdownPath,
-    overwrite = TRUE
-  )
+# Run ---------------------------------------------------------------------
 
-  file.copy(
-    file.path(find.package("fgczgseaora"), "rmarkdown_reports/bibliography.bib"),
-    bibpath,
-    overwrite = TRUE
-  )
-
-  rmarkdown::render(
-    rmarkdownPath,
-    bookdown::html_document2(number_sections = FALSE),
-    params = list(results = sigora_res, plot1 = p1, GPStable = GPStab),
-    clean = TRUE
-  )
-
-}
+sapply(contrs, runSIGORAlong)
 

@@ -5,6 +5,9 @@ library(fgczgseaora)
 library(org.Hs.eg.db)
 library(conflicted)
 
+
+# Setup -------------------------------------------------------------------
+
 fpath <- "inst/example_data/Contrasts_SignificanceValues_f_Cells_Treatment.csv"
 
 dd <- read_csv(fpath)
@@ -24,15 +27,26 @@ contrs <- ddd %>%
   distinct(!!sym(contrast_col)) %>%
   pull()
 
-for (this.contrast in contrs) {
-  fpath <- make.names(this.contrast)
 
-  if(!dir.exists(target)){
-    dir.create(target)
+# Function ----------------------------------------------------------------
+
+runGSEAlong <- function(contrast,
+                        organism = "hsapiens",
+                        ID_col = "UniprotID",
+                        target = "geneontology_Biological_Process",
+                        map_col = "GO",
+                        nperm = 10,
+                        fc_col = "estimate",
+                        contrast_col = "lhs",
+                        outdir = "GSEA") {
+  fpath <- make.names(contrast)
+
+  if(!dir.exists(outdir)){
+    dir.create(outdir)
   }
 
   ranktable <- ddd %>%
-    dplyr::filter(!!sym(contrast_col) == this.contrast) %>%
+    dplyr::filter(!!sym(contrast_col) == contrast) %>%
     dplyr::select(!!sym(ID_col), Score = !!sym(fc_col))
 
   GSEA_res <-
@@ -42,13 +56,13 @@ for (this.contrast in contrs) {
       enrichDatabase = target,
       interestGene = ranktable,
       interestGeneType = "uniprotswissprot",
-      outputDirectory = target,
+      outputDirectory = outdir,
       isOutput = TRUE,
       perNum = nperm,
       projectName = fpath
     )
 
-  f_mappingTable <- file.path(target,
+  f_mappingTable <- file.path(outdir,
                               paste0("Project_",fpath),
                               paste0("interestingID_mappingTable_", fpath,".txt"))
   mappingTable <-
@@ -69,8 +83,8 @@ for (this.contrast in contrs) {
     nperm = nperm
   )
 
-  rmarkdownPath <- file.path(target, paste0("Project_",fpath), "GSEA.Rmd")
-  bibpath <- file.path(target,paste0("Project_",fpath), "bibliography.bib")
+  rmarkdownPath <- file.path(outdir, paste0("Project_",fpath), "GSEA.Rmd")
+  bibpath <- file.path(outdir,paste0("Project_",fpath), "bibliography.bib")
 
 
   file.copy(
@@ -91,5 +105,10 @@ for (this.contrast in contrs) {
     params = list(GSEA = GSEA),
     clean = TRUE
   )
-
 }
+
+
+# Run ---------------------------------------------------------------------
+
+sapply(contrs, runGSEAlong)
+
