@@ -112,17 +112,20 @@ toplot <- toplot %>%
   as.list() %>%
   lapply(na.omit)
 
-if(length(GSEA$upsetData)==1) return(message("UpSetR plot cannot be displayed. Only one pathway enriched."))
-
-UpSetR::fromList(toplot) %>%
+if(length(GSEA$upsetData)==1) {
+  message("UpSetR plot cannot be displayed. Only one pathway enriched.")
+} else {
+  UpSetR::fromList(toplot) %>%
   UpSetR::upset(mb.ratio = c(0.7, 0.3), order.by = "freq", nsets = 20)
+}
 ```
 
 
 ### `WebGestaltR` Results
 
 ```{r results='asis'}
-cat("Since `WebGestaltR` provides its own summary report, please refer to [this file](", file.path("./Project_GSEA_proj/Report_GSEA_proj.html"), ").", sep = "")
+repfile <- list.files(pattern = "Report_")
+cat("Since `WebGestaltR` provides its own summary report, please refer to [this file](", file.path(repfile), ").", sep = "")
 ```
 
 ### References
