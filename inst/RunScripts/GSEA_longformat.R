@@ -25,8 +25,6 @@ contrs <- ddd %>%
   pull()
 
 for (this.contrast in contrs) {
-  this.contrast <- contrs
-
   fpath <- make.names(this.contrast)
 
   if(!dir.exists(target)){

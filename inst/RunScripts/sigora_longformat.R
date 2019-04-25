@@ -25,14 +25,19 @@ contrs <- ddd %>%
   distinct(!!sym(contrast_col)) %>%
   pull()
 
-for (this.contrast in contrs[1]) {
+for (this.contrast in contrs) {
+  fpath <- make.names(this.contrast)
 
-  if (!(dir.exists(this.contrast))) {
-    dir.create(this.contrast)
+  if(!dir.exists(trgt)){
+    dir.create(trgt)
+  }
+
+  if(!dir.exists(file.path(trgt, fpath))){
+    dir.create(file.path(trgt, fpath))
   }
 
   dat <- ddd %>%
-    filter(!!sym(contrast_col) == this.contrast)
+    dplyr::filter(!!sym(contrast_col) == this.contrast)
 
   GPStab <-
     makeGPS_wrappR(dat$UniprotID, target = trgt, dev = TRUE)
@@ -52,9 +57,9 @@ for (this.contrast in contrs[1]) {
 
   p1 <- try(sigora_heatmap(sigora_example, GPStab))
 
-  rmarkdownPath <- file.path(this.contrast, "sigora.Rmd")
+  rmarkdownPath <- file.path(trgt, fpath, "sigora.Rmd")
 
-  bibpath <- file.path(this.contrast, "bibliography.bib")
+  bibpath <- file.path(trgt, fpath, "bibliography.bib")
 
   file.copy(
     file.path(find.package("fgczgseaora"), "rmarkdown_reports/sigora.Rmd"),

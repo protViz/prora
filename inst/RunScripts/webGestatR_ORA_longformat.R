@@ -45,8 +45,8 @@ for (this.contrast in contrs) {
 
   fpath <- make.names(this.contrast)
 
-  if (!dir.exists(fpath)) {
-    dir.create(fpath)
+  if(!dir.exists(target)){
+    dir.create(target)
   }
 
   dat <- ddd %>%
@@ -69,10 +69,10 @@ for (this.contrast in contrs) {
       referenceGene = ddd$UniprotID,
       interestGeneType = "uniprotswissprot",
       referenceGeneType = "uniprotswissprot",
-      outputDirectory = fpath,
+      outputDirectory = target,
       isOutput = TRUE,
       perNum = nperm,
-      projectName = "GSEA_proj"
+      projectName = fpath
     )
 
 }
