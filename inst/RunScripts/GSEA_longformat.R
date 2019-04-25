@@ -5,7 +5,7 @@ library(fgczgseaora)
 library(org.Hs.eg.db)
 library(conflicted)
 
-fpath <- "d:/projects/p2695_ULF/results_Draft/modelling_results/Contrasts_f_Cells_Treatment_Interaction.csv"
+fpath <- "inst/example_data/Contrasts_SignificanceValues_f_Cells_Treatment.csv"
 
 dd <- read_csv(fpath)
 colnames(dd) <- make.names(colnames(dd))
@@ -25,7 +25,7 @@ contrs <- ddd %>%
   pull()
 
 for (this.contrast in contrs) {
-  this.contrast <- contrs[1]
+  this.contrast <- contrs
 
   fpath <- make.names(this.contrast)
 
