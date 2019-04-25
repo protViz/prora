@@ -9,3 +9,4 @@ output/
 Project*/
 GSEA_output/
 *.log
+*.Rd
