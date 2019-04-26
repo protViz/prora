@@ -4,8 +4,10 @@
 #' @importFrom dplyr filter select
 #' @importFrom tidyr separate
 #' @importFrom magrittr %>%
+#' @importFrom rlang sym
 #'
 #' @param df \code{data.frame} with FASTA headers in first column
+#' @param idcolumn Column name containing the IDs
 #'
 #' @return Returns the whole \code{data.frame} with a column called \code{UniprotID} containing UniprotSwissprot IDs instead of Fasta headers. This format is easier to use for subsequent ID mappings using the \code{Annotationdbi} package.
 #'

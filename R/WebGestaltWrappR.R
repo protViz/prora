@@ -19,100 +19,121 @@
 #' @param work_dir output directory to store \code{WebGestaltR} reports
 #' @param method clustering method to be used in \code{simpleheatmap3}
 
-webGestaltWrapper <- function(quant_data, enrichDatabase, organism, se_threshold, work_dir = "output", nrNas, method, nclust = 2) {
+webGestaltWrapper <-
+  function(quant_data,
+           enrichDatabase,
+           organism,
+           se_threshold,
+           work_dir = "output",
+           nrNas,
+           method,
+           nclust = 2) {
+    # Additional functions ------------------------------------------------------
 
-  # Additional functions ------------------------------------------------------
-
-  write_interesting_geneFile <- function(ID, df, output.dir) {
-    df %>%
-      dplyr::filter(clusterID == ID) %>%
-      dplyr::select(colID) %>%
-      readr::write_tsv(
-        path = paste(output.dir, "/protein_cluster_", ID, ".txt", sep = ""),
-        col_names = F
-      )
-    message(paste("protein_cluster_",
-                  ID,
-                  ".txt was written to ",
-                  output.dir,
-                  sep = ""))
-  }
-
-  aggregate_results <- function(output) {
-    makedataframe <- function(ll){
-      if (is.null(ll$enrichResult) || grepl("ERROR", ll$enrichResult)) {
-        return(NULL)
-      } else {
-          tmp <- as.data.frame(ll$enrichResult)
-          tmp %>%
-            dplyr::mutate(file.origin = parse_number(tools::file_path_sans_ext(basename(ll$filename))))
-      }
+    write_interesting_geneFile <- function(ID, df, output.dir) {
+      df %>%
+        dplyr::filter(clusterID == ID) %>%
+        dplyr::select(colID) %>%
+        readr::write_tsv(
+          path = paste(output.dir, "/protein_cluster_", ID, ".txt", sep = ""),
+          col_names = F
+        )
+      message(paste(
+        "protein_cluster_",
+        ID,
+        ".txt was written to ",
+        output.dir,
+        sep = ""
+      ))
     }
 
-    res <- lapply(output, makedataframe) %>%
-      do.call(rbind, .)
-    return(res)
-  }
+    aggregate_results <- function(output) {
+      makedataframe <- function(ll) {
+        if (is.null(ll$enrichResult) || grepl("ERROR", ll$enrichResult)) {
+          return(NULL)
+        } else {
+          tmp <- as.data.frame(ll$enrichResult)
+          tmp %>%
+            dplyr::mutate(file.origin = parse_number(tools::file_path_sans_ext(basename(
+              ll$filename
+            ))))
+        }
+      }
+
+      res <- lapply(output, makedataframe) %>%
+        do.call(rbind, .)
+      return(res)
+    }
 
 
-  se_filter <- function(quant_data, se_threshold, nrNas) {
-    se_observed <- apply(quant_data, 1, sd, na.rm = TRUE)
-    quant_data_filtered <- quant_data[se_observed > se_threshold, ]
-    idx <- which(apply(quant_data_filtered, 1, function(x) length(which(is.na(x))))<nrNas)
-    quant_data <- quant_data_filtered[idx,]
-    return(quant_data_filtered)
-  }
+    se_filter <- function(quant_data, se_threshold, nrNas) {
+      se_observed <- apply(quant_data, 1, sd, na.rm = TRUE)
+      quant_data_filtered <-
+        quant_data[se_observed > se_threshold,]
+      idx <-
+        which(apply(quant_data_filtered, 1, function(x)
+          length(which(is.na(
+            x
+          )))) < nrNas)
+      quant_data <- quant_data_filtered[idx, ]
+      return(quant_data_filtered)
+    }
 
-  getProteinClustering <- function(quant_data_filtered, method, nclusts) {
+    getProteinClustering <-
+      function(quant_data_filtered, method, nclusts) {
+        clustering <-
+          quantable::simpleheatmap3(
+            scale(t(quant_data_filtered), scale = FALSE),
+            labCol = row.names(quant_data_filtered),
+            plot = FALSE,
+            nrOfClustersCol = nclusts,
+            method = method
+          )$Col
+        return(clustering)
+      }
+
+
+    # Reference list ----------------------------------------------------------
+
+    reference_list <- data.frame(rownames(quant_data))
+    write_tsv(reference_list,
+              file.path(work_dir, "referencelist.txt"),
+              col_names = F)
+
+
+    # Protein cluster lists ---------------------------------------------------
+
+    quant_data_filtered <-
+      se_filter(quant_data, se_threshold, nrNas)
+
     clustering <-
-      quantable::simpleheatmap3(
-        scale(t(quant_data_filtered), scale = FALSE),
-        labCol = row.names(quant_data_filtered),
-        plot = FALSE,
-        nrOfClustersCol = nclusts,
-        method = method
-      )$Col
-    return(clustering)
-  }
+      getProteinClustering(quant_data_filtered, method, nclust)
 
-
-  # Reference list ----------------------------------------------------------
-
-  reference_list <- data.frame(rownames(quant_data))
-  write_tsv(reference_list, file.path(work_dir, "referencelist.txt"), col_names = F)
-
-
-  # Protein cluster lists ---------------------------------------------------
-
-  quant_data_filtered <- se_filter(quant_data, se_threshold, nrNas)
-
-  clustering <- getProteinClustering(quant_data_filtered, method, nclust)
-
-  sapply(
-    unique(clustering$clusterID),
-    write_interesting_geneFile,
-    df = clustering,
-    output.dir = "output/ORA_inputFiles"
-  )
-
-
-  # WebGestaltR call --------------------------------------------------------
-
-  output <-
-    WebGestaltR::WebGestaltRBatch(
-      enrichMethod = "ORA",
-      organism = organism,
-      enrichDatabase = enrichDatabase,
-      interestGeneFolder = "output/ORA_inputFiles",
-      referenceGeneFile = "output/referencelist.txt",
-      isOutput = TRUE,
-      interestGeneType = "uniprotswissprot",
-      referenceGeneType =  "uniprotswissprot",
-      outputDirectory = "output/",
-      isParallel = TRUE
+    sapply(
+      unique(clustering$clusterID),
+      write_interesting_geneFile,
+      df = clustering,
+      output.dir = "output/ORA_inputFiles"
     )
 
-  aggregated_results <- aggregate_results(output)
+
+    # WebGestaltR call --------------------------------------------------------
+
+    output <-
+      WebGestaltR::WebGestaltRBatch(
+        enrichMethod = "ORA",
+        organism = organism,
+        enrichDatabase = enrichDatabase,
+        interestGeneFolder = "output/ORA_inputFiles",
+        referenceGeneFile = "output/referencelist.txt",
+        isOutput = TRUE,
+        interestGeneType = "uniprotswissprot",
+        referenceGeneType =  "uniprotswissprot",
+        outputDirectory = "output/",
+        isParallel = TRUE
+      )
+
+    aggregated_results <- aggregate_results(output)
 
     # Output list -------------------------------------------------------------
 
@@ -131,6 +152,4 @@ webGestaltWrapper <- function(quant_data, enrichDatabase, organism, se_threshold
       reference_list = reference_list
     )
     return(config)
-}
-
-
+  }

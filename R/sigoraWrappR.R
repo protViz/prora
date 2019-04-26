@@ -64,7 +64,8 @@ sigoraWrappR <-
       GPSrepository = GPSrepos,
       database = db,
       data = df[, c("UniprotID", fc_col)],
-      proteinsAfterFiltering = nrow(df[df[, fc_col] >= fc_threshold, ])
+      proteinsAfterFiltering = nrow(df[df[, fc_col] >= fc_threshold, ]),
+      direction = ifelse(greater_than, yes = "greater than", no = "less than")
     )
     return(output)
   }
