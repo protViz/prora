@@ -12,9 +12,10 @@ library(fgczgseaora)
 
 # Setup -------------------------------------------------------------------
 
-fpath <- "inst/example_data/Contrasts_SignificanceValues_f_Cells_Treatment.csv"
+# fpath <- "inst/example_data/Contrasts_SignificanceValues_f_Cells_Treatment.csv"
+# dd <- read_csv(fpath)
 
-dd <- read_csv(fpath)
+dd <- contrast_data_example
 colnames(dd) <- make.names(colnames(dd))
 
 ddd <- getUniprotFromFastaHeader(dd)
@@ -34,7 +35,8 @@ runSIGORAlong <-
            fc_col = "estimate",
            fc_threshold = 0.5,
            outdir = "sigORA",
-           contrast_col = con_col) {
+           contrast_col = con_col,
+           greater = TRUE) {
 
     fpath <- make.names(contrast)
 
@@ -62,7 +64,7 @@ runSIGORAlong <-
         df = dat,
         GPSrepos = myGPSrepo,
         db = trgt,
-        greater_than = TRUE
+        greater_than = greater
       )
 
     p1 <- try(sigora_heatmap(sigora_example, GPStab))

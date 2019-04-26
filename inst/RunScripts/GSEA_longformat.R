@@ -8,9 +8,11 @@ library(conflicted)
 
 # Setup -------------------------------------------------------------------
 
-fpath <- "inst/example_data/Contrasts_SignificanceValues_f_Cells_Treatment.csv"
+# fpath <- "inst/example_data/Contrasts_SignificanceValues_f_Cells_Treatment.csv"
+# dd <- read_csv(fpath)
 
-dd <- read_csv(fpath)
+dd <- contrast_data_example
+
 colnames(dd) <- make.names(colnames(dd))
 
 ddd <- getUniprotFromFastaHeader(dd)
@@ -41,7 +43,7 @@ runGSEAlong <- function(contrast,
                         outdir = "GSEA") {
   fpath <- make.names(contrast)
 
-  if(!dir.exists(outdir)){
+  if (!dir.exists(outdir)) {
     dir.create(outdir)
   }
 
@@ -62,19 +64,27 @@ runGSEAlong <- function(contrast,
       projectName = fpath
     )
 
-  f_mappingTable <- file.path(outdir,
-                              paste0("Project_",fpath),
-                              paste0("interestingID_mappingTable_", fpath,".txt"))
+  f_mappingTable <- file.path(
+    outdir,
+    paste0("Project_", fpath),
+    paste0("interestingID_mappingTable_", fpath, ".txt")
+  )
   mappingTable <-
     read_delim(f_mappingTable,
                delim = "\t")
 
   mappingTable %>% mutate(entrezgene = as.character(entrezgene)) -> mappingTable
-  GSEA_res_sep <- GSEA_res %>% separate_rows(leadingEdgeId, sep=";")
-  merged_data <- inner_join(mappingTable, GSEA_res_sep,
-                            by=c("entrezgene" = "leadingEdgeId"))
+  GSEA_res_sep <-
+    GSEA_res %>% separate_rows(leadingEdgeId, sep = ";")
+  merged_data <- inner_join(mappingTable,
+                            GSEA_res_sep,
+                            by = c("entrezgene" = "leadingEdgeId"))
 
-  readr::write_delim(merged_data, path = file.path(outdir, paste0("Project_",fpath), "merged_data.tsv"), delim = "\t")
+  readr::write_delim(
+    merged_data,
+    path = file.path(outdir, paste0("Project_", fpath), "merged_data.tsv"),
+    delim = "\t"
+  )
 
   GSEA <- list(
     organism = organism,
@@ -85,8 +95,10 @@ runGSEAlong <- function(contrast,
     nperm = nperm
   )
 
-  rmarkdownPath <- file.path(outdir, paste0("Project_",fpath), "GSEA.Rmd")
-  bibpath <- file.path(outdir,paste0("Project_",fpath), "bibliography.bib")
+  rmarkdownPath <-
+    file.path(outdir, paste0("Project_", fpath), "GSEA.Rmd")
+  bibpath <-
+    file.path(outdir, paste0("Project_", fpath), "bibliography.bib")
 
 
   file.copy(
@@ -96,7 +108,10 @@ runGSEAlong <- function(contrast,
   )
 
   file.copy(
-    file.path(find.package("fgczgseaora"), "rmarkdown_reports/bibliography.bib"),
+    file.path(
+      find.package("fgczgseaora"),
+      "rmarkdown_reports/bibliography.bib"
+    ),
     bibpath,
     overwrite = TRUE
   )
@@ -113,4 +128,3 @@ runGSEAlong <- function(contrast,
 # Run ---------------------------------------------------------------------
 
 sapply(contrs, runGSEAlong)
-

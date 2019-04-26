@@ -8,9 +8,10 @@ library(conflicted)
 
 # Setup -------------------------------------------------------------------
 
-fpath <- "inst/example_data/Contrasts_SignificanceValues_f_Cells_Treatment.csv"
+# fpath <- "inst/example_data/Contrasts_SignificanceValues_f_Cells_Treatment.csv"
+# dd <- read_csv(fpath)
 
-dd <- read_csv(fpath)
+dd <- contrast_data_example
 colnames(dd) <- make.names(colnames(dd))
 ddd <- getUniprotFromFastaHeader(dd)
 
@@ -26,12 +27,11 @@ contrs <- ddd %>%
 apply_threshold <-
   function(df,
            th,
-           alt = c("greater.than", "less.than")) {
-    alt <- match.arg(alt)
-    if (alt == "greater.than") {
+           greater = TRUE) {
+    if (greater) {
       df %>%
         dplyr::filter(Score > th) -> out
-    } else if (alt == "less.than") {
+    } else {
       df %>%
         dplyr::filter(Score <= th) -> out
     }
