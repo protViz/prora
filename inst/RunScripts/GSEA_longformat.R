@@ -74,6 +74,8 @@ runGSEAlong <- function(contrast,
   merged_data <- inner_join(mappingTable, GSEA_res_sep,
                             by=c("entrezgene" = "leadingEdgeId"))
 
+  readr::write_delim(merged_data, path = file.path(outdir, paste0("Project_",fpath), "merged_data.tsv"), delim = "\t")
+
   GSEA <- list(
     organism = organism,
     target = target,
