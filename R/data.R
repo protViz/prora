@@ -81,3 +81,12 @@ NULL
 #' @format A list of 12 entries
 NULL
 
+#' Contrast effect estimates
+#'
+#' Example data set containing effect estimates and p values from different contrasts.
+#'
+#' @docType data
+#' @name contrast_data_example
+#' @usage data(exampleContrastData)
+#' @format A \code{data.frame} with 2304 rows and 18 variables
+NULL
