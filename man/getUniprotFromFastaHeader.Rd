@@ -8,6 +8,8 @@ getUniprotFromFastaHeader(df, idcolumn = "protein_Id")
 }
 \arguments{
 \item{df}{\code{data.frame} with FASTA headers in first column}
+
+\item{idcolumn}{Column name containing the IDs}
 }
 \value{
 Returns the whole \code{data.frame} with a column called \code{UniprotID} containing UniprotSwissprot IDs instead of Fasta headers. This format is easier to use for subsequent ID mappings using the \code{Annotationdbi} package.
