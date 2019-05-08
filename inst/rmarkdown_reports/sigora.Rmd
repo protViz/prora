@@ -44,7 +44,7 @@ The following analysis compares filters proteins based on a fold change threshol
 
 - Total number of proteins: `r nrow(res$data)`
 
-- Fold change threshold: `r res$fc_threshold`
+- Score threshold: `r res$fc_threshold`
 
 - Number of proteins after filtering: `r res$proteinsAfterFiltering`
 
@@ -148,10 +148,10 @@ try(sigora_upsetR(sigora_res = res, GPStable = GPStab))
 ### Data used
 
 ```{r}
-colnames(res$data) <- c("Symbol", "Fold Change")
+colnames(res$data) <- c("Symbol", "Score")
 res$data %>%
-  mutate(`Fold Change` = round(`Fold Change`, 2)) %>% 
-  DT::datatable(colnames = c("Symbol", "Fold Change"), width = 500, style = "bootstrap")
+  mutate(`Score` = round(`Score`, 2)) %>% 
+  DT::datatable(colnames = c("Symbol", "Score"), width = 500, style = "bootstrap")
 ```
 
 
