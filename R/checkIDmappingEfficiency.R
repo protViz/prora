@@ -5,6 +5,12 @@
 #' @importFrom S4Vectors na.omit
 #' @importFrom dplyr distinct
 #' @return Returns a data.frame containing information of mapping efficiency on GO, ENTREZ and KEGG IDs
+#'
+#' @examples
+#' data("exampleContrastData", package = "fgczgseaora")
+#' df <- getUniprotFromFastaHeader(exampleContrastData)
+#' checkIDmappingEfficiency(df$UniprotID, keytype = "UNIPROT")
+#'
 #' @export checkIDmappingEfficiency
 #'
 checkIDmappingEfficiency <- function(IDs, keytype) {
