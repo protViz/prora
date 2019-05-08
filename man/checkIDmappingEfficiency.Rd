@@ -17,3 +17,9 @@ Returns a data.frame containing information of mapping efficiency on GO, ENTREZ 
 \description{
 Checks mapping efficiency for IDs on the most commonly used ID types
 }
+\examples{
+data("exampleContrastData", package = "fgczgseaora")
+df <- getUniprotFromFastaHeader(exampleContrastData)
+checkIDmappingEfficiency(df$UniprotID, keytype = "UNIPROT")
+
+}
