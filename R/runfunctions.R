@@ -160,7 +160,8 @@ runSIGORAlong <-
       params = list(
         results = sigora_res,
         plot1 = p1,
-        GPStable = GPStab
+        GPStable = GPStab,
+        direction_greater = greater
       ),
       clean = TRUE
     )

@@ -11,6 +11,7 @@ params:
   results: !r quote(fgczgseaora::sigora_example)
   plot1: !r quote(fgczgseaora::p1)
   GPStable: !r quote(fgczgseaora::GPStab_example)
+  direction_greater: !r TRUE
 subtitle: Using the `sigora` package
 bibliography: bibliography.bib
 ---
@@ -31,6 +32,7 @@ if(!exists("progress")){
 res <- eval(params$results)
 p1 <- eval(params$plot1)
 GPStab <- eval(params$GPStable)
+direction_greater <- eval(params$direction_greater)
 
 library(tidyverse)
 library(knitr)
@@ -46,11 +48,11 @@ The following analysis compares filters proteins based on a fold change threshol
 
 - Score threshold: `r res$fc_threshold`
 
+- Direction of the threshold: `r ifelse(direction_greater, "greater than", "less than")`
+
 - Number of proteins after filtering: `r res$proteinsAfterFiltering`
 
 - Database used to produce GPS repository: `r res$database`
-
-- File used for the analysis: `r res$fpath`
 
 ### ORA results {.tabset .tabset-pills}
 
