@@ -20,8 +20,12 @@ colnames(dd) <- make.names(colnames(dd))
 
 ddd <- getUniprotFromFastaHeader(dd)
 
-con_col = "lhs"
-thdirection <- TRUE # TRUE: Greater than threshold, FALSE: Smaller than threshold
+con_col <- "lhs"
+greater <- TRUE # TRUE: Greater than threshold, FALSE: Smaller than threshold
+target <- "GO"
+fc_col <- "estimate"
+fc_threshold <- 0.5
+outdir <- "sigORA"
 
 contrs <- ddd %>%
   distinct(!!sym(con_col)) %>%
@@ -30,5 +34,11 @@ contrs <- ddd %>%
 
 # Run ---------------------------------------------------------------------
 
-sapply(contrs[1], runSIGORAlong)
+sapply(contrs[1],
+       runSIGORAlong,
+       target = target,
+       fc_col = fc_col,
+       greater = greater,
+       fc_threshold = fc_threshold,
+       outdir = outdir)
 

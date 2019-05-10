@@ -8,6 +8,7 @@ runGSEAlong <- function(contrast,
                         fc_col = "estimate",
                         contrast_col = "lhs",
                         outdir = "GSEA") {
+  outdir <- paste0(outdir, "_", target)
   fpath <- make.names(contrast)
 
   if (!dir.exists(outdir)) {
@@ -94,13 +95,13 @@ runGSEAlong <- function(contrast,
 #' @export runSIGORAlong
 runSIGORAlong <-
   function(contrast,
-           trgt = "GO",
+           target = "GO",
            fc_col = "estimate",
            fc_threshold = 0.5,
            outdir = "sigORA",
            contrast_col = con_col,
-           greater = thdirection) {
-
+           greater = TRUE) {
+    outdir <- paste0(outdir, "_", target)
     fpath <- make.names(contrast)
 
     if (!dir.exists(outdir)) {
@@ -115,10 +116,10 @@ runSIGORAlong <-
       dplyr::filter(!!sym(contrast_col) == contrast)
 
     GPStab <-
-      makeGPS_wrappR(dat$UniprotID, target = trgt, dev = TRUE)
+      makeGPS_wrappR(dat$UniprotID, target = target, dev = TRUE)
 
     myGPSrepo <-
-      makeGPS_wrappR(dat$UniprotID, target = trgt)
+      makeGPS_wrappR(dat$UniprotID, target = target)
 
     sigora_res <-
       sigoraWrappR(
@@ -126,7 +127,7 @@ runSIGORAlong <-
         fc_col = fc_col,
         df = dat,
         GPSrepos = myGPSrepo,
-        db = trgt,
+        db = target,
         greater_than = greater
       )
 
@@ -194,9 +195,10 @@ runWebGestaltORAlong <- function(contrast,
                                  contrast_col = con_col,
                                  fc_col = "estimate",
                                  outdir = "WebGestalt_ORA") {
+  outdir <- paste0(outdir, "_", target)
   fpath <- make.names(contrast)
 
-  if(!dir.exists(outdir)){
+  if (!dir.exists(outdir)) {
     dir.create(outdir)
   }
 
@@ -205,11 +207,9 @@ runWebGestaltORAlong <- function(contrast,
     dplyr::select(!!sym(ID_col), Score = !!sym(fc_col))
 
   ranktable <-
-    apply_threshold(
-      df = dat,
-      th = threshold,
-      greater = greater
-    )
+    apply_threshold(df = dat,
+                    th = threshold,
+                    greater = greater)
 
   ORA_res <-
     WebGestaltR(

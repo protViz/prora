@@ -16,6 +16,15 @@ colnames(dd) <- make.names(colnames(dd))
 ddd <- getUniprotFromFastaHeader(dd)
 
 con_col <- "lhs"
+organism <- "hsapiens"
+ID_col <- "UniprotID"
+target = "geneontology_Biological_Process"
+map_col = "GO"
+threshold = 0.5
+greater = TRUE
+nperm = 10
+fc_col = "estimate"
+outdir = "WebGestalt_ORA"
 
 contrs <- ddd %>%
   distinct(!!sym(con_col)) %>%
@@ -24,4 +33,18 @@ contrs <- ddd %>%
 
 # Run ---------------------------------------------------------------------
 
-sapply(contrs[1], runWebGestaltORAlong)
+sapply(
+  contrs[1],
+  runWebGestaltORAlong,
+  contrast_col = con_col,
+  organism = organism,
+  ID_col = ID_col,
+  target = target,
+  map_col = map_col,
+  threshold = threshold,
+  greater = greater,
+  nperm = nperm,
+  fc_col = fc_col,
+  outdir = outdir
+)
+
