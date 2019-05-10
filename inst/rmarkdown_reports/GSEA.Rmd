@@ -54,17 +54,11 @@ The following analysis compares the enrichment of particular gene/protein set me
 ```{r}
 genesets <- GSEA$merged_data %>% 
   distinct(geneSet, .keep_all = TRUE) %>% 
-  dplyr::mutate(set = paste0("[", geneSet, "](", link, ")")) %>% 
+  dplyr::mutate(set = paste0("<a href='",link,"'>",geneSet,"</a>")) %>% 
   dplyr::select(set, description, ES, NES, pValue, FDR)
 
 genesets <- genesets %>% arrange(NES)
-#DT::datatable(genesets)
-knitr::kable(genesets,
-             digits = 3,
-             col.names = c("Gene Set", "Description", "ES", "NES", "P-value","Q-value"),
-             align = "c",
-             caption = "Table of significantly enriched gene sets. ES: Enrichment Score, NES: Normalised Enrichment Score"
-)
+DT::datatable(genesets, escape = FALSE, colnames = c("Gene Set", "Description", "ES", "NES", "P-value","Q-value"), style = "bootstrap") %>% DT::formatRound(digits = 3, columns = c("ES", "NES", "pValue", "FDR"))
 ```
 
 #### Input Data
@@ -79,7 +73,7 @@ GSEA$input_data %>%
 
 ### Visualisation
 
-```{r fig.cap="Heatmap of Score patterns in significantly enriched pathways identified by GSEA", fig.asp=2}
+```{r fig.cap="Heatmap of Score patterns in significantly enriched pathways identified by GSEA", fig.asp=2, include=FALSE, eval=FALSE}
 
 gettop <- function(data, n=10){
   data %>% 
@@ -116,7 +110,7 @@ if(length(GSEA$upsetData)==1) {
   message("UpSetR plot cannot be displayed. Only one pathway enriched.")
 } else {
   UpSetR::fromList(toplot) %>%
-  UpSetR::upset(mb.ratio = c(0.7, 0.3), order.by = "freq", nsets = 20)
+  UpSetR::upset(mb.ratio = c(0.5, 0.5), order.by = "freq", nsets = 20)
 }
 ```
 
