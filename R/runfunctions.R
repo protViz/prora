@@ -60,7 +60,8 @@ runGSEAlong <- function(contrast,
     input_data = ranktable,
     output_dir = fpath,
     merged_data = merged_data,
-    nperm = nperm
+    nperm = nperm,
+    contrast = contrast
   )
 
   rmarkdownPath <-
@@ -131,7 +132,7 @@ runSIGORAlong <-
         greater_than = greater
       )
 
-    p1 <- try(sigora_heatmap(sigora_example, GPStab))
+    p1 <- try(sigora_heatmap(sigora_res, GPStab))
 
     rmarkdownPath <- file.path(outdir, fpath, "sigora.Rmd")
 
@@ -162,7 +163,8 @@ runSIGORAlong <-
         results = sigora_res,
         plot1 = p1,
         GPStable = GPStab,
-        direction_greater = greater
+        direction_greater = greater,
+        contrast = contrast
       ),
       clean = TRUE
     )

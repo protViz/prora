@@ -27,7 +27,7 @@ if(!exists("progress")){
   }
 }
 
-res <- eval(params$GSEA_res)
+GSEA <- eval(params$GSEA)
 
 library(tidyverse)
 library(knitr)
@@ -45,6 +45,8 @@ The following analysis compares the enrichment of particular gene/protein set me
 
 * Output Directory: `r GSEA$output_dir`
 
+* Contrast: `r GSEA$contrast`
+
 * Number of permutations: `r GSEA$nperm`
 
 ### GSEA Results {.tabset .tabset-pills}
@@ -58,7 +60,7 @@ genesets <- GSEA$merged_data %>%
   dplyr::select(set, description, ES, NES, pValue, FDR)
 
 genesets <- genesets %>% arrange(NES)
-DT::datatable(genesets, escape = FALSE, colnames = c("Gene Set", "Description", "ES", "NES", "P-value","Q-value"), style = "bootstrap") %>% DT::formatRound(digits = 3, columns = c("ES", "NES", "pValue", "FDR"))
+DT::datatable(genesets, escape = FALSE, colnames = c("Pathway", "Description", "ES", "NES", "P-value","Adj. P-value"), style = "bootstrap") %>% DT::formatRound(digits = 3, columns = c("ES", "NES", "pValue", "FDR"))
 ```
 
 #### Input Data
@@ -68,7 +70,7 @@ colnames(GSEA$input_data) <- c("ID", "Score")
 GSEA$input_data %>%
   dplyr::mutate(`Score` = round(`Score`, 2)) %>% 
   dplyr::arrange(Score) %>% 
-  DT::datatable(colnames = c("ID", "Score"), width = 500, style = "bootstrap")
+  DT::datatable(colnames = c("ID", "Score"), width = 700, style = "bootstrap")
 ```
 
 ### Visualisation
