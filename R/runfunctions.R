@@ -324,7 +324,6 @@ runGSEA <- function(data,
 #' @export runSIGORA
 runSIGORA <-
   function(data,
-           fpath,
            target = "GO",
            fc_col = "estimate",
            ID_col = "UniprotID",
@@ -335,10 +334,6 @@ runSIGORA <-
 
     if (!dir.exists(outdir)) {
       dir.create(outdir)
-    }
-
-    if (!dir.exists(file.path(outdir, fpath))) {
-      dir.create(file.path(outdir, fpath))
     }
 
     GPStab <-
@@ -359,9 +354,9 @@ runSIGORA <-
 
     p1 <- try(sigora_heatmap(sigora_res, GPStab))
 
-    rmarkdownPath <- file.path(outdir, fpath, "sigora.Rmd")
+    rmarkdownPath <- file.path(outdir, "sigora.Rmd")
 
-    bibpath <- file.path(outdir, fpath, "bibliography.bib")
+    bibpath <- file.path(outdir, "bibliography.bib")
 
     file.copy(
       file.path(

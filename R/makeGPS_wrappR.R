@@ -46,9 +46,11 @@ makeGPS_wrappR <-
 
     if (dev) {
       return(mkGPStable)
-    } else {
+    } else if (all(dim(mkGPStable) > 0)) {
       out <- sigora::makeGPS(mkGPStable)
       return(out)
+    } else {
+      stop("No pathway, gene, description mappings. Cannot produce GPS repository.")
     }
   }
 
