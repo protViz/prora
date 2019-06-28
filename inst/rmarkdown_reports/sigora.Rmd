@@ -12,7 +12,7 @@ params:
   plot1: "abc"
   GPStable: !r quote(fgczgseaora::GPStab)
   direction_greater: TRUE
-  contrast: "abc"
+  contrast: ""
 subtitle: Using the `sigora` package
 bibliography: bibliography.bib
 ---
