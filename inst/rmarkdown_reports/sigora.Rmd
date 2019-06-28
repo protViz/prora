@@ -134,7 +134,7 @@ res$sigora$detailed_results %>%
 
 ### Visualisation
 
-```{r fig.cap="Heatmap of fold change patterns in significantly enriched pathways identified by sigORA.", fig.width=10, fig.height=20}
+```{r fig.cap="Heatmap of fold change patterns in significantly enriched pathways identified by sigORA.", fig.width=10, fig.height=20, eval=FALSE}
 if (is_character(p1)) {
   message("No pathways to visualise")
 } else {
