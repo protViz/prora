@@ -292,6 +292,11 @@ runGSEA <- function(data,
     nperm = nperm
   )
 
+  rdataPath <- file.path(outdir, paste0("Project_", fpath), "GSEA.Rdata")
+
+  message("storing GSEA.rdata to: ", rdataPath)
+  saveRDS(GSEA, file= rdataPath)
+
   rmarkdownPath <-
     file.path(outdir, paste0("Project_", fpath), "GSEA.Rmd")
   bibpath <-
@@ -312,6 +317,8 @@ runGSEA <- function(data,
     bibpath,
     overwrite = TRUE
   )
+
+  message("rendering :", rmarkdownPath)
 
   rmarkdown::render(
     rmarkdownPath,
