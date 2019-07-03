@@ -1,3 +1,13 @@
+#' Contrast effect estimates
+#'
+#' Example data set containing effect estimates and p values from different contrasts.
+#'
+#' @docType data
+#' @name exampleContrastData
+#' @usage data(exampleContrastData)
+#' @format A \code{data.frame} with 2304 rows and 18 variables
+NULL
+
 #' Examplary Uniprot IDs
 #'
 #' Gene symbols for running examples to produce GPS repositories using \code{\link{makeGPS_wrappR}}
