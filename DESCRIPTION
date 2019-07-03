@@ -3,13 +3,14 @@ Type: Package
 Title: ORA, sigORA and GSEA functionalities for proteomic data
 Version: 0.1.0
 Author: Lucas Kook, Witold Wolski
-Maintainer: Lucas Kook <lucasheinrich.kook@uzh.ch>
-Description: Implements gene pair signature based over representation analysis and gene set enrichment tools. Allows background specification for sigORA using the sigora package without further ID mapping being necessary.
+Maintainer: Witold Wolski <wew@fgcz.ethz.ch>
+Description: Implements gene pair signature based over representation analysis and gene set 
+    enrichment tools. Allows background specification for sigORA using the sigora package 
+    without further ID mapping being necessary.
 Depends: R (>= 2.10)
-License: GPL
+License: GPL-2
 Encoding: UTF-8
 LazyData: true
 Imports: tidyverse, sigora, org.Hs.eg.db, GO.db, reactome.db, AnnotationDbi, dplyr, tidyr, S4Vectors, WebGestaltR, quantable, SRMService, UpSetR, ggplot2, conflicted, readr, magrittr, rlang
 RoxygenNote: 6.1.1
-Suggests: 
-    testthat
+Suggests: knitr, rmarkdown, bookdown
