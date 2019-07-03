@@ -6,6 +6,7 @@
 #' @importFrom readr write_tsv
 #' @importFrom quantable simpleheatmap3
 #' @importFrom WebGestaltR WebGestaltRBatch
+#' @importFrom stats sd
 #' @importFrom magrittr %>%
 #'
 #' @return list with results
