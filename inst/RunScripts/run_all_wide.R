@@ -17,10 +17,13 @@ dfiles <- file.path("../data", list.files("../data/"))[1:3]
 organism <- "hsapiens"
 ID_col <- "UniprotID"
 fc_col <- "log2FC"
-target_GSEA <- c("geneontology_Biological_Process",
-                 "geneontology_Cellular_Component",
-                 "geneontology_Molecular_Function")[1]
-target_SIGORA <- c("GO", "KEGG")[2] # reactome throws error w/ 2Grp_CF_a_vs_CF_b.txt
+target_GSEA <- c(
+  "geneontology_Biological_Process",
+  "geneontology_Cellular_Component",
+  "geneontology_Molecular_Function"
+)
+target_SIGORA <-
+  c("GO", "KEGG", "reactome")
 map_col <- "GO"
 fc_threshold <- 0.5
 greater <- TRUE
@@ -43,7 +46,7 @@ for (i in seq_len(length(dfiles))) {
     filter(!is.na(UniprotID))
 
   sapply(target_GSEA, function(x) {
-    runGSEA(
+    fgczgseaora:::.runGSEA(
       data = dd,
       fpath = "",
       ID_col = ID_col,
@@ -57,7 +60,7 @@ for (i in seq_len(length(dfiles))) {
   })
 
   sapply(target_GSEA, function(x) {
-    runWebGestaltORA(
+    fgczgseaora:::.runWebGestaltORA(
       data = dd,
       fpath = "",
       organism = organism,
@@ -73,7 +76,7 @@ for (i in seq_len(length(dfiles))) {
   })
 
   sapply(target_SIGORA, function(x) {
-    runSIGORA(
+    fgczgseaora:::.runSIGORA(
       data = dd,
       target = x,
       fc_col = fc_col,
@@ -83,4 +86,3 @@ for (i in seq_len(length(dfiles))) {
     )
   })
 }
-
