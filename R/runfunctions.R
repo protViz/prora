@@ -170,7 +170,6 @@
       bookdown::html_document2(number_sections = FALSE),
       params = list(
         results = sigora_res,
-        plot1 = p1,
         GPStable = GPStab,
         direction_greater = greater
       ),
