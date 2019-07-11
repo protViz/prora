@@ -11,6 +11,6 @@ Depends: R (>= 2.10), WebGestaltR (>= 0.3.0)
 License: GPL-2
 Encoding: UTF-8
 LazyData: true
-Imports: tidyverse, sigora, org.Hs.eg.db, GO.db, reactome.db, AnnotationDbi, dplyr, tidyr, S4Vectors, quantable, SRMService, UpSetR, ggplot2, conflicted, readr, magrittr, rlang
+Imports: tidyverse, sigora, org.Hs.eg.db, GO.db, reactome.db, AnnotationDbi, dplyr, tidyr, S4Vectors, quantable, UpSetR, ggplot2, readr, magrittr, rlang
 RoxygenNote: 6.1.1
 Suggests: knitr, rmarkdown, bookdown, slam
