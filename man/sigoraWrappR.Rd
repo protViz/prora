@@ -46,7 +46,7 @@ data("exampleContrastData", package = "fgczgseaora")
 data("idmap", package = "sigora")
 df <- getUniprotFromFastaHeader(exampleContrastData)
 myGPSrepo <- makeGPS_wrappR(ids = df$UniprotID)
-res <- sigoraWrappR(fc_col = colnames(df)[3], GPSrepos = myGPSrepo,
+res <- sigoraWrappR(fc_col = "estimate", GPSrepos = myGPSrepo,
                     df = df, fc_threshold = 0.5)
 
 }
