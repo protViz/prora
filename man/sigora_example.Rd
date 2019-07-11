@@ -4,7 +4,6 @@
 \name{sigora_example}
 \alias{sigora_example}
 \title{Exemplary sigora output}
-\format{A list containing 7 entries as described below}
 \usage{
 data(sigora_example)
 }

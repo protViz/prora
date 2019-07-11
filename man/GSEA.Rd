@@ -4,7 +4,6 @@
 \name{GSEA}
 \alias{GSEA}
 \title{Exemplary GSEA output}
-\format{A list containing the 5 entries as described below.}
 \usage{
 data(GSEA)
 }

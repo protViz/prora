@@ -4,7 +4,6 @@
 \name{GPStab}
 \alias{GPStab}
 \title{Exemplary GPS table}
-\format{A data frame containing 20957 rows and 3 variables}
 \usage{
 data(GPStab)
 }

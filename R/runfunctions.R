@@ -142,7 +142,7 @@
         greater_than = greater
       )
 
-    p1 <- try(sigora_heatmap(sigora_res, GPStab))
+     p1 <- try(sigora_heatmap(sigora_res, GPStab))
 
     rmarkdownPath <- file.path(outdir, "sigora.Rmd")
 

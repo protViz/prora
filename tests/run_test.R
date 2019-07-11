@@ -17,7 +17,7 @@ dfiles <- "example_data.txt"
 
 organism <- "hsapiens"
 ID_col <- "UniprotID"
-fc_col <- "estimate.Age.class..Old...Young"
+fc_col <- "estimate"
 target_GSEA <- c(
   "geneontology_Biological_Process",
   "geneontology_Cellular_Component",

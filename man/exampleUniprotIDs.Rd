@@ -4,7 +4,6 @@
 \name{exampleUniprotIDs}
 \alias{exampleUniprotIDs}
 \title{Examplary Uniprot IDs}
-\format{A character vector containing 2292 Uniprot IDs}
 \usage{
 data(exampleUniprotIDs)
 }

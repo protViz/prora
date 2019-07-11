@@ -5,7 +5,6 @@
 #' @docType data
 #' @name exampleContrastData
 #' @usage data(exampleContrastData)
-#' @format A \code{data.frame} with 2304 rows and 18 variables
 NULL
 
 #' Examplary Uniprot IDs
@@ -15,7 +14,6 @@ NULL
 #' @docType data
 #' @name exampleUniprotIDs
 #' @usage data(exampleUniprotIDs)
-#' @format A character vector containing 2292 Uniprot IDs
 NULL
 
 #' Exemplary GPS table
@@ -30,7 +28,6 @@ NULL
 #' @docType data
 #' @name GPStab
 #' @usage data(GPStab)
-#' @format A data frame containing 20957 rows and 3 variables
 NULL
 
 #' Exemplary GSEA output
@@ -48,7 +45,6 @@ NULL
 #' @docType data
 #' @name GSEA
 #' @usage data(GSEA)
-#' @format A list containing the 5 entries as described below.
 NULL
 
 #' Exemplary sigora output
@@ -68,15 +64,4 @@ NULL
 #' @docType data
 #' @name sigora_example
 #' @usage data(sigora_example)
-#' @format A list containing 7 entries as described below
-NULL
-
-#' Exemplary WebGestaltR output
-#'
-#' Examplary clustering plus ora output using the \code{WebGestaltR} package.
-#'
-#' @docType data
-#' @name webGestaltExample
-#' @usage data(webGestaltExample)
-#' @format A list of 12 entries
 NULL
