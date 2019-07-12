@@ -9,11 +9,11 @@ Authors@R: c(person("Lucas", "Kook",
     person("Witold E.", "Wolski",
     email = "wew@fgcz.ethz.ch",
     role = c("cre"),
-    comment = c(ORCID = "0000-0002-6468-120X"))
+    comment = c(ORCID = "0000-0002-6468-120X")))
 Description: Implements gene pair signature based over representation
     analysis and gene set enrichment tools. Allows background specification
     for sigORA using the sigora package  without further ID mapping being necessary.
-Depends: R (>= 3.6), WebGestaltR (>= 0.3)
+Depends: R (>= 3.5), WebGestaltR (>= 0.3)
 License: GPL-2
 Encoding: UTF-8
 LazyData: true
