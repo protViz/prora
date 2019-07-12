@@ -13,7 +13,7 @@ Authors@R: c(person("Lucas", "Kook",
 Description: Implements gene pair signature based over representation
     analysis and gene set enrichment tools. Allows background specification
     for sigORA using the sigora package  without further ID mapping being necessary.
-Depends: R (>= 3.6), WebGestaltR (>= 0.3.0)
+Depends: R (>= 3.6), WebGestaltR (>= 0.3)
 License: GPL-2
 Encoding: UTF-8
 LazyData: true
