@@ -1,94 +1,101 @@
 ---
-title: "Vignette Title"
+title: "fgczgseaora: Unifying methods on gene set enrichment"
 author:
-- name: First Author
-  affiliation: First Author's Affiliation
-- name: Second Author
-  affiliation: Second Author's Affiliation
-  email: corresponding@author.com
-package: packageName
+- name: Lucas Heinrich Kook
+  affiliation: Functional Genomics Center Zurich, ETH Zurich, University of Zurich
+- name: Witold Wolski
+  affiliation: Functional Genomics Center Zurich, ETH Zurich, University of Zurich
+  email: wew@fgcz.ethz.ch
+package: fgczgseaora
 output:
   BiocStyle::pdf_document
+bibliography: bibliography.bib
 abstract: |
-  Description of your vignette
+  A plethora of R packages exist on CRAN and Bioconductor to perform over-representation analysis (ORA) and gene set enrichment analysis (GSEA). However, consistency in the underlying nomenclature for specific analyses and user friendly implementation is still lacking. `fgczgseaora` aims at unifying ID mapping and enrichment analysis in a syntactically coherent and intuitive way, while ensuring reproducibility of results. `fgczgseaora` primarily consists of wrapper functions around the `r CRANpkg("sigora")` and `r CRANpkg("WebGestaltR")` packages from CRAN and `r CRANpkg("rmarkdown")` based reports for visualisation and contextualisation of analysis results.
 vignette: |
   %\VignetteIndexEntry{Vignette Title}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
-# Getting started
-
-To enable the _Bioconductor_ style in your R Markdown vignette you need to include the following in the `DESCRIPTION` file:
-
-    VignetteBuilder: knitr
-    Suggests: BiocStyle, knitr, rmarkdown
-
-
-# Style macros
-
-_BiocStyle_ introduces the following macros for referring to _R_ packages:
-
-* `r Biocpkg("IRanges")`, for _Bioconductor_ software, annotation and experiment data packages,
-* `r CRANpkg("data.table")`, for _R_ packages available on CRAN,
-* `r Githubpkg("rstudio/rmarkdown")`, for _R_ packages available on GitHub,
-* `r Rpackage("MyPkg")`, for _R_ packages that are _not_ available on _Bioconductor_, CRAN or GitHub.
-
-
-# Figures
-
-Assign captions to figures in the code chunk option `fig.cap` to automatically number them, and to be able to reference them, see Figure \@ref(fig:plot). The figure label is generated from the code chunk label by prefixing it with `fig:`.
-
-```{r plot, fig.cap="Regular figure. The first sentence of the figure caption is automatically emphasized to serve as figure title.", echo=FALSE}
-plot(cars)
-```
-
-Small and wide figures can be specified by `fig.small` and `fig.wide` code chunk options.
-
-```{r small, fig.cap="Small figure. A plot produced by a code chunk with option `fig.small = TRUE`.", fig.small=TRUE, echo=FALSE}
-plot(cars)
-```
-
-```{r wide, fig.cap="Wide figure. A plot produced by a code chunk with option `fig.wide = TRUE`.", fig.wide=TRUE, echo=FALSE}
-plot(cars)
+```{r setup, include=FALSE}
+library(tidyverse)
+library(fgczgseaora)
+knitr::opts_chunk$set(
+  echo = TRUE,
+  warning = FALSE,
+  message = FALSE,
+  error = FALSE,
+  fig.width = 4,
+  fig.height = 3,
+  fig.align = "center",
+  cache = FALSE
+)
+options(width = 80)
 ```
 
 
-# Equations
+# Introduction
 
-To number and reference equations, put them in equation environments and assign labels to them, see Equation \@ref(eq:binom).
+Methods to identify differentially regulated pathways among a vast background of quantified genes or proteins differ in complexity of the underlying algorithms and computations, ranging from the application of Fisher's exact test in ORA and extensions to gene pairs [@Foroushani2013] to more complex statistical procdures in gene set enrichment analysis [@Subramanian15545] and network based procedures [@glaab2012enrichnet]. Almost all methods come with their own implementation as an _R_ package, _i.e._ ORA in both `r CRANpkg("sigora")` and `r CRANpkg("WebGestaltR")`, network based gene enrichment analysis in `r CRANpkg("enrichnet")` and the list keeps going on. Naturally, different implementations come with different -- and often inconsistent -- features, such as ID mapping or demand a lot of knowledge from the user in setting up appropriate data structures and other preconditions. `fgczgseaora` aims at providing a consistent and user friendly interface, which will be introduced in the following section. Elaborating on the methodological and statistical aspects of the underlying methods is beyond the scope of this vignette and the reader is referred to the publications in the reference section.
 
-\begin{equation}
-  f\left(k\right) = \binom{n}{k} p^k\left(1-p\right)^{n-k}
-  (\#eq:binom)
-\end{equation}
+# Installation and loading
 
+After installing the packages from _Bioconductor_ as shown below, the package can be loaded using `library(fgczgseaora)`.
 
-# Tables
+```{r installing, eval=FALSE}
+BiocManager::install("fgczgseaora")
+library(fgczgseaora)
+```
 
-Like figures, tables with captions will also be numbered and can be referenced, see Table \@ref(tab:table).
+# Example workflow
 
-Fruit   | Price
-------- | -----
-bananas | 1.2
-apples  | 1.0
-oranges | 2.5
+We shall analyse proteomic data with the following format:
 
-: (\#tab:table) A simple table. With caption.
+```{r}
+data("exampleContrastData")
+glimpse(exampleContrastData)
+```
 
+The first column `protein_Id` contains FASTA formatted human protein accessions and the second column fold change estimates. _e.g._ as obtained by a `limma::toptable()` call. The first step is now to translate the FASTA headers into Uniprot accessions for subsequent ID mapping.
 
-# Cross-references
+```{r}
+dd <- getUniprotFromFastaHeader(exampleContrastData)
+glimpse(dd)
+```
 
-Apart from referencing figures (Section \@ref(figures)), tables (Section \@ref(tables)), and equations (Section \@ref(equations)), you can also use the same syntax to refer to sections by their default labels generated by pandoc.
+We see that we have lost `r nrow(exampleContrastData) - nrow(dd)` accessions which did not correspond to a FASTA format. Now we apply ORA, sigORA and GSEA to the obtained ranked protein list. To apply sigORA and ORA one must first compute the background GPS repository using `makeGPS_wrappR()`. The advantage is that backgrounds can be specified separately for each experiment or combined for several batches of experiments. However, computing the accession pair signatures and calculating their respective weights is computationally intensive and potentially time consuming.
 
+```{r results='hide'}
+data("idmap", package = "sigora")
+myGPSrepo <- makeGPS_wrappR(ids = dd$UniprotID, target = "GO")
+res <- sigoraWrappR(df = dd, fc_threshold = 0.2, fc_col = "estimate",
+                    GPSrepos = myGPSrepo, greater_than = TRUE)
+```
 
-# Side notes
+The result of `sigoraWrappR()` is a list containing the sigORA and ORA results along with user specified inputs that will be used in the reports described in section \@ref(reports).
 
-Footnotes are displayed as side notes on the right margin^[this is a side note entered as a footnote], which has the advantage that they appear close to the place where they are defined.
+```{r}
+names(res)
+```
 
+Under the hood a lot of ID mapping has taken place of which the user is unaware. To check the ID mapping efficiency when mapping Uniprot IDs to GO, KEGG or ENTREZ accessions the package comes with a `checkIDmappingEfficiency()` function to check the number of lost IDs.
+
+```{r}
+checkIDmappingEfficiency(dd$UniprotID, keytype = "UNIPROT") %>% 
+  round(2)
+```
+
+Evidently, the mapping from Uniprot to KEGG IDs seems to be fairly inefficient and results should be interpreted with care.
+
+# Reports
+
+<!-- <FIXME> Include reports and `.runGSEA()` + other run functions </FIXME> -->
 
 # Session info {.unnumbered}
 
 ```{r sessionInfo, echo=FALSE}
 sessionInfo()
 ```
+
+# References
