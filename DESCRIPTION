@@ -2,15 +2,36 @@ Package: fgczgseaora
 Type: Package
 Title: ORA, sigORA and GSEA functionalities for proteomic data
 Version: 0.1.0
-Author: Lucas Kook, Witold Wolski
-Maintainer: Witold Wolski <wew@fgcz.ethz.ch>
-Description: Implements gene pair signature based over representation analysis and gene set 
-    enrichment tools. Allows background specification for sigORA using the sigora package 
-    without further ID mapping being necessary.
-Depends: R (>= 2.10), WebGestaltR (>= 0.3.0)
+Authors@R: c(person("Lucas", "Kook",
+    email = "lucasheinrich.kook@uzh.ch",
+    role = c("aut"),
+    comment = c(ORCID = "0000-0002-7546-7356")),
+    person("Witold E.", "Wolski",
+    email = "wew@fgcz.ethz.ch",
+    role = c("cre"),
+    comment = c(ORCID = "0000-0002-6468-120X"))
+Description: Implements gene pair signature based over representation
+    analysis and gene set enrichment tools. Allows background specification
+    for sigORA using the sigora package  without further ID mapping being necessary.
+Depends: R (>= 3.6), WebGestaltR (>= 0.3.0)
 License: GPL-2
 Encoding: UTF-8
 LazyData: true
-Imports: tidyverse, sigora, org.Hs.eg.db, GO.db, reactome.db, AnnotationDbi, dplyr, tidyr, S4Vectors, quantable, UpSetR, ggplot2, readr, magrittr, rlang
+Imports: AnnotationDbi,
+    GO.db,
+    S4Vectors,
+    UpSetR,
+    dplyr,
+    ggplot2,
+    magrittr,
+    org.Hs.eg.db,
+    quantable,
+    reactome.db,
+    readr,
+    rlang,
+    sigora,
+    tidyr,
+    tidyverse
 RoxygenNote: 6.1.1
 Suggests: knitr, rmarkdown, bookdown, slam
+biocViews: MassSpectrometryData, ReproducibleResearch
