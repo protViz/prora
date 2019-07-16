@@ -26,7 +26,6 @@ target_GSEA <- c(
 )
 
 target_GSEA <- target_GSEA[1]
-map_col <- "GO"
 fc_threshold <- .5
 greater <- TRUE
 nperm <- 10
@@ -56,7 +55,6 @@ sapply(target_GSEA, function(x) {
     organism = organism,
     ID_col = ID_col,
     target = x,
-    map_col = map_col,
     threshold = fc_threshold,
     greater = greater,
     nperm = nperm,

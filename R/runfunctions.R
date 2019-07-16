@@ -20,7 +20,6 @@
                     fc_col = "estimate",
                     organism = "hsapiens",
                     target = "geneontology_Biological_Process",
-                    map_col = "GO",
                     nperm = 10,
                     outdir = "GSEA") {
   outdir <- paste0(outdir, "_", target)
@@ -185,7 +184,6 @@
                              organism = "hsapiens",
                              ID_col = "UniprotID",
                              target = "geneontology_Biological_Process",
-                             map_col = "GO",
                              threshold = 0.5,
                              greater = TRUE,
                              nperm = 10,

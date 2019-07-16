@@ -23,11 +23,8 @@ target_GSEA <- c(
   "geneontology_Cellular_Component",
   "geneontology_Molecular_Function"
 )
-target_SIGORA <- c("GO", "KEGG", "reactome")
 
 target_GSEA <- target_GSEA[1]
-target_SIGORA <- target_SIGORA[1]
-map_col <- "GO"
 greater <- TRUE
 nperm <- 10
 
@@ -53,7 +50,6 @@ sapply(target_GSEA, function(x) {
     fc_col = fc_col,
     organism = organism,
     target = x,
-    map_col = map_col,
     nperm = nperm,
     outdir = file.path(odir, "GSEA")
   )
