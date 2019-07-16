@@ -9,8 +9,8 @@ library(fgczgseaora)
 
 # Files -------------------------------------------------------------------
 
-data("exampleContrastData", package = "fgczgseaora")
-dd <- exampleContrastData
+#data("exampleContrastData", package = "fgczgseaora")
+dd <- fgczgseaora::exampleContrastData
 dfiles <- "example_data.txt"
 
 # Parameters --------------------------------------------------------------
@@ -22,8 +22,11 @@ target_GSEA <- c(
   "geneontology_Biological_Process",
   "geneontology_Cellular_Component",
   "geneontology_Molecular_Function"
-)[1]
-target_SIGORA <- c("GO", "KEGG", "reactome")[1]
+)
+target_SIGORA <- c("GO", "KEGG", "reactome")
+
+target_GSEA <- target_GSEA[1]
+target_SIGORA <- target_SIGORA[1]
 map_col <- "GO"
 fc_threshold <- 0.5
 greater <- TRUE
