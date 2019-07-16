@@ -57,10 +57,10 @@ The following analysis compares the enrichment of particular gene/protein set me
 genesets <- GSEA$merged_data %>% 
   distinct(geneSet, .keep_all = TRUE) %>% 
   dplyr::mutate(set = paste0("<a href='",link,"'>",geneSet,"</a>")) %>% 
-  dplyr::select(set, description, ES, NES, pValue, FDR)
+  dplyr::select(set, description, enrichmentScore, normalizedEnrichmentScore, pValue, FDR)
 
-genesets <- genesets %>% arrange(NES)
-DT::datatable(genesets, escape = FALSE, colnames = c("Pathway", "Description", "ES", "NES", "P-value","Adj. P-value"), style = "bootstrap") %>% DT::formatRound(digits = 3, columns = c("ES", "NES", "pValue", "FDR"))
+genesets <- genesets %>% arrange(normalizedEnrichmentScore)
+DT::datatable(genesets, escape = FALSE, colnames = c("Pathway", "Description", "enrichmentScore", "normalizedEnrichmentScore", "P-value","Adj. P-value"), style = "bootstrap") %>% DT::formatRound(digits = 3, columns = c("enrichmentScore", "normalizedEnrichmentScore", "pValue", "FDR"))
 ```
 
 #### Input Data
@@ -80,7 +80,7 @@ GSEA$input_data %>%
 gettop <- function(data, n=10){
   data %>% 
     distinct(geneSet, .keep_all = TRUE) %>%
-    top_n(n = n, wt = abs(NES)) %>% 
+    top_n(n = n, wt = abs(normalizedEnrichmentScore)) %>% 
     dplyr::select(geneSet) %>% 
     inner_join(., data, by = "geneSet") -> out
   return(out)
