@@ -110,6 +110,7 @@
     params = list(GSEA = GSEA),
     clean = TRUE
   )
+  return(GSEA)
 }
 
 .runSIGORA <-
@@ -145,8 +146,6 @@
 
     rmarkdownPath <- file.path(outdir, "sigora.Rmd")
 
-    bibpath <- file.path(outdir, "bibliography.bib")
-
     file.copy(
       file.path(
         find.package("fgczgseaora"),
@@ -156,6 +155,7 @@
       overwrite = TRUE
     )
 
+    bibpath <- file.path(outdir, "bibliography.bib")
     file.copy(
       file.path(
         find.package("fgczgseaora"),
@@ -165,16 +165,18 @@
       overwrite = TRUE
     )
 
+    sigoraData <- list(
+      results = sigora_res,
+      GPStable = GPStab,
+      direction_greater = greater
+    )
     rmarkdown::render(
       rmarkdownPath,
       bookdown::html_document2(number_sections = FALSE),
-      params = list(
-        results = sigora_res,
-        GPStable = GPStab,
-        direction_greater = greater
-      ),
+      params = ,
       clean = TRUE
     )
+    return(sigoraData)
   }
 
 
@@ -217,4 +219,5 @@
       perNum = nperm,
       projectName = fpath
     )
+  return(ORA_res)
 }
