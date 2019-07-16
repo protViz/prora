@@ -11,6 +11,7 @@ library(fgczgseaora)
 
 #data("exampleContrastData", package = "fgczgseaora")
 dd <- fgczgseaora::exampleContrastData
+#dd <- fgczgseaora::exampleUniprotIDs
 dfiles <- "example_data.txt"
 
 # Parameters --------------------------------------------------------------
@@ -26,7 +27,7 @@ target_GSEA <- c(
 
 target_GSEA <- target_GSEA[1]
 map_col <- "GO"
-fc_threshold <- 0.5
+fc_threshold <- .5
 greater <- TRUE
 nperm <- 10
 
@@ -44,6 +45,9 @@ colnames(dd) <- make.names(colnames(dd))
 filtered_dd <- getUniprotFromFastaHeader(dd) %>%
   filter(!is.na(UniprotID))
 
+# add some check that the threshold is reasonable.
+
+sum(filtered_dd$estimate > .5)
 
 sapply(target_GSEA, function(x) {
   fgczgseaora:::.runWebGestaltORA(
