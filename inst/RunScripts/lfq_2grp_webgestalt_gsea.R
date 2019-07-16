@@ -23,18 +23,10 @@ target_GSEA <- c(
 #target_SIGORA <- target_SIGORA[1]
 # Parameters --------------------------------------------------------------
 
-organism <- "hsapiens"
-ID_col <- "UniprotID"
-fc_col <- "estimate"
 
-grp2report <- "data/2Grp_CF_a_vs_CF_b.txt"
-result_dir <- "gsea_ora_results"
-
-
-organism <- "hsapiens"
 ID_col <- "TopProteinName"
 fc_col <- "log2FC"
-nperm <- 10
+nperm <- 100
 
 #
 fpath_se <- tools::file_path_sans_ext(basename(grp2report))

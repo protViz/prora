@@ -6,29 +6,41 @@ library(sigora)
 library(GO.db)
 library(slam)
 library(fgczgseaora)
-
+library(readr)
 
 # Files -------------------------------------------------------------------
 
-dd <- fgczgseaora::exampleContrastData
-dfiles <- "example_data.txt"
+grp2report <- "data/2Grp_CF_a_vs_CF_b.txt"
+result_dir <- "gsea_ora_results"
+target_SIGORA <- c("GO", "KEGG", "reactome")
 
+#target_SIGORA <- target_SIGORA[1]
 
-# Parameters --------------------------------------------------------------
 
 organism <- "hsapiens"
-ID_col <- "UniprotID"
-fc_col <- "estimate"
-
-target_SIGORA <- c("GO", "KEGG", "reactome")
-target_SIGORA <- target_SIGORA[1]
-fc_threshold <- 0.5
+ID_col <- "TopProteinName"
+fc_col <- "log2FC"
+fc_threshold <- 1
 greater <- TRUE
 
 
+fpath_se <- tools::file_path_sans_ext(basename(grp2report))
+odir <- file.path(result_dir , make.names(fpath_se))
+
+
+dd <- read_tsv(grp2report)
+dd <- dd %>% select_at(c(ID_col, fc_col))
+
+filtered_dd <- getUniprotFromFastaHeader(dd,idcolumn = ID_col) %>%
+  filter(!is.na(UniprotID))
+
+# Parameters --------------------------------------------------------------
+
+filtered_dd <- na.omit(filtered_dd)
+sum(filtered_dd[[fc_col]] > fc_threshold)
+
+
 # Run ---------------------------------------------------------------------
-fpath_se <- tools::file_path_sans_ext(basename(dfiles))
-odir <- make.names(fpath_se)
 
 if (!dir.exists(odir)) {
   if (!dir.create(odir)) {
@@ -36,19 +48,15 @@ if (!dir.exists(odir)) {
   }
 }
 
-colnames(dd) <- make.names(colnames(dd))
-filtered_dd <- getUniprotFromFastaHeader(dd) %>%
-  filter(!is.na(UniprotID))
-
-
 
 if (organism == "hsapiens"){
-
-  sapply(target_SIGORA, function(target_SIGORA) {
+  res <- lapply(target_SIGORA, function(target_SIGORA) {
+    message(target_SIGORA)
     fgczgseaora:::.runSIGORA(
       data = filtered_dd,
       target = target_SIGORA,
       fc_col = fc_col,
+      ID_col = "UniprotID",
       fc_threshold = fc_threshold,
       greater = greater,
       outdir = file.path(odir, "sigORA")
