@@ -12,3 +12,8 @@ GSEA_output/
 *.Rd
 inst/example_data/Contrasts_SignificanceValues_f_Cells_Treatment.csv
 genData.R
+vignettes/*.R
+vignettes/*.out
+vignettes/*.tex
+vignettes/.build.*
+
