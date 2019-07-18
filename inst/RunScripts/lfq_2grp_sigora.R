@@ -12,11 +12,12 @@ library(readr)
 
 grp2report <- "data/2Grp_CF_a_vs_CF_b.txt"
 result_dir <- "gsea_ora_results"
-target_SIGORA <- c("GO", "KEGG", "reactome")
+
+
 
 #target_SIGORA <- target_SIGORA[1]
 
-
+target_SIGORA <- c("GO", "KEGG", "reactome")
 organism <- "hsapiens"
 ID_col <- "TopProteinName"
 fc_col <- "log2FC"
