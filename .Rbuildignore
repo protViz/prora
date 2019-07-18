@@ -2,3 +2,6 @@
 ^\.Rproj\.user$
 inst/example_data/*
 genData.R
+inst/rmarkdown_reports/*.html
+inst/rmarkdown_reports/*.pdf
+
