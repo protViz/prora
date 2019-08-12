@@ -55,7 +55,6 @@ for (i in seq_len(length(dfiles))) {
       fc_col = fc_col,
       organism = organism,
       target = x,
-      map_col = map_col,
       nperm = nperm,
       outdir = file.path(odir, "GSEA")
     )
@@ -68,7 +67,6 @@ for (i in seq_len(length(dfiles))) {
       organism = organism,
       ID_col = ID_col,
       target = x,
-      map_col = map_col,
       threshold = fc_threshold,
       greater = greater,
       nperm = nperm,
