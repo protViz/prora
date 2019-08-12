@@ -8,6 +8,8 @@
 #' @importFrom WebGestaltR WebGestaltRBatch
 #' @importFrom stats sd
 #' @importFrom magrittr %>%
+#' @importFrom rlang .data
+#' @importFrom readr parse_number
 #'
 #' @return list with results
 #'
@@ -62,7 +64,7 @@ webGestaltWrapper <-
       }
 
       res <- lapply(output, makedataframe) %>%
-        do.call(rbind, .)
+        do.call(rbind, .data)
       return(res)
     }
 

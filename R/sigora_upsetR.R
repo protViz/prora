@@ -4,13 +4,13 @@
 #' @param GPStable Object returned by \code{\link{makeGPS_wrappR}} function, setting \code{dev=TRUE}
 #' @param ... other parameters to \code{upset}
 #'
-#' @export sigora_upsetR sigora_upsetR
 #' @importFrom UpSetR fromList upset
 #' @importFrom dplyr inner_join filter select mutate
 #' @importFrom tidyr spread
 #' @importFrom S4Vectors na.omit
 #' @importFrom magrittr %>%
-
+#' @importFrom rlang .data
+#' @export
 sigora_upsetR <- function(sigora_res, GPStable, ...) {
   mergeR <- function(sigora_res, GPStable) {
     tab1 <- sigora_res$sigora$summary_results
@@ -28,7 +28,7 @@ sigora_upsetR <- function(sigora_res, GPStable, ...) {
 
   toplot <- df %>%
     dplyr::select(pathwayId, gene) %>%
-    dplyr::mutate(ID = 1:nrow(.)) %>%
+    dplyr::mutate(ID = seq_len(nrow(.data))) %>%
     tidyr::spread(pathwayId, gene) %>%
     dplyr::select(-ID) %>%
     as.list() %>%
