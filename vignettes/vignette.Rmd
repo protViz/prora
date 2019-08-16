@@ -92,6 +92,79 @@ Evidently, the mapping from Uniprot to KEGG IDs seems to be fairly inefficient a
 
 <!-- <FIXME> Include reports and `.runGSEA()` + other run functions </FIXME> -->
 
+Good reporting and reproducibility of all intermediate and final results is key to good scientific practice. In this spirit, `fgczgseaora` provides a reproducible, `r CRANpkg("rmarkdown")` based reports for each method. To highlight the most important targets, settings and parameters, a walkthrough is given in this part of the vignette.
+
+To run all methods and produce the reports on the example data from the prior section, the following parameters must be set in advance.
+
+```{r}
+organism <- "hsapiens" # Organism to which the FASTA headers correspond
+ID_col <- "UniprotID" # Column containing the IDs
+fc_col <- "estimate" # Column containing the estimates (in this case log fold changes)
+target_GSEA <- c( # all possible targets for GSEA
+  "geneontology_Biological_Process",
+  "geneontology_Cellular_Component",
+  "geneontology_Molecular_Function"
+)
+target_SIGORA <- # all possible targets for sigORA
+  c("GO", "KEGG", "reactome")
+fc_threshold <- 0.5 # threshold for ORA methods
+greater <- TRUE # direction of the threshold
+nperm <- 10 # number of permutations used to compute enrichment scores in GSEA
+odir <- "tmp" # output directory to write all reports
+```
+
+To iterate over all possible target directly, wrapper functions that are not exported by `fgczgseaora`'s NAMESPACE can be used. They take the above specified parameters as inputs and facilitate the enrichment analysis workflows tremendously. The results will be saved to the specified output directory with a subfolder for each method and target.
+
+The following code chunk iterates the `.runGSEA()` function over all possible GSEA target databases.
+
+```{r eval=FALSE}
+sapply(target_GSEA, function(x) {
+  fgczgseaora:::.runGSEA(
+    data = dd,
+    fpath = "",
+    ID_col = ID_col,
+    fc_col = fc_col,
+    organism = organism,
+    target = x,
+    nperm = nperm,
+    outdir = file.path(odir, "GSEA")
+  )
+})
+```
+
+Analogously, `.runWebGestaltORA()` and `.runSIGORA()` embody a whole workflow and save nicely formatted results to the output directory.
+
+```{r eval=FALSE}
+sapply(target_GSEA, function(x) {
+  fgczgseaora:::.runWebGestaltORA(
+    data = dd,
+    fpath = "",
+    organism = organism,
+    ID_col = ID_col,
+    target = x,
+    threshold = fc_threshold,
+    greater = greater,
+    nperm = nperm,
+    fc_col = fc_col,
+    outdir = file.path(odir, "WebGestaltORA")
+  )
+})
+```
+
+```{r eval=FALSE}
+sapply(target_SIGORA, function(x) {
+  fgczgseaora:::.runSIGORA(
+    data = dd,
+    target = x,
+    fc_col = fc_col,
+    fc_threshold = fc_threshold,
+    greater = greater,
+    outdir = file.path(odir, "sigORA")
+  )
+})
+```
+
+
 # Session info {.unnumbered}
 
 ```{r sessionInfo, echo=FALSE}
