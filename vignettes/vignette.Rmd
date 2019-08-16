@@ -115,7 +115,7 @@ odir <- "tmp" # output directory to write all reports
 
 To iterate over all possible target directly, wrapper functions that are not exported by `fgczgseaora`'s NAMESPACE can be used. They take the above specified parameters as inputs and facilitate the enrichment analysis workflows tremendously. The results will be saved to the specified output directory with a subfolder for each method and target.
 
-The following code chunk iterates the `.runGSEA()` function over all possible GSEA target databases.
+The following code chunk iterates the `.runGSEA()` function over all possible GSEA target databases. Internally, `.runGSEA()` calls `WebGestaltR()` for the analysis and compiles `fgczgseaora's` in the same output directory.
 
 ```{r eval=FALSE}
 sapply(target_GSEA, function(x) {
@@ -150,6 +150,8 @@ sapply(target_GSEA, function(x) {
   )
 })
 ```
+
+`.runSIGORA()` calls the `sigoraWrappR()` function which was introduced in section \@ref(Example workflow) and compiles the built-in report. 
 
 ```{r eval=FALSE}
 sapply(target_SIGORA, function(x) {
