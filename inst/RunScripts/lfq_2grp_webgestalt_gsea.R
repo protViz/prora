@@ -1,64 +1,43 @@
+#!/usr/bin/Rscript
+"WebGestaltR GSEA
+
+Usage:
+  test.R <grp2file> [--organism=<organism>] [--outdir=<outdir>]
+        [--nperm=<nperm>] [--ID_col=<ID_col>] [--fc_col=<fc_col>]
+
+Options:
+  -o --organism=<organism> organism [default: hsapiens]
+  -r --outdir=<outdir> output directory [default: results]
+  -n --nperm=<nperm> number of permutations to calculate enrichment scores [default: 10]
+  -i --ID_col=<ID_col> Column containing the UniprotIDs [default: TopProteinName]
+  -f --fc_col=<fc_col> Column containing the estimates [default: log2FC]
+
+Arguments:
+  grp2file  input file
+" -> doc
+
+library(docopt)
+opt <- docopt(doc)
+
 options(warn = -1)
-
-
 suppressMessages(library(WebGestaltR))
-
 suppressMessages(library(tidyverse))
 suppressMessages(library(org.Hs.eg.db))
 suppressMessages(library(sigora))
-library(GO.db)
-library(slam)
-library(fgczgseaora)
-library(readr)
+suppressMessages(library(GO.db))
+suppressMessages(library(slam))
+suppressMessages(library(fgczgseaora))
+suppressMessages(library(readr))
 
 
-# Files -------------------------------------------------------------------
+# Check command args ------------------------------------------------------
 
-args = commandArgs(trailingOnly=TRUE)
-print(args)
-
-
-if(length(args) < 2) {
-  stop("At least two argument must be supplied: grp2file and output_directory", call.=FALSE)
-}
-#args <- c("data/MQ-report-mouseLFQ_8wPostSCI_vs_Nv.txt", "gsea_results")
-grp2report <- args[1]
-result_dir <- args[2]
-
-organism <- "hsapiens"
-if(length(args) == 3){
-  organism <- args[3]
-}
-organisms <- listOrganism(hostName = "http://www.webgestalt.org/", cache = NULL)
-
-if(! organism %in% organisms){
-  stop("organism : ",organism, "is not in the list of available organisms", paste(organisms, collapse=" ") )
-}
-
-
-# number of permutations
-nperm <- 10
-if (length(args)==4) {
-  nperm <- args[4]
-}
-
-ID_col <- "TopProteinName"
-fc_col <- "log2FC"
-
-if (length(args) == 6) {
-  # default output file
-  ID_col <- args[5]
-  fc_col <- args[6]
-}
-
-#######################################
-
-cat("grp2report", grp2report , "\n",
-    "result_dir",result_dir , "\n",
-    "organism", organism, "\n",
-    "nperm",nperm , "\n",
-    "ID_col" , ID_col,"\n",
-    "fc_col" , fc_col , "\n")
+cat("\nParameters used:\n\t grp2report:", grp2report <- opt$grp2file, "\n\t",
+    "result_dir:", result_dir <- opt[["--outdir"]], "\n\t",
+    "  organism:", org <- opt[["--organism"]], "\n\t",
+    "     nperm:", nperm <- as.numeric(opt[["--nperm"]]), "\n\t",
+    "    ID_col:", ID_col <- opt[["--ID_col"]],"\n\t",
+    "    fc_col:", fc_col <- opt[["--fc_col"]] , "\n\n\n")
 
 
 target_GSEA <- c(
@@ -67,12 +46,11 @@ target_GSEA <- c(
   "geneontology_Molecular_Function"
 )
 
-#target_SIGORA <- target_SIGORA[1]
+
 # Parameters --------------------------------------------------------------
 
-#
 fpath_se <- tools::file_path_sans_ext(basename(grp2report))
-odir <- file.path( result_dir , make.names(fpath_se))
+odir <- file.path(result_dir , make.names(fpath_se))
 
 if(!dir.exists(result_dir)){
   dir.create(result_dir)
@@ -85,7 +63,7 @@ if (!dir.exists(odir)) {
 dd <- read_tsv(grp2report)
 dd <- dd %>% select_at(c(ID_col, fc_col))
 
-filtered_dd <- getUniprotFromFastaHeader(dd,idcolumn = ID_col) %>%
+filtered_dd <- getUniprotFromFastaHeader(dd, idcolumn = ID_col) %>%
   filter(!is.na(UniprotID))
 filtered_dd <- na.omit(filtered_dd)
 
@@ -96,7 +74,7 @@ res <- lapply(target_GSEA, function(x) {
     fpath = "",
     ID_col = "UniprotID",
     fc_col = fc_col,
-    organism = organism,
+    organism = org,
     target = x,
     nperm = nperm,
     outdir = file.path(odir, "GSEA")
