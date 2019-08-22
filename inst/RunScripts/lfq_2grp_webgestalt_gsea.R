@@ -47,6 +47,12 @@ target_GSEA <- c(
 )
 
 
+organisms <- listOrganism(hostName = "http://www.webgestalt.org/", cache = NULL)
+
+if(! organism %in% organisms){
+  stop("organism : ",organism, "is not in the list of available organisms", paste(organisms, collapse=" ") )
+}
+
 # Parameters --------------------------------------------------------------
 
 fpath_se <- tools::file_path_sans_ext(basename(grp2report))
