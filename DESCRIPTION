@@ -35,5 +35,5 @@ Imports: AnnotationDbi,
     tidyverse
 RoxygenNote: 6.1.1
 VignetteBuilder: knitr
-Suggests: knitr, rmarkdown, bookdown, slam, BiocStyle
+Suggests: knitr, rmarkdown, bookdown, slam, BiocStyle, docopt
 biocViews: MassSpectrometryData, ReproducibleResearch

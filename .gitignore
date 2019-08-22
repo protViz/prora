@@ -16,4 +16,5 @@ vignettes/*.R
 vignettes/*.out
 vignettes/*.tex
 vignettes/.build.*
+inst/example_data/2Grp_CF_a_vs_CF_b.txt
 

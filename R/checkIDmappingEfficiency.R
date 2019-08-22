@@ -4,6 +4,7 @@
 #' @importFrom AnnotationDbi mapIds
 #' @importFrom S4Vectors na.omit
 #' @importFrom dplyr distinct
+#' @importFrom tibble enframe
 #' @return Returns a data.frame containing information of mapping efficiency on GO, ENTREZ and KEGG IDs
 #'
 #' @examples
@@ -13,19 +14,19 @@
 #'
 #' @export checkIDmappingEfficiency
 #'
-checkIDmappingEfficiency <- function(IDs, keytype) {
+checkIDmappingEfficiency <- function(IDs, keytype, db = org.Hs.eg.db) {
   uniqueInputIDs <- unique(IDs)
   number_unique_InputIDs <- length(uniqueInputIDs)
 
-  mapping <- function(x = org.Hs.eg.db, column) {
+  mapping <- function(column) {
     mpd <- mapIds(
-      x = x,
+      x = db,
       keys = uniqueInputIDs,
       keytype = keytype,
       column = column,
       multiVals = "CharacterList"
     ) %>% unlist %>%
-      data.frame(InputIDs = names(.), mappedIDs = .) %>%
+      enframe(name = "InputIDs", value = "mappedIDs") %>%
       na.omit %>% distinct(InputIDs) %>% nrow %>% return()
   }
 

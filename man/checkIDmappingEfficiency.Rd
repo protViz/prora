@@ -4,7 +4,7 @@
 \alias{checkIDmappingEfficiency}
 \title{Checks mapping efficiency for IDs on the most commonly used ID types}
 \usage{
-checkIDmappingEfficiency(IDs, keytype)
+checkIDmappingEfficiency(IDs, keytype, db = org.Hs.eg.db)
 }
 \arguments{
 \item{IDs}{character vector of IDs}
