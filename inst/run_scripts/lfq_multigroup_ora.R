@@ -1,13 +1,16 @@
 #!/usr/bin/Rscript
+
 "WebGestaltR GSEA
 
 Usage:
-  test.R <grp2file> [--organism=<organism>] [--outdir=<outdir>] [--nperm=<nperm>]
+  test.R <grp2file> [--organism=<organism>] [--outdir=<outdir>] [--nperm=<nperm>] [--log2fc=<log2fc>] [--is_greater=<is_greater>]
 
 Options:
   -o --organism=<organism> organism [default: hsapiens]
-  -r --outdir=<outdir> output directory [default: results_gsea]
+  -r --outdir=<outdir> output directory [default: results_ora]
   -n --nperm=<nperm> number of permutations to calculate enrichment scores [default: 50]
+  -t --log2fc=<log2fc> fc threshold [default: 1]
+  -g --is_greater=<is_greater> is greater than log2fc [default: TRUE]
 
 Arguments:
   grp2file  input file
@@ -16,10 +19,9 @@ Arguments:
 library(docopt)
 opt <- docopt(doc)
 
-options(warn = -1)
-suppressMessages( library(WebGestaltR) )
-suppressMessages( library(tidyverse) )
-suppressMessages( library(org.Hs.eg.db) )
+suppressMessages(library(WebGestaltR))
+suppressMessages(library(tidyverse))
+suppressMessages(library(org.Hs.eg.db))
 suppressMessages(library(sigora))
 suppressMessages(library(GO.db))
 suppressMessages(library(slam))
@@ -32,6 +34,8 @@ suppressMessages(library(readr))
 cat("\nParameters used:\n\t grp2report:", grp2report <- opt$grp2file, "\n\t",
     "result_dir:", result_dir <- opt[["--outdir"]], "\n\t",
     "  organism:", organism <- opt[["--organism"]], "\n\t",
+    "    log2fc:", log2fc <- opt[["--log2fc"]], "\n\t",
+    "is_greater:", is_greater <- opt[["--is_greater"]], "\n\t",
     "     nperm:", nperm <- as.numeric(opt[["--nperm"]]), "\n\n\n")
 
 
@@ -47,7 +51,7 @@ contrast <- "contrast"
 
 organisms <- listOrganism(hostName = "http://www.webgestalt.org/", cache = NULL)
 
-if(! organism %in% organisms){
+if(! organism %in% organisms) {
   stop("organism : " , organism , "is not in the list of available organisms", paste(organisms, collapse=" ") )
 }
 
@@ -60,8 +64,13 @@ if(!dir.exists(result_dir)){
   dir.create(result_dir)
 }
 
-if (!dir.exists(odir)) {
-  dir.create(odir)
+if(!dir.exists(result_dir)){
+  dir.create(result_dir)
+}
+
+subdir <- file.path(result_dir, paste0("fc_",log2fc,"_is_g_",is_greater))
+if(!dir.exists(subdir)){
+  dir.create(subdir)
 }
 
 fc_estimates <- readxl::read_xlsx(grp2report)
@@ -87,18 +96,22 @@ names(filtered_dd_list) <- contr_names
 
 for(name in names(filtered_dd_list)){
   filtered_dd <- filtered_dd_list[[name]]
+
   cat("\n\n processing contrast :",name, "\n\n")
+
   res <- lapply(target_GSEA, function(x) {
-    message(x)
-    fgczgseaora:::.runGSEA(
+    message("\n",x,"\n")
+    fgczgseaora:::.runWebGestaltORA(
       data = filtered_dd,
       fpath = name,
-      ID_col = "UniprotID",
-      fc_col = fc_col,
       organism = organism,
+      ID_col = "UniprotID",
       target = x,
+      threshold = log2fc,
+      greater = is_greater,
       nperm = nperm,
-      outdir = file.path(odir, "GSEA")
+      fc_col = fc_col,
+      outdir = subdir
     )
   })
 }
