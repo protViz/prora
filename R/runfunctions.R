@@ -22,7 +22,7 @@
                     target = "geneontology_Biological_Process",
                     nperm = 10,
                     outdir = "GSEA") {
-  outdir <- paste0(outdir, "_", target)
+  outdir <- file.path(outdir, target)
 
   if (!dir.exists(outdir)) {
     dir.create(outdir)
@@ -189,7 +189,7 @@
                              nperm = 10,
                              fc_col = "estimate",
                              outdir = "WebGestalt_ORA") {
-  outdir <- paste0(outdir, "_", target)
+  outdir <- file.path(outdir, target)
 
   if (!dir.exists(outdir)) {
     dir.create(outdir)
