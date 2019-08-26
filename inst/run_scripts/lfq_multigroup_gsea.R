@@ -53,15 +53,9 @@ if(! organism %in% organisms){
 
 # Parameters --------------------------------------------------------------
 
-fpath_se <- tools::file_path_sans_ext(basename(grp2report))
-odir <- file.path(result_dir , make.names(fpath_se))
 
 if(!dir.exists(result_dir)){
   dir.create(result_dir)
-}
-
-if (!dir.exists(odir)) {
-  dir.create(odir)
 }
 
 fc_estimates <- readxl::read_xlsx(grp2report)
@@ -98,7 +92,7 @@ for(name in names(filtered_dd_list)){
       organism = organism,
       target = x,
       nperm = nperm,
-      outdir = file.path(odir, "GSEA")
+      outdir = result_dir
     )
   })
 }
