@@ -8,7 +8,7 @@ Usage:
 Options:
   -o --organism=<organism> organism [default: hsapiens]
   -r --outdir=<outdir> output directory [default: results]
-  -n --nperm=<nperm> number of permutations to calculate enrichment scores [default: 10]
+  -n --nperm=<nperm> number of permutations to calculate enrichment scores [default: 50]
   -i --ID_col=<ID_col> Column containing the UniprotIDs [default: TopProteinName]
   -f --fc_col=<fc_col> Column containing the estimates [default: log2FC]
 
@@ -34,7 +34,7 @@ suppressMessages(library(readr))
 
 cat("\nParameters used:\n\t grp2report:", grp2report <- opt$grp2file, "\n\t",
     "result_dir:", result_dir <- opt[["--outdir"]], "\n\t",
-    "  organism:", org <- opt[["--organism"]], "\n\t",
+    "  organism:", organism <- opt[["--organism"]], "\n\t",
     "     nperm:", nperm <- as.numeric(opt[["--nperm"]]), "\n\t",
     "    ID_col:", ID_col <- opt[["--ID_col"]],"\n\t",
     "    fc_col:", fc_col <- opt[["--fc_col"]] , "\n\n\n")
@@ -66,12 +66,19 @@ if (!dir.exists(odir)) {
   dir.create(odir)
 }
 
-dd <- read_tsv(grp2report)
-dd <- dd %>% select_at(c(ID_col, fc_col))
+fc_estimates <- read_tsv(grp2report)
+fc_estimates <- fc_estimates %>% select_at(c(ID_col, fc_col))
 
-filtered_dd <- getUniprotFromFastaHeader(dd, idcolumn = ID_col) %>%
+print("Selected columns: ")
+print(sample_n(fc_estimates, 10))
+
+filtered_dd <- getUniprotFromFastaHeader(fc_estimates, idcolumn = ID_col) %>%
   filter(!is.na(UniprotID))
 filtered_dd <- na.omit(filtered_dd)
+print("After ID filtering columns: ")
+print(sample_n(filtered_dd, 10))
+
+
 
 res <- lapply(target_GSEA, function(x) {
   message(x)
@@ -80,7 +87,7 @@ res <- lapply(target_GSEA, function(x) {
     fpath = "",
     ID_col = "UniprotID",
     fc_col = fc_col,
-    organism = org,
+    organism = organism,
     target = x,
     nperm = nperm,
     outdir = file.path(odir, "GSEA")
