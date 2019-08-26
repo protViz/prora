@@ -2,12 +2,11 @@
 "WebGestaltR GSEA
 
 Usage:
-  test.R <grp2file> [--organism=<organism>] [--outdir=<outdir>]
-        [--nperm=<nperm>] [--ID_col=<ID_col>] [--fc_col=<fc_col>]
+  test.R <grp2file> [--organism=<organism>] [--outdir=<outdir>] [--nperm=<nperm>] [--ID_col=<ID_col>] [--fc_col=<fc_col>]
 
 Options:
   -o --organism=<organism> organism [default: hsapiens]
-  -r --outdir=<outdir> output directory [default: results]
+  -r --outdir=<outdir> output directory [default: results_gsea]
   -n --nperm=<nperm> number of permutations to calculate enrichment scores [default: 50]
   -i --ID_col=<ID_col> Column containing the UniprotIDs [default: TopProteinName]
   -f --fc_col=<fc_col> Column containing the estimates [default: log2FC]
@@ -55,16 +54,11 @@ if(! organism %in% organisms){
 
 # Parameters --------------------------------------------------------------
 
-fpath_se <- tools::file_path_sans_ext(basename(grp2report))
-odir <- file.path(result_dir , make.names(fpath_se))
 
 if(!dir.exists(result_dir)){
   dir.create(result_dir)
 }
 
-if (!dir.exists(odir)) {
-  dir.create(odir)
-}
 
 fc_estimates <- read_tsv(grp2report)
 fc_estimates <- fc_estimates %>% select_at(c(ID_col, fc_col))
@@ -90,7 +84,7 @@ res <- lapply(target_GSEA, function(x) {
     organism = organism,
     target = x,
     nperm = nperm,
-    outdir = file.path(odir, "GSEA")
+    outdir = result_dir
   )
 })
 

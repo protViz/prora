@@ -2,8 +2,7 @@
 "WebGestaltR ORA
 
 Usage:
-  test.R <grp2file> [--organism=<organism>] [--outdir=<outdir>]
-        [--nperm=<nperm>] [--ID_col=<ID_col>] [--fc_col=<fc_col>]
+  test.R <grp2file> [--organism=<organism>] [--outdir=<outdir>] [--log2fc=<log2fc>] [--is_greater=<is_greater>] [--nperm=<nperm>] [--ID_col=<ID_col>] [--fc_col=<fc_col>]
 
 Options:
   -o --organism=<organism> organism [default: hsapiens]
@@ -18,10 +17,7 @@ Arguments:
   grp2file  input file
 " -> doc
 
-library(docopt)
-opt <- docopt(doc)
 
-options(warn = -1)
 suppressMessages(library(WebGestaltR))
 suppressMessages(library(tidyverse))
 suppressMessages(library(org.Hs.eg.db))
@@ -30,7 +26,12 @@ suppressMessages(library(GO.db))
 suppressMessages(library(slam))
 suppressMessages(library(fgczgseaora))
 suppressMessages(library(readr))
+library(docopt)
 
+
+opt <- docopt(doc)
+
+print(opt)
 
 # Check command args ------------------------------------------------------
 
@@ -60,15 +61,18 @@ if(! organism %in% organisms){
 # Parameters --------------------------------------------------------------
 
 fpath_se <- tools::file_path_sans_ext(basename(grp2report))
-odir <- file.path(result_dir , make.names(fpath_se))
+#odir <- file.path(result_dir , make.names(fpath_se))
 
 if(!dir.exists(result_dir)){
   dir.create(result_dir)
 }
 
-if (!dir.exists(odir)) {
-  dir.create(odir)
+subdir <- file.path(result_dir, paste0("fc_",log2fc,"_is_g_",is_greater))
+if(!dir.exists(subdir)){
+  dir.create(subdir)
 }
+
+
 
 fc_estimates <- read_tsv(grp2report)
 fc_estimates <- fc_estimates %>% select_at(c(ID_col, fc_col))
@@ -97,7 +101,7 @@ res <- lapply(target_GSEA, function(x) {
     greater = is_greater,
     nperm = nperm,
     fc_col = fc_col,
-    outdir = file.path(odir, "WebGestaltORA")
+    outdir = subdir
   )
 })
 
