@@ -7,7 +7,7 @@ This package also provides executable R script files which can be run on windows
 # Webgestalt ORA
 
 ```
-PS D:\Dropbox\DataAnalysis\fgczgseaora_Test_SRMService_Integration>  Rscript C:\Users\wolski\prog\fgczgseaora\inst\run_scripts\lfq_2grp_webgestalt_ora.R --help
+PS >  Rscript <fgczgseaora_path>\run_scripts\lfq_2grp_webgestalt_ora.R --help
 
 WebGestaltR ORA
 
@@ -40,7 +40,7 @@ Rscript <fgczgseaora_path>\run_scripts\lfq_2grp_webgestalt_ora.R .\data\2Grp_CF_
 # WebGestaltR GSEA 
 
 ```
-PS D:\Dropbox\DataAnalysis\fgczgseaora_Test_SRMService_Integration>  Rscript C:\Users\wolski\prog\fgczgseaora\inst\run_scripts\lfq_2grp_webgestalt_gsea.R --help
+PS >  Rscript <fgczgseaora_path>\run_scripts\lfq_2grp_webgestalt_gsea.R --help
 WebGestaltR GSEA
 
 Usage:
