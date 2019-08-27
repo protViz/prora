@@ -61,6 +61,18 @@ PS D:\Dropbox\DataAnalysis\fgczgseaora_Test_SRMService_Integration>
 
 
 ```
-Rscript <fgczgseaora_path>\run_scripts\lfq_2grp_webgestalt_gsea.R .\data\2Grp_CF_a_vs_CF_b.txt
+PS > Rscript <fgczgseaora_path>\run_scripts\lfq_2grp_webgestalt_gsea.R .\data\2Grp_CF_a_vs_CF_b.txt
+```
+
+To simplify executing the scripts you can add `<fgczgseaora_path>\win` to the path variable on windows and than execute:
+
+```
+PS > lfq_2grp_webgestalt_gsea.bat --help
+```
+
+or ad `<fgczgseaora_path>\run_scripts` to the path on linux and execute
+
+```
+lfq_2grp_webgestalt_gsea.R --help
 ```
 
