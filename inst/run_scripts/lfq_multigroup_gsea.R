@@ -1,5 +1,5 @@
 #!/usr/bin/Rscript
-"WebGestaltR GSEA
+"WebGestaltR GSEA for multigroup reports
 
 Usage:
   test.R <grp2file> [--organism=<organism>] [--outdir=<outdir>] [--nperm=<nperm>]
@@ -17,9 +17,9 @@ library(docopt)
 opt <- docopt(doc)
 
 options(warn = -1)
-suppressMessages( library(WebGestaltR) )
-suppressMessages( library(tidyverse) )
-suppressMessages( library(org.Hs.eg.db) )
+suppressMessages(library(WebGestaltR))
+suppressMessages(library(tidyverse))
+suppressMessages(library(org.Hs.eg.db))
 suppressMessages(library(sigora))
 suppressMessages(library(GO.db))
 suppressMessages(library(slam))

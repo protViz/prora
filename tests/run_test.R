@@ -32,7 +32,6 @@ fc_threshold <- 0.5
 greater <- TRUE
 nperm <- 10
 
-
 # Run ---------------------------------------------------------------------
 
 for (i in seq_len(length(dfiles))) {
