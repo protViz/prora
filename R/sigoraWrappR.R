@@ -52,7 +52,7 @@ sigoraWrappR <-
     }
     sigora_res <-
       sigora::sigora(GPSrepo = GPSrepos,
-             level = 5,
+             level = 2,
              queryList = enriched$UniprotID)
     ora_res <-
       sigora::ora(geneList = enriched$UniprotID,
