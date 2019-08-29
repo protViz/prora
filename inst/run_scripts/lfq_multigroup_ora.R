@@ -34,8 +34,7 @@ suppressMessages(library(readr))
 cat("\nParameters used:\n\t grp2report:", grp2report <- opt$grp2file, "\n\t",
     "result_dir:", result_dir <- opt[["--outdir"]], "\n\t",
     "  organism:", organism <- opt[["--organism"]], "\n\t",
-    "    log2fc:", log2fc <- opt[["--log2fc"]], "\n\t",
-    "is_greater:", is_greater <- opt[["--is_greater"]], "\n\t",
+    "    log2fc:", log2fc <- as.numeric(opt[["--log2fc"]]), "\n\t",
     "     nperm:", nperm <- as.numeric(opt[["--nperm"]]), "\n\n\n")
 
 
@@ -85,11 +84,6 @@ print(sample_n(filtered_dd, 10))
 
 
 
-
-
-
-
-
 filtered_dd_list <- base::split(filtered_dd, filtered_dd$contrast)
 contr_names <- names(filtered_dd_list)
 contr_names <- gsub(" ","", contr_names)
@@ -100,9 +94,9 @@ names(filtered_dd_list) <- contr_names
 
 
 
+log2fc_s <- c(log2fc, -as.numeric(log2fc))
 
-log2fc_s <- c(log2fc, -log2fc)
-
+is_greater <- if(log2fc > 0 ){TRUE}else{FALSE}
 for(log2fc in log2fc_s){
 
   subdir <- file.path(result_dir, paste0("fc_threshold_",abs(log2fc),"_is_greater_",is_greater))
@@ -125,7 +119,7 @@ for(log2fc in log2fc_s){
         ID_col = "UniprotID",
         target = x,
         threshold = log2fc,
-        greater = if(log2fc >0 ){TRUE}else{FALSE},
+        greater = is_greater,
         nperm = nperm,
         fc_col = fc_col,
         outdir = subdir
