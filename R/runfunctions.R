@@ -25,7 +25,7 @@
   outdir <- file.path(outdir, target)
 
   if (!dir.exists(outdir)) {
-    dir.create(outdir)
+    dir.create(outdir, recursive = TRUE)
   }
 
   ranktable <- data %>%
@@ -133,7 +133,7 @@
     outdir <- paste0(outdir, "_", target)
 
     if (!dir.exists(outdir)) {
-      dir.create(outdir)
+      dir.create(outdir, recursive = TRUE)
     }
 
     GPStab <-
@@ -143,14 +143,19 @@
       makeGPS_wrappR(data[[ID_col]], target = target)
 
     sigora_res <-
-      sigoraWrappR(
+      try(sigoraWrappR(
         fc_threshold = fc_threshold,
         fc_col = fc_col,
         df = data,
         GPSrepos = myGPSrepo,
         db = target,
         greater_than = greater
-      )
+      ))
+
+    if (inherits(sigora_res, "try-error")) {
+      message("No enriched pathways. No report will be generated.")
+      return(invisible(NULL))
+    }
 
 
     rmarkdownPath <- file.path(outdir, "sigora.Rmd")
@@ -202,7 +207,7 @@
   outdir <- file.path(outdir, target)
 
   if (!dir.exists(outdir)) {
-    dir.create(outdir)
+    dir.create(outdir, recursive = TRUE)
   }
 
   dat <- data %>%
