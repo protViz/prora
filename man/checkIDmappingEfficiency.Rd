@@ -10,6 +10,8 @@ checkIDmappingEfficiency(IDs, keytype, db = org.Hs.eg.db)
 \item{IDs}{character vector of IDs}
 
 \item{keytype}{corresponding keytype}
+
+\item{db}{database object, default org.Hs.eg.db}
 }
 \value{
 Returns a data.frame containing information of mapping efficiency on GO, ENTREZ and KEGG IDs
