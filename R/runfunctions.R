@@ -44,6 +44,16 @@
       projectName = fpath
     )
 
+  if(is.null(GSEA_res)){
+    warning("!!! no results returned by WebGestaltR !!!", GSEA_res)
+    return(NULL)
+  }
+
+  rdataPath <- file.path(outdir, paste0("Project_", fpath), "GSEA_res.Rdata")
+
+  message("storing GSEA_res to: ", rdataPath)
+  saveRDS(GSEA_res, file= rdataPath)
+
   f_mappingTable <- file.path(
     outdir,
     paste0("Project_", fpath),
