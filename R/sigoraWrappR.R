@@ -15,6 +15,7 @@
 #' @param db database used for the generation of the GPS repository
 #' @param greater_than Logical. Whether fc_threshold should be applied as
 #' greater_than (default is \code{TRUE}) or strictly less than (\code{FALSE})
+#' @param idmap id mapping table, dafault sigora::idmap
 #'
 #' @return Returns a \code{list} containing the following elements:
 #' \itemize{
@@ -44,7 +45,8 @@ sigoraWrappR <-
            GPSrepos = sigora::kegH,
            df,
            db = "",
-           greater_than = TRUE) {
+           greater_than = TRUE,
+           idmap = sigora::idmap) {
     if(greater_than) {
       enriched <- df[df[, fc_col] >= fc_threshold,]
     } else {
@@ -52,8 +54,9 @@ sigoraWrappR <-
     }
     sigora_res <-
       sigora::sigora(GPSrepo = GPSrepos,
-             level = 5,
-             queryList = enriched$UniprotID)
+             level = 2,
+             queryList = enriched$UniprotID,
+             idmap = idmap)
     ora_res <-
       sigora::ora(geneList = enriched$UniprotID,
           GPSrepo = GPSrepos)

@@ -168,7 +168,7 @@ In the following the `.runGSEA()` function's inner workings will be discussed in
 
 # Command line tools
 
-The main enrichment methods in this package (ORA, sigORA, GSEA) come with a `r CRANpkg("docopt")` based command line tool to facilitate analysing batches of files^[Those scripts can be found in `system.file("RunScripts", package = "fgczgseaora")`]. The main advantage of docopt is that all tools have to come with a thorough documentation where it is also possible to provide default values. For running GSEA, the command line tool is:
+The main enrichment methods in this package (ORA, sigORA, GSEA) come with a `r CRANpkg("docopt")` based command line tool to facilitate analysing batches of files^[Those scripts can be found in `system.file("run_scripts", package = "fgczgseaora")`]. The main advantage of docopt is that all tools have to come with a thorough documentation where it is also possible to provide default values. For running GSEA, the command line tool is:
 
 ```{r eval=FALSE}
 #!/usr/bin/Rscript
@@ -199,20 +199,21 @@ opt <- docopt(doc)
 It can be run using the following command in a UNIX/Linux terminal, specifying the organism as mouse:
 
 ```{bash eval=FALSE}
-Rscript path/to/gsea_docopt.R path/to/group2file.txt -o mmusculus
+Rscript path/to/lfq_2grp_webgestalt_gsea.R path/to/group2file.txt -o mmusculus
 ```
 
 or equivalently:
 
 ```{bash eval=FALSE}
-Rscript path/to/gsea_docopt.R path/to/group2file.txt --organism=mmusculus
+Rscript path/to/lfq_2grp_webgestalt_gsea.R path/to/group2file.txt 
+  --organism=mmusculus
 ```
 
 The help file can also be accessed via the command line using:
 
 ```{bash eval=FALSE}
-Rscript path/to/gsea_docopt.R -h # or
-Rscript path/to/gsea_docopt.R --help
+Rscript path/to/lfq_2grp_webgestalt_gsea.R -h # or
+Rscript path/to/lfq_2grp_webgestalt_gsea.R --help
 ```
 
 

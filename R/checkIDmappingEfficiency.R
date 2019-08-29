@@ -1,6 +1,7 @@
 #' Checks mapping efficiency for IDs on the most commonly used ID types
 #' @param IDs character vector of IDs
 #' @param keytype corresponding keytype
+#' @param db database object, default org.Hs.eg.db
 #' @importFrom AnnotationDbi mapIds
 #' @importFrom S4Vectors na.omit
 #' @importFrom dplyr distinct

@@ -31,6 +31,7 @@ Imports: AnnotationDbi,
     readr,
     rlang,
     sigora,
+    tibble,
     tidyr,
     tidyverse
 RoxygenNote: 6.1.1

@@ -1,0 +1,78 @@
+# fgczgseaora
+running ora or gsea on lists of proteinidentifiers
+
+
+This package also provides executable R script files which can be run on windows an linux as follows:
+
+# Webgestalt ORA
+
+```
+PS >  Rscript <fgczgseaora_path>\run_scripts\lfq_2grp_webgestalt_ora.R --help
+
+WebGestaltR ORA
+
+Usage:
+  test.R <grp2file> [--organism=<organism>] [--outdir=<outdir>] [--log2fc=<log2fc>] [--is_greater=<is_greater>] [--nperm=<nperm>] [--ID_col=<ID_col>] [--fc_col=<fc_col>]
+
+Options:
+  -o --organism=<organism> organism [default: hsapiens]
+  -r --outdir=<outdir> output directory [default: results_ora]
+  -t --log2fc=<log2fc> fc threshold [default: 1]
+  -g --is_greater=<is_greater> is greater than log2fc [default: TRUE]
+  -n --nperm=<nperm> number of permutations to calculate enrichment scores [default: 50]
+  -i --ID_col=<ID_col> Column containing the UniprotIDs [default: TopProteinName]
+  -f --fc_col=<fc_col> Column containing the estimates [default: log2FC]
+
+Arguments:
+  grp2file  input file
+PS D:\Dropbox\DataAnalysis\fgczgseaora_Test_SRMService_Integration>
+```
+
+
+Ora analysis for foldchanges greater and smaller than 1.
+
+```
+Rscript <fgczgseaora_path>\run_scripts\lfq_2grp_webgestalt_ora.R .\data\2Grp_CF_a_vs_CF_b.txt --log2fc=1 --is_greater=TRUE
+Rscript <fgczgseaora_path>\run_scripts\lfq_2grp_webgestalt_ora.R .\data\2Grp_CF_a_vs_CF_b.txt --log2fc=1 --is_greater=FALSE
+ 
+```
+
+# WebGestaltR GSEA 
+
+```
+PS >  Rscript <fgczgseaora_path>\run_scripts\lfq_2grp_webgestalt_gsea.R --help
+WebGestaltR GSEA
+
+Usage:
+  test.R <grp2file> [--organism=<organism>] [--outdir=<outdir>] [--nperm=<nperm>] [--ID_col=<ID_col>] [--fc_col=<fc_col>]
+
+Options:
+  -o --organism=<organism> organism [default: hsapiens]
+  -r --outdir=<outdir> output directory [default: results_gsea]
+  -n --nperm=<nperm> number of permutations to calculate enrichment scores [default: 50]
+  -i --ID_col=<ID_col> Column containing the UniprotIDs [default: TopProteinName]
+  -f --fc_col=<fc_col> Column containing the estimates [default: log2FC]
+
+Arguments:
+  grp2file  input file
+PS D:\Dropbox\DataAnalysis\fgczgseaora_Test_SRMService_Integration>
+```
+
+
+
+```
+PS > Rscript <fgczgseaora_path>\run_scripts\lfq_2grp_webgestalt_gsea.R .\data\2Grp_CF_a_vs_CF_b.txt
+```
+
+To simplify executing the scripts you can add `<fgczgseaora_path>\win` to the path variable on windows and than execute:
+
+```
+PS > lfq_2grp_webgestalt_gsea.bat --help
+```
+
+or ad `<fgczgseaora_path>\run_scripts` to the path on linux and execute
+
+```
+lfq_2grp_webgestalt_gsea.R --help
+```
+

@@ -87,7 +87,7 @@ makeGPS_wrappR <-
     keytype = k0,
     column = target_column,
     multiVals = "CharacterList"
-  ) %>% unlist %>% data.frame(Symbol = names(.), pathwayID = .)
+  ) %>% unlist %>% enframe(name = "Symbol", value = "pathwayID")
 
   pn_table <- mapIds(
     pn_db,
@@ -95,7 +95,7 @@ makeGPS_wrappR <-
     multiVals = "CharacterList",
     keytype = k1,
     column = k2
-  ) %>% unlist %>% data.frame(pathwayID = names(.), pathwayName = .)
+  ) %>% unlist %>% enframe(name = "pathwayID", value = "pathwayName")
 
   out <- list(gp_tab = gp_table, pn_tab = pn_table)
 
@@ -116,7 +116,7 @@ makeGPS_wrappR <-
     keytype = "UNIPROT",
     column = target_column,
     multiVals = "CharacterList"
-  ) %>% unlist %>% data.frame(Symbol = names(.), pathwayID = .)
+  ) %>% unlist %>% enframe(name = "Symbol", value = "pathwayID")
 
   out <- list(pn_tab = pn_table, gp_tab = gp_table)
   return(out)
