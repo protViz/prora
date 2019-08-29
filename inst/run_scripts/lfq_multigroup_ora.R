@@ -1,6 +1,6 @@
 #!/usr/bin/Rscript
 
-"WebGestaltR GSEA
+"WebGestaltR ORA for multigroup reports
 
 Usage:
   test.R <grp2file> [--organism=<organism>] [--outdir=<outdir>] [--nperm=<nperm>] [--log2fc=<log2fc>] [--is_greater=<is_greater>]
@@ -68,10 +68,7 @@ if(!dir.exists(result_dir)){
   dir.create(result_dir)
 }
 
-subdir <- file.path(result_dir, paste0("fc_",log2fc,"_is_g_",is_greater))
-if(!dir.exists(subdir)){
-  dir.create(subdir)
-}
+
 
 fc_estimates <- readxl::read_xlsx(grp2report)
 fc_estimates <- fc_estimates %>% select_at(c(ID_col, fc_col, contrast))
@@ -86,32 +83,53 @@ print("After ID filtering columns: ")
 print(sample_n(filtered_dd, 10))
 
 
+
+
+
+
+
+
+
 filtered_dd_list <- base::split(filtered_dd, filtered_dd$contrast)
 contr_names <- names(filtered_dd_list)
 contr_names <- gsub(" ","", contr_names)
 contr_names <- gsub("-","_vs_", contr_names)
 contr_names <- make.names(contr_names)
-
 names(filtered_dd_list) <- contr_names
 
-for(name in names(filtered_dd_list)){
-  filtered_dd <- filtered_dd_list[[name]]
 
-  cat("\n\n processing contrast :",name, "\n\n")
 
-  res <- lapply(target_GSEA, function(x) {
-    message("\n",x,"\n")
-    fgczgseaora:::.runWebGestaltORA(
-      data = filtered_dd,
-      fpath = name,
-      organism = organism,
-      ID_col = "UniprotID",
-      target = x,
-      threshold = log2fc,
-      greater = is_greater,
-      nperm = nperm,
-      fc_col = fc_col,
-      outdir = subdir
-    )
-  })
+
+
+log2fc_s <- c(log2fc, -log2fc)
+
+for(log2fc in log2fc_s){
+
+  subdir <- file.path(result_dir, paste0("fc_threshold_",abs(log2fc),"_is_greater_",is_greater))
+  if(!dir.exists(subdir)){
+    dir.create(subdir)
+  }
+
+
+  for(name in names(filtered_dd_list)){
+    filtered_dd <- filtered_dd_list[[name]]
+
+    cat("\n\n processing contrast :",name, "\n\n")
+
+    res <- lapply(target_GSEA, function(x) {
+      message("\n",x,"\n")
+      fgczgseaora:::.runWebGestaltORA(
+        data = filtered_dd,
+        fpath = name,
+        organism = organism,
+        ID_col = "UniprotID",
+        target = x,
+        threshold = log2fc,
+        greater = if(log2fc >0 ){TRUE}else{FALSE},
+        nperm = nperm,
+        fc_col = fc_col,
+        outdir = subdir
+      )
+    })
+  }
 }
