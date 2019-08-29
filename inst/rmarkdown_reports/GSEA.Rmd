@@ -108,7 +108,7 @@ toplot <- toplot %>%
   as.list() %>%
   lapply(na.omit)
 
-if(length(GSEA$upsetData)==1) {
+if(length(toplot) <= 1) {
   message("UpSetR plot cannot be displayed. Only one pathway enriched.")
 } else {
   UpSetR::fromList(toplot) %>%
