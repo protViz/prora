@@ -11,7 +11,15 @@ output:
   BiocStyle::pdf_document
 bibliography: bibliography.bib
 abstract: |
-  A plethora of R packages exist on CRAN and Bioconductor to perform over-representation analysis (ORA) and gene set enrichment analysis (GSEA). However, consistency in the underlying nomenclature for specific analyses and user friendly implementation is still lacking. `fgczgseaora` aims at unifying ID mapping and enrichment analysis in a syntactically coherent and intuitive way, while ensuring reproducibility of results. `fgczgseaora` primarily consists of wrapper functions around the `r CRANpkg("sigora")` and `r CRANpkg("WebGestaltR")` packages from CRAN and `r CRANpkg("rmarkdown")` based reports for visualisation and contextualisation of analysis results.
+  A plethora of R packages exist on CRAN and Bioconductor to perform over-representation 
+  analysis (ORA) and gene set enrichment analysis (GSEA). However, consistency in the 
+  underlying nomenclature for specific analyses and user friendly implementation is 
+  still lacking. `fgczgseaora` aims at unifying ID mapping and enrichment analysis 
+  in a syntactically coherent and intuitive way, while ensuring reproducibility of 
+  results. `fgczgseaora` primarily consists of wrapper functions around the 
+  `r CRANpkg("sigora")` and `r CRANpkg("WebGestaltR")` packages from CRAN and 
+  `r CRANpkg("rmarkdown")` based reports for visualisation and contextualisation 
+  of analysis results.
 vignette: |
   %\VignetteIndexEntry{Vignette Title}
   %\VignetteEngine{knitr::rmarkdown}
@@ -37,11 +45,27 @@ options(width = 80)
 
 # Introduction
 
-Methods to identify differentially regulated pathways among a vast background of quantified genes or proteins differ in complexity of the underlying algorithms and computations, ranging from the application of Fisher's exact test in ORA and extensions to gene pairs [@Foroushani2013] to more complex statistical procdures in gene set enrichment analysis [@Subramanian15545] and network based procedures [@glaab2012enrichnet]. Almost all methods come with their own implementation as an _R_ package, _i.e._ ORA in both `r CRANpkg("sigora")` and `r CRANpkg("WebGestaltR")`, network based gene enrichment analysis in `r CRANpkg("enrichnet")` and the list keeps going on. Naturally, different implementations come with different -- and often inconsistent -- features, such as ID mapping or demand a lot of knowledge from the user in setting up appropriate data structures and other preconditions. `fgczgseaora` aims at providing a consistent and user friendly interface, which will be introduced in the following section. Elaborating on the methodological and statistical aspects of the underlying methods is beyond the scope of this vignette and the reader is referred to the publications in the reference section.
+Methods to identify differentially regulated pathways among a vast background of
+quantified genes or proteins differ in complexity of the underlying algorithms 
+and computations, ranging from the application of Fisher's exact test in ORA and
+extensions to gene pairs [@Foroushani2013] to more complex statistical procdures
+in gene set enrichment analysis [@Subramanian15545] and network based procedures
+[@glaab2012enrichnet]. Almost all methods come with their own implementation as 
+an _R_ package, _i.e._ ORA in both `r CRANpkg("sigora")` and 
+`r CRANpkg("WebGestaltR")`, network based gene enrichment analysis in 
+`r CRANpkg("enrichnet")` and the list keeps going on. Naturally, different 
+implementations come with different -- and often inconsistent -- features, such 
+as ID mapping or demand a lot of knowledge from the user in setting up appropriate
+data structures and other preconditions. `fgczgseaora` aims at providing a 
+consistent and user friendly interface, which will be introduced in the following 
+section. Elaborating on the methodological and statistical aspects of the underlying 
+methods is beyond the scope of this vignette and the reader is referred to the 
+publications in the reference section.
 
 # Installation and loading
 
-After installing the packages from _Bioconductor_ as shown below, the package can be loaded using `library(fgczgseaora)`.
+After installing the packages from _Bioconductor_ as shown below, the package 
+can be loaded using `library(fgczgseaora)`.
 
 ```{r installing, eval=FALSE}
 BiocManager::install("fgczgseaora")
@@ -57,14 +81,24 @@ data("exampleContrastData")
 glimpse(exampleContrastData)
 ```
 
-The first column `protein_Id` contains FASTA formatted human protein accessions and the second column fold change estimates. _e.g._ as obtained by a `limma::toptable()` call. The first step is now to translate the FASTA headers into Uniprot accessions for subsequent ID mapping.
+The first column `protein_Id` contains FASTA formatted human protein accessions 
+and the second column fold change estimates. _e.g._ as obtained by a 
+`limma::toptable()` call. The first step is now to translate the FASTA headers 
+into Uniprot accessions for subsequent ID mapping.
 
 ```{r}
 dd <- getUniprotFromFastaHeader(exampleContrastData)
 glimpse(dd)
 ```
 
-We see that we have lost `r nrow(exampleContrastData) - nrow(dd)` accessions which did not correspond to a FASTA format. Now we apply ORA, sigORA and GSEA to the obtained ranked protein list. To apply sigORA and ORA one must first compute the background GPS repository using `makeGPS_wrappR()`. The advantage is that backgrounds can be specified separately for each experiment or combined for several batches of experiments. However, computing the accession pair signatures and calculating their respective weights is computationally intensive and potentially time consuming.
+We see that we have lost `r nrow(exampleContrastData) - nrow(dd)` accessions 
+which did not correspond to a FASTA format. Now we apply ORA, sigORA and GSEA to
+the obtained ranked protein list. To apply sigORA and ORA one must first compute 
+the background GPS repository using `makeGPS_wrappR()`. The advantage is that 
+backgrounds can be specified separately for each experiment or combined for several 
+batches of experiments. However, computing the accession pair signatures and 
+calculating their respective weights is computationally intensive and potentially 
+time consuming.
 
 ```{r results='hide'}
 data("idmap", package = "sigora")
@@ -73,26 +107,37 @@ res <- sigoraWrappR(df = dd, fc_threshold = 0.2, fc_col = "estimate",
                     GPSrepos = myGPSrepo, greater_than = TRUE)
 ```
 
-The result of `sigoraWrappR()` is a list containing the sigORA and ORA results along with user specified inputs that will be used in the reports described in section \@ref(reports).
+The result of `sigoraWrappR()` is a list containing the sigORA and ORA results 
+along with user specified inputs that will be used in the reports described in 
+section \@ref(reports).
 
 ```{r}
 names(res)
 ```
 
-Under the hood a lot of ID mapping has taken place of which the user is unaware. To check the ID mapping efficiency when mapping Uniprot IDs to GO, KEGG or ENTREZ accessions the package comes with a `checkIDmappingEfficiency()` function to check the number of lost IDs.
+Under the hood a lot of ID mapping has taken place of which the user is unaware. 
+To check the ID mapping efficiency when mapping Uniprot IDs to GO, KEGG or ENTREZ 
+accessions the package comes with a `checkIDmappingEfficiency()` function to 
+check the number of lost IDs.
 
 ```{r}
 checkIDmappingEfficiency(dd$UniprotID, keytype = "UNIPROT") %>% 
   round(2)
 ```
 
-Evidently, the mapping from Uniprot to KEGG IDs seems to be fairly inefficient and results should be interpreted with care.
+Evidently, the mapping from Uniprot to KEGG IDs seems to be fairly inefficient 
+and results should be interpreted with care.
 
 # Reports
 
-Good reporting and reproducibility of all intermediate and final results is key to good scientific practice. In this spirit, `fgczgseaora` provides a reproducible, `r CRANpkg("rmarkdown")` based reports for each method. To highlight the most important targets, settings and parameters, a walkthrough is given in this part of the vignette.
+Good reporting and reproducibility of all intermediate and final results is key
+to good scientific practice. In this spirit, `fgczgseaora` provides a reproducible, 
+`r CRANpkg("rmarkdown")` based reports for each method. To highlight the most 
+important targets, settings and parameters, a walkthrough is given in this part 
+of the vignette.
 
-To run all methods and produce the reports on the example data from the prior section, the following parameters must be set in advance.
+To run all methods and produce the reports on the example data from the prior 
+section, the following parameters must be set in advance.
 
 ```{r}
 organism <- "hsapiens" # Organism to which the FASTA headers correspond
@@ -111,13 +156,18 @@ nperm <- 10 # number of permutations used to compute enrichment scores in GSEA
 odir <- "tmp" # output directory to write all reports
 ```
 
-To iterate over all possible target directly, wrapper functions that are not exported by `fgczgseaora`'s NAMESPACE can be used. They take the above specified parameters as inputs and facilitate the enrichment analysis workflows tremendously. The results will be saved to the specified output directory with a subfolder for each method and target.
+To iterate over all possible target directly, the following workflow functions 
+can be used. They take the above specified parameters as inputs and facilitate 
+the enrichment analysis workflows tremendously. The results will be saved to the
+specified output directory with a subfolder for each method and target.
 
-The following code chunk iterates the `.runGSEA()` function over all possible GSEA target databases. Internally, `.runGSEA()` calls `WebGestaltR()` for the analysis and compiles `fgczgseaora's` in the same output directory.
+The following code chunk iterates the `.runGSEA()` function over all possible 
+GSEA target databases. Internally, `.runGSEA()` calls `WebGestaltR()` for the 
+analysis and compiles `fgczgseaora's` in the same output directory.
 
 ```{r eval=FALSE}
 sapply(target_GSEA, function(x) {
-  fgczgseaora:::.runGSEA(
+  .runGSEA(
     data = dd,
     fpath = "",
     ID_col = ID_col,
@@ -130,11 +180,12 @@ sapply(target_GSEA, function(x) {
 })
 ```
 
-Analogously, `.runWebGestaltORA()` and `.runSIGORA()` embody a whole workflow and save nicely formatted results to the output directory.
+Analogously, `.runWebGestaltORA()` and `.runSIGORA()` embody a whole workflow 
+and save nicely formatted results to the output directory.
 
 ```{r eval=FALSE}
 sapply(target_GSEA, function(x) {
-  fgczgseaora:::.runWebGestaltORA(
+  .runWebGestaltORA(
     data = dd,
     fpath = "",
     organism = organism,
@@ -149,11 +200,12 @@ sapply(target_GSEA, function(x) {
 })
 ```
 
-`.runSIGORA()` calls the `sigoraWrappR()` function which was introduced in section \@ref(Example workflow) and compiles the built-in report. 
+`.runSIGORA()` calls the `sigoraWrappR()` function which was introduced in 
+section \@ref(Example workflow) and compiles the built-in report. 
 
 ```{r eval=FALSE}
 sapply(target_SIGORA, function(x) {
-  fgczgseaora:::.runSIGORA(
+  .runSIGORA(
     data = dd,
     target = x,
     fc_col = fc_col,
@@ -164,28 +216,35 @@ sapply(target_SIGORA, function(x) {
 })
 ```
 
-In the following the `.runGSEA()` function's inner workings will be discussed in more detail. After creating the output directory `outdir` the provided data is fed into `r CRANpkg("WebGestaltR")`'s `WebGestaltR(..., enrichMethod = "GSEA")`. The results are then used to generate the report provided by the `fgczgseaora` package^[The source files for all reports can be found in `system.file("rmarkdown_reports", package = "fgczgseaora")`]. All `WebGestaltR` and `fgczgseaora` results can then be found in the output directory.
+In the following the `.runGSEA()` function's inner workings will be discussed in 
+more detail. After creating the output directory `outdir` the provided data is 
+fed into `r CRANpkg("WebGestaltR")`'s `WebGestaltR(..., enrichMethod = "GSEA")`. 
+The results are then used to generate the report provided by the `fgczgseaora` 
+package^[The source files for all reports can be found in 
+`system.file("rmarkdown_reports", package = "fgczgseaora")`]. All `WebGestaltR` 
+and `fgczgseaora` results can then be found in the output directory.
 
 # Command line tools
 
-The main enrichment methods in this package (ORA, sigORA, GSEA) come with a `r CRANpkg("docopt")` based command line tool to facilitate analysing batches of files^[Those scripts can be found in `system.file("run_scripts", package = "fgczgseaora")`]. The main advantage of docopt is that all tools have to come with a thorough documentation where it is also possible to provide default values. For running GSEA, the command line tool is:
+The main enrichment methods in this package (ORA, sigORA, GSEA) come with a 
+`r CRANpkg("docopt")` based command line tool to facilitate analysing batches of
+files^[Those scripts can be found in 
+`system.file("run_scripts", package = "fgczgseaora")`]. 
+The main advantage of docopt is that all tools have to come with a thorough 
+documentation where it is also possible to provide default values. For running 
+GSEA, the command line tool is:
 
 ```{r eval=FALSE}
 #!/usr/bin/Rscript
-"WebGestaltR GSEA
+"WebGestaltR GSEA for multigroup reports
 
 Usage:
-  test.R <grp2file> [--organism=<organism>] [--outdir=<outdir>]
-        [--nperm=<nperm>] [--ID_col=<ID_col>] [--fc_col=<fc_col>]
+  test.R <grp2file> [--organism=<organism>] [--outdir=<outdir>] [--nperm=<nperm>]
 
 Options:
   -o --organism=<organism> organism [default: hsapiens]
-  -r --outdir=<outdir> output directory [default: results]
-  -n --nperm=<nperm> number of permutations to calculate 
-         enrichment scores [default: 10]
-  -i --ID_col=<ID_col> Column containing the UniprotIDs 
-         [default: TopProteinName]
-  -f --fc_col=<fc_col> Column containing the estimates [default: log2FC]
+  -r --outdir=<outdir> output directory [default: results_gsea]
+  -n --nperm=<nperm> number of permutations to calculate enrichment scores [default: 50]
 
 Arguments:
   grp2file  input file
@@ -193,10 +252,10 @@ Arguments:
 
 library(docopt)
 opt <- docopt(doc)
-...
 ```
 
-It can be run using the following command in a UNIX/Linux terminal, specifying the organism as mouse:
+It can be run using the following command in a UNIX/Linux terminal, specifying 
+the organism as mouse:
 
 ```{bash eval=FALSE}
 Rscript path/to/lfq_2grp_webgestalt_gsea.R path/to/group2file.txt -o mmusculus
