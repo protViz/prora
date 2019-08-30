@@ -96,11 +96,12 @@ names(filtered_dd_list) <- contr_names
 
 log2fc_s <- c(log2fc, -as.numeric(log2fc))
 
-is_greater <- if(log2fc > 0 ){TRUE}else{FALSE}
 for(log2fc in log2fc_s){
+  is_greater <- if(log2fc > 0 ){TRUE}else{FALSE}
 
   subdir <- file.path(result_dir, paste0("fc_threshold_",abs(log2fc),"_is_greater_",is_greater))
   if(!dir.exists(subdir)){
+    message("created directory : ", subdir, "\n\n")
     dir.create(subdir)
   }
 

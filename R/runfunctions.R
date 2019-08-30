@@ -6,7 +6,7 @@
   function(df, th, col = "Score", greater = TRUE) {
     if (greater) {
       df %>%
-        filter(!!sym(col) > th) -> out
+        filter(!!sym(col) >= th) -> out
     } else {
       df %>%
         filter(!!sym(col) <= th) -> out
@@ -218,7 +218,15 @@
                     th = threshold,
                     greater = greater)
 
-  ORA_res <-
+  message("There are ", nrow(dat), " proteins in the background\n\n")
+  message("There are ",nrow(ranktable) , " proteins in the selected set\n\n" )
+
+  if(nrow(ranktable) == 0){
+    message("NO proteins in the subset!\n")
+    return(0)
+  }
+
+  ORA_res <- tryCatch(
     WebGestaltR(
       enrichMethod = "ORA",
       organism = organism,
@@ -231,6 +239,7 @@
       isOutput = TRUE,
       perNum = nperm,
       projectName = fpath
-    )
+    ), error = function(e){message(e) ; return(NULL) })
+  message("\n\n Finished ORA \n\n")
   return(ORA_res)
 }
