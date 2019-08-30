@@ -226,7 +226,7 @@
     return(0)
   }
 
-  ORA_res <- try(
+  ORA_res <- tryCatch(
     WebGestaltR(
       enrichMethod = "ORA",
       organism = organism,
@@ -239,6 +239,7 @@
       isOutput = TRUE,
       perNum = nperm,
       projectName = fpath
-    ))
+    ), error = function(e){message(e) ; return(NULL) })
+  message("\n\n Finished ORA \n\n")
   return(ORA_res)
 }
