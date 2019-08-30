@@ -16,7 +16,7 @@
 #' getUniprotFromFastaHeader(exampleContrastData)
 getUniprotFromFastaHeader <- function(df, idcolumn = "protein_Id") {
   df %>%
-    dplyr::filter(grepl(pattern = "sp", !!sym(idcolumn))) %>%
+    dplyr::filter(grepl(pattern = "^sp|^tr", !!sym(idcolumn))) %>%
     tidyr::separate(col = !!sym(idcolumn),
                     sep = "_",
                     into = c("begin", "end")) %>%
