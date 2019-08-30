@@ -6,7 +6,7 @@
            greater = TRUE) {
     if (greater) {
       df %>%
-        dplyr::filter(Score > th) -> out
+        dplyr::filter(Score >= th) -> out
     } else {
       df %>%
         dplyr::filter(Score <= th) -> out
@@ -213,7 +213,15 @@
                     th = threshold,
                     greater = greater)
 
-  ORA_res <-
+  message("There are ", nrow(dat), " proteins in the background\n\n")
+  message("There are ",nrow(ranktable) , " proteins in the selected set\n\n" )
+
+  if(nrow(ranktable) == 0){
+    message("NO proteins in the subset!\n")
+    return(0)
+  }
+
+  ORA_res <- try(
     WebGestaltR(
       enrichMethod = "ORA",
       organism = organism,
@@ -226,6 +234,6 @@
       isOutput = TRUE,
       perNum = nperm,
       projectName = fpath
-    )
+    ))
   return(ORA_res)
 }
