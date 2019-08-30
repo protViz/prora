@@ -1,19 +1,22 @@
 # Helper functions for run scripts
 
+#' @importFrom rlang sym
+#' @importFrom dplyr filter
 .apply_threshold <-
-  function(df,
-           th,
-           greater = TRUE) {
+  function(df, th, col = "Score", greater = TRUE) {
     if (greater) {
       df %>%
-        dplyr::filter(Score > th) -> out
+        filter(!!sym(col) > th) -> out
     } else {
       df %>%
-        dplyr::filter(Score <= th) -> out
+        filter(!!sym(col) <= th) -> out
     }
     return(out)
   }
 
+#' @importFrom WebGestaltR WebGestaltR
+#' @importFrom readr read_delim
+#' @importFrom tidyr separate_rows
 .runGSEA <- function(data,
                     fpath,
                     ID_col = "UniprotID",
@@ -52,20 +55,17 @@
   rdataPath <- file.path(outdir, paste0("Project_", fpath), "GSEA_res.Rdata")
 
   message("storing GSEA_res to: ", rdataPath)
-  saveRDS(GSEA_res, file= rdataPath)
+  saveRDS(GSEA_res, file = rdataPath)
 
   f_mappingTable <- file.path(
     outdir,
     paste0("Project_", fpath),
     paste0("interestingID_mappingTable_", fpath, ".txt")
   )
-  mappingTable <-
-    read_delim(f_mappingTable,
-               delim = "\t")
-
-  mappingTable %>% mutate(entrezgene = as.character(entrezgene)) -> mappingTable
+  mappingTable <- read_delim(f_mappingTable, delim = "\t") %>%
+    mutate(entrezgene = as.character(!!sym("entrezgene")))
   GSEA_res_sep <-
-    GSEA_res %>% separate_rows(leadingEdgeId, sep = ";")
+    GSEA_res %>% separate_rows(!!sym("leadingEdgeId"), sep = ";")
   merged_data <- inner_join(mappingTable,
                             GSEA_res_sep,
                             by = c("entrezgene" = "leadingEdgeId"))
@@ -193,7 +193,7 @@
     return(sigoraData)
   }
 
-
+#' @importFrom WebGestaltR WebGestaltR
 .runWebGestaltORA <- function(data,
                              fpath,
                              organism = "hsapiens",

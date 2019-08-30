@@ -35,8 +35,8 @@ webGestaltWrapper <-
 
     write_interesting_geneFile <- function(ID, df, output.dir) {
       df %>%
-        dplyr::filter(clusterID == ID) %>%
-        dplyr::select(colID) %>%
+        dplyr::filter(!!sym("clusterID") == !!sym("ID")) %>%
+        dplyr::select(!!sym("colID")) %>%
         readr::write_tsv(
           path = paste(output.dir, "/protein_cluster_", ID, ".txt", sep = ""),
           col_names = F

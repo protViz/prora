@@ -21,10 +21,10 @@ getUniprotFromFastaHeader <- function(df, idcolumn = "protein_Id") {
                     sep = "_",
                     into = c("begin", "end")) %>%
     tidyr::separate(
-      col = begin,
+      col = !!sym("begin"),
       sep = "\\|",
       into = c("prefix", "UniprotID", "Symbol")
     ) %>%
-    dplyr::select(-prefix, -Symbol, -end) %>%
+    dplyr::select(-!!sym("prefix"), -!!sym("Symbol"), -!!sym("end")) %>%
     return()
 }

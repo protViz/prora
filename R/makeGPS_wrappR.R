@@ -107,8 +107,8 @@ makeGPS_wrappR <-
   target_column <- "PATH"
 
   pn_table <- sigora::kegH$pathwaydescriptions %>%
-    dplyr::rename(pathwayID = pwys, pathwayName = nms) %>%
-    mutate(pathwayID = substr(pathwayID, start = 4, stop = 8))
+    dplyr::rename(pathwayID = !!sym("pwys"), pathwayName = !!sym("nms")) %>%
+    mutate(pathwayID = substr(!!sym("pathwayID"), start = 4, stop = 8))
 
   gp_table <- AnnotationDbi::mapIds(
     gp_db,

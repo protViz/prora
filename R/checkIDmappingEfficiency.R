@@ -28,7 +28,7 @@ checkIDmappingEfficiency <- function(IDs, keytype, db = org.Hs.eg.db) {
       multiVals = "CharacterList"
     ) %>% unlist %>%
       enframe(name = "InputIDs", value = "mappedIDs") %>%
-      na.omit %>% distinct(InputIDs) %>% nrow %>% return()
+      na.omit %>% distinct(!!sym("InputIDs")) %>% nrow %>% return()
   }
 
   ENTREZmapped <- mapping(column = "ENTREZID")

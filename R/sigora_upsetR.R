@@ -18,7 +18,7 @@ sigora_upsetR <- function(sigora_res, GPStable, ...) {
     colnames(tab1)[1] <- "pathwayId"
     colnames(tab2) <- c("gene", "fc")
     tab3 <- dplyr::inner_join(GPStable, tab1)
-    tab4 <- dplyr::inner_join(tab3, tab2) %>% filter(Bonferroni < 0.05)
+    tab4 <- dplyr::inner_join(tab3, tab2) %>% filter(!!sym("Bonferroni") < 0.05)
     return(tab4)
   }
 
@@ -27,10 +27,10 @@ sigora_upsetR <- function(sigora_res, GPStable, ...) {
   if(any(dim(df)==0)) return(NULL)
 
   toplot <- df %>%
-    dplyr::select(pathwayId, gene) %>%
+    dplyr::select(!!sym("pathwayId"), !!sym("gene")) %>%
     dplyr::mutate(ID = seq_len(nrow(.data))) %>%
-    tidyr::spread(pathwayId, gene) %>%
-    dplyr::select(-ID) %>%
+    tidyr::spread(!!sym("pathwayId"), !!sym("gene")) %>%
+    dplyr::select(-!!sym("ID")) %>%
     as.list() %>%
     lapply(na.omit)
 
