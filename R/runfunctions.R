@@ -14,9 +14,19 @@
     return(out)
   }
 
+#' workflow for GSEA
+#' @param data data
+#' @param fpath file path to write to
+#' @param ID_col column name containing IDs
+#' @param fc_col column name containing estimates
+#' @param organism organism
+#' @param target target database, default: geneontology_Biological_Process
+#' @param nperm number of permutations
+#' @param outdir output directory
 #' @importFrom WebGestaltR WebGestaltR
 #' @importFrom readr read_delim
 #' @importFrom tidyr separate_rows
+#' @export
 .runGSEA <- function(data,
                     fpath,
                     ID_col = "UniprotID",
@@ -122,6 +132,15 @@
   return(GSEA)
 }
 
+#' workflow for sigORA
+#' @param data data
+#' @param ID_col column name containing IDs
+#' @param fc_col column name containing estimates
+#' @param fc_threshold threshold for estimate
+#' @param greater flag whether to filter > threshold or < threshold
+#' @param target target database, default: "GO"
+#' @param outdir output directory
+#' @export
 .runSIGORA <-
   function(data,
            target = "GO",
@@ -193,7 +212,19 @@
     return(sigoraData)
   }
 
+#' workflow for ORA
+#' @param data data
+#' @param fpath file path to write to
+#' @param ID_col column name containing IDs
+#' @param fc_col column name containing estimates
+#' @param organism organism
+#' @param target target database, default: "geneontology_Biological_Process"
+#' @param threshold threshold for estimate
+#' @param nperm number of permutations
+#' @param outdir output directory
+#' @param greater indicating direction of threshold
 #' @importFrom WebGestaltR WebGestaltR
+#' @export
 .runWebGestaltORA <- function(data,
                              fpath,
                              organism = "hsapiens",
