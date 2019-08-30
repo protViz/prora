@@ -11,7 +11,6 @@ output/
 Project*/
 GSEA_output/
 *.log
-*.Rd
 inst/example_data/Contrasts_SignificanceValues_f_Cells_Treatment.csv
 genData.R
 vignettes/*.R
