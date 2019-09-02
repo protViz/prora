@@ -2,7 +2,7 @@
 running ora or gsea on lists of proteinidentifiers
 
 
-This package also provides executable R script files which can be run on windows an linux as follows:
+This package also provides executable R script files which can be run on windows or linux as follows:
 
 # Webgestalt ORA
 
