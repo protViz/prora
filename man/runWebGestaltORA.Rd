@@ -7,7 +7,7 @@
 runWebGestaltORA(data, fpath, organism = "hsapiens",
   ID_col = "UniprotID", target = "geneontology_Biological_Process",
   threshold = 0.5, greater = TRUE, nperm = 10, fc_col = "estimate",
-  outdir = "WebGestalt_ORA")
+  outdir = "WebGestalt_ORA", interestGeneType = "uniprotswissprot")
 }
 \arguments{
 \item{data}{data}

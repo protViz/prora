@@ -6,7 +6,7 @@
 \usage{
 runGSEA(data, fpath, ID_col = "UniprotID", fc_col = "estimate",
   organism = "hsapiens", target = "geneontology_Biological_Process",
-  nperm = 10, outdir = "GSEA")
+  nperm = 10, outdir = "GSEA", interestGeneType = "uniprotswissprot")
 }
 \arguments{
 \item{data}{data}
