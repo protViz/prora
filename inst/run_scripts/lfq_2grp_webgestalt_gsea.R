@@ -76,7 +76,7 @@ print(sample_n(filtered_dd, 10))
 
 res <- lapply(target_GSEA, function(x) {
   message(x)
-  fgczgseaora:::.runGSEA(
+  fgczgseaora::runGSEA(
     data = filtered_dd,
     fpath = "",
     ID_col = "UniprotID",

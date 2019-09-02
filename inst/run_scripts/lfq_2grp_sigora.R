@@ -53,7 +53,7 @@ if (!dir.exists(odir)) {
 if (organism == "hsapiens"){
   res <- lapply(target_SIGORA, function(target_SIGORA) {
     message(target_SIGORA)
-    fgczgseaora:::.runSIGORA(
+    fgczgseaora::runSIGORA(
       data = filtered_dd,
       target = target_SIGORA,
       fc_col = fc_col,

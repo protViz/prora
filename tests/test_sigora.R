@@ -35,7 +35,7 @@ colnames(dd) <- make.names(colnames(dd))
 dd <- getUniprotFromFastaHeader(dd) %>%
   filter(!is.na(UniprotID))
 sapply(target_SIGORA, function(x) {
-  fgczgseaora:::.runSIGORA(
+  fgczgseaora::runSIGORA(
     data = dd,
     target = x,
     fc_col = fc_col,

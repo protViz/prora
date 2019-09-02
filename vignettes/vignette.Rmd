@@ -161,13 +161,13 @@ can be used. They take the above specified parameters as inputs and facilitate
 the enrichment analysis workflows tremendously. The results will be saved to the
 specified output directory with a subfolder for each method and target.
 
-The following code chunk iterates the `.runGSEA()` function over all possible 
-GSEA target databases. Internally, `.runGSEA()` calls `WebGestaltR()` for the 
+The following code chunk iterates the `runGSEA()` function over all possible 
+GSEA target databases. Internally, `runGSEA()` calls `WebGestaltR()` for the 
 analysis and compiles `fgczgseaora's` in the same output directory.
 
 ```{r eval=FALSE}
 sapply(target_GSEA, function(x) {
-  .runGSEA(
+  runGSEA(
     data = dd,
     fpath = "",
     ID_col = ID_col,
@@ -180,12 +180,12 @@ sapply(target_GSEA, function(x) {
 })
 ```
 
-Analogously, `.runWebGestaltORA()` and `.runSIGORA()` embody a whole workflow 
+Analogously, `runWebGestaltORA()` and `runSIGORA()` embody a whole workflow 
 and save nicely formatted results to the output directory.
 
 ```{r eval=FALSE}
 sapply(target_GSEA, function(x) {
-  .runWebGestaltORA(
+  runWebGestaltORA(
     data = dd,
     fpath = "",
     organism = organism,
@@ -200,12 +200,12 @@ sapply(target_GSEA, function(x) {
 })
 ```
 
-`.runSIGORA()` calls the `sigoraWrappR()` function which was introduced in 
+`runSIGORA()` calls the `sigoraWrappR()` function which was introduced in 
 section \@ref(Example workflow) and compiles the built-in report. 
 
 ```{r eval=FALSE}
 sapply(target_SIGORA, function(x) {
-  .runSIGORA(
+  runSIGORA(
     data = dd,
     target = x,
     fc_col = fc_col,
@@ -216,7 +216,7 @@ sapply(target_SIGORA, function(x) {
 })
 ```
 
-In the following the `.runGSEA()` function's inner workings will be discussed in 
+In the following the `runGSEA()` function's inner workings will be discussed in 
 more detail. After creating the output directory `outdir` the provided data is 
 fed into `r CRANpkg("WebGestaltR")`'s `WebGestaltR(..., enrichMethod = "GSEA")`. 
 The results are then used to generate the report provided by the `fgczgseaora` 

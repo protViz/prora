@@ -27,14 +27,16 @@
 #' @importFrom readr read_delim
 #' @importFrom tidyr separate_rows
 #' @export
-.runGSEA <- function(data,
+runGSEA <- function(data,
                     fpath,
                     ID_col = "UniprotID",
                     fc_col = "estimate",
                     organism = "hsapiens",
                     target = "geneontology_Biological_Process",
                     nperm = 10,
-                    outdir = "GSEA") {
+                    outdir = "GSEA",
+                    interestGeneType = "uniprotswissprot")
+{
   outdir <- file.path(outdir, target)
 
   if (!dir.exists(outdir)) {
@@ -50,7 +52,7 @@
       organism = organism,
       enrichDatabase = target,
       interestGene = ranktable,
-      interestGeneType = "uniprotswissprot",
+      interestGeneType = interestGeneType,
       outputDirectory = outdir,
       isOutput = TRUE,
       perNum = nperm,
@@ -141,7 +143,7 @@
 #' @param target target database, default: "GO"
 #' @param outdir output directory
 #' @export
-.runSIGORA <-
+runSIGORA <-
   function(data,
            target = "GO",
            fc_col = "estimate",
@@ -225,7 +227,7 @@
 #' @param greater indicating direction of threshold
 #' @importFrom WebGestaltR WebGestaltR
 #' @export
-.runWebGestaltORA <- function(data,
+runWebGestaltORA <- function(data,
                              fpath,
                              organism = "hsapiens",
                              ID_col = "UniprotID",
@@ -234,7 +236,8 @@
                              greater = TRUE,
                              nperm = 10,
                              fc_col = "estimate",
-                             outdir = "WebGestalt_ORA") {
+                             outdir = "WebGestalt_ORA",
+                             interestGeneType = "uniprotswissprot") {
   outdir <- file.path(outdir, target)
 
   if (!dir.exists(outdir)) {
@@ -246,8 +249,8 @@
 
   ranktable <-
     .apply_threshold(df = dat,
-                    th = threshold,
-                    greater = greater)
+                     th = threshold,
+                     greater = greater)
 
   message("There are ", nrow(dat), " proteins in the background\n\n")
   message("There are ",nrow(ranktable) , " proteins in the selected set\n\n" )
@@ -264,13 +267,14 @@
       enrichDatabase = target,
       interestGene = ranktable[[ID_col]],
       referenceGene = data[[ID_col]],
-      interestGeneType = "uniprotswissprot",
-      referenceGeneType = "uniprotswissprot",
+      interestGeneType = interestGeneType,
+      referenceGeneType = interestGeneType,
       outputDirectory = outdir,
       isOutput = TRUE,
       perNum = nperm,
       projectName = fpath
     ), error = function(e){message(e) ; return(NULL) })
   message("\n\n Finished ORA \n\n")
+
   return(ORA_res)
 }

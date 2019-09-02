@@ -2,11 +2,13 @@
 "WebGestaltR GSEA for multigroup reports
 
 Usage:
-  test.R <grp2file> [--organism=<organism>] [--outdir=<outdir>] [--nperm=<nperm>]
+  test.R <grp2file> [--organism=<organism>] [--outdir=<outdir>] [--nperm=<nperm>] [--idtype=<idtype>] [--ID_col=<ID_col>]
 
 Options:
   -o --organism=<organism> organism [default: hsapiens]
   -r --outdir=<outdir> output directory [default: results_gsea]
+  -t --idtype=<idtype> type of id used for mapping [default: uniprotswissprot]
+  -i --ID_col=<ID_col> Column containing the UniprotIDs [default: top_protein]
   -n --nperm=<nperm> number of permutations to calculate enrichment scores [default: 50]
 
 Arguments:
@@ -32,6 +34,8 @@ suppressMessages(library(readr))
 cat("\nParameters used:\n\t grp2report:", grp2report <- opt$grp2file, "\n\t",
     "result_dir:", result_dir <- opt[["--outdir"]], "\n\t",
     "  organism:", organism <- opt[["--organism"]], "\n\t",
+    "    idtype:", idtype <- opt[["--idtype"]], "\n\t",
+    "    ID_col:", idcolumn <- opt[["--ID_col"]], "\n\t",
     "     nperm:", nperm <- as.numeric(opt[["--nperm"]]), "\n\n\n")
 
 
@@ -41,14 +45,22 @@ target_GSEA <- c(
   "geneontology_Molecular_Function"
 )
 
-ID_col <- "top_protein"
+ID_col <- idcolumn
 fc_col <- "estimate"
 contrast <- "contrast"
 
 organisms <- listOrganism(hostName = "http://www.webgestalt.org/", cache = NULL)
 
 if(! organism %in% organisms){
-  stop("organism : " , organism , "is not in the list of available organisms", paste(organisms, collapse=" ") )
+  cat( paste(organisms, collapse="\n") )
+  stop("organism : " , organism , "is not in the list of available organisms!" )
+}
+
+idtypes <- listIdType(organism = organism, hostName = "http://www.webgestalt.org/", cache = NULL)
+
+if(! idtype %in% idtypes){
+  cat(paste(idtypes, collapse="\n"))
+  stop("idtype : " , idtypes , "is not in the list of available idtypes!" )
 }
 
 # Parameters --------------------------------------------------------------
@@ -64,9 +76,8 @@ fc_estimates <- fc_estimates %>% select_at(c(ID_col, fc_col, contrast))
 print("Selected columns: ")
 print(sample_n(fc_estimates, 10))
 
-filtered_dd <- getUniprotFromFastaHeader(fc_estimates, idcolumn = ID_col) %>%
-  filter(!is.na(UniprotID))
-filtered_dd <- na.omit(filtered_dd)
+
+filtered_dd <- na.omit(fc_estimates)
 print("After ID filtering columns: ")
 print(sample_n(filtered_dd, 10))
 
@@ -79,20 +90,32 @@ contr_names <- make.names(contr_names)
 
 names(filtered_dd_list) <- contr_names
 
-for(name in names(filtered_dd_list)){
-  filtered_dd <- filtered_dd_list[[name]]
-  cat("\n\n processing contrast :",name, "\n\n")
-  res <- lapply(target_GSEA, function(x) {
-    message(x)
-    fgczgseaora:::.runGSEA(
-      data = filtered_dd,
-      fpath = name,
-      ID_col = "UniprotID",
-      fc_col = fc_col,
-      organism = organism,
-      target = x,
-      nperm = nperm,
-      outdir = result_dir
-    )
-  })
+res <- list()
+
+for(target in target_GSEA)
+{
+  res_contrast <- list()
+  for(name in names(filtered_dd_list))
+  {
+    filtered_dd <- filtered_dd_list[[name]]
+    cat("\n\n processing target : ",target," for contrast : ", name, "\n\n")
+
+    res_contrast[[name]] <- lapply(target_GSEA, function(x) {
+      message(x)
+      fgczgseaora::runGSEA(
+        data = filtered_dd,
+        fpath = name,
+        ID_col = ID_col,
+        fc_col = fc_col,
+        organism = organism,
+        target = x,
+        nperm = nperm,
+        outdir = result_dir,
+        interestGeneType = idtype
+      )
+    })
+  }
+  res[[target]] <- res_contrast
 }
+
+saveRDS(res, file="whats_in_GSEA_res.Rda")

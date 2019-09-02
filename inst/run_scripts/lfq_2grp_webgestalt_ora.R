@@ -91,7 +91,7 @@ print(sample_n(filtered_dd, 10))
 
 res <- lapply(target_GSEA, function(x) {
   message("\n",x,"\n")
-  fgczgseaora:::.runWebGestaltORA(
+  fgczgseaora::runWebGestaltORA(
     data = filtered_dd,
     fpath = "",
     organism = organism,

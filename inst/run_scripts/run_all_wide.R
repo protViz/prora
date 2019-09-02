@@ -46,7 +46,7 @@ for (i in seq_len(length(dfiles))) {
     filter(!is.na(UniprotID))
 
   sapply(target_GSEA, function(x) {
-    fgczgseaora:::.runGSEA(
+    fgczgseaora::runGSEA(
       data = dd,
       fpath = "",
       ID_col = ID_col,
@@ -60,7 +60,7 @@ for (i in seq_len(length(dfiles))) {
   })
 
   sapply(target_GSEA, function(x) {
-    fgczgseaora:::.runWebGestaltORA(
+    fgczgseaora::runWebGestaltORA(
       data = dd,
       fpath = "",
       organism = organism,
@@ -76,7 +76,7 @@ for (i in seq_len(length(dfiles))) {
   })
 
   sapply(target_SIGORA, function(x) {
-    fgczgseaora:::.runSIGORA(
+    fgczgseaora::.runSIGORA(
       data = dd,
       target = x,
       fc_col = fc_col,

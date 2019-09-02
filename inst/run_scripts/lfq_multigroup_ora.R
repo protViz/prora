@@ -8,9 +8,10 @@ Usage:
 Options:
   -o --organism=<organism> organism [default: hsapiens]
   -r --outdir=<outdir> output directory [default: results_ora]
-  -n --nperm=<nperm> number of permutations to calculate enrichment scores [default: 50]
   -t --log2fc=<log2fc> fc threshold [default: 1]
-  -g --is_greater=<is_greater> is greater than log2fc [default: TRUE]
+  -t --idtype=<idtype> type of id used for mapping [default: uniprotswissprot]
+  -i --ID_col=<ID_col> Column containing the UniprotIDs [default: top_protein]
+  -n --nperm=<nperm> number of permutations to calculate enrichment scores [default: 50]
 
 Arguments:
   grp2file  input file
@@ -33,8 +34,10 @@ suppressMessages(library(readr))
 
 cat("\nParameters used:\n\t grp2report:", grp2report <- opt$grp2file, "\n\t",
     "result_dir:", result_dir <- opt[["--outdir"]], "\n\t",
-    "  organism:", organism <- opt[["--organism"]], "\n\t",
     "    log2fc:", log2fc <- as.numeric(opt[["--log2fc"]]), "\n\t",
+    "  organism:", organism <- opt[["--organism"]], "\n\t",
+    "    idtype:", idtype <- opt[["--idtype"]], "\n\t",
+    "    ID_col:", idcolumn <- opt[["--ID_col"]], "\n\t",
     "     nperm:", nperm <- as.numeric(opt[["--nperm"]]), "\n\n\n")
 
 
@@ -113,7 +116,7 @@ for(log2fc in log2fc_s){
 
     res <- lapply(target_GSEA, function(x) {
       message("\n",x,"\n")
-      fgczgseaora:::.runWebGestaltORA(
+      fgczgseaora::runWebGestaltORA(
         data = filtered_dd,
         fpath = name,
         organism = organism,
@@ -123,7 +126,8 @@ for(log2fc in log2fc_s){
         greater = is_greater,
         nperm = nperm,
         fc_col = fc_col,
-        outdir = subdir
+        outdir = subdir,
+        interestGeneType = idtype
       )
     })
   }

@@ -40,7 +40,7 @@ dd <- getUniprotFromFastaHeader(dd) %>%
   filter(!is.na(UniprotID))
 
 sapply(target_GSEA, function(x) {
-  fgczgseaora:::.runWebGestaltORA(
+  fgczgseaora::runWebGestaltORA(
     data = dd,
     fpath = "",
     organism = organism,
