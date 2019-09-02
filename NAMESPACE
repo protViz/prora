@@ -3,6 +3,7 @@
 export(checkIDmappingEfficiency)
 export(getUniprotFromFastaHeader)
 export(makeGPS_wrappR)
+export(map_ids_uniprot)
 export(runGSEA)
 export(runSIGORA)
 export(runWebGestaltORA)
