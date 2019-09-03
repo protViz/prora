@@ -14,12 +14,16 @@
 #' fc_estimates <- fgczgseaora::exampleContrastData
 #'
 #' filtered_dd <- getUniprotFromFastaHeader(fc_estimates, idcolumn = "protein_Id")
-#' head(filtered_dd)
-#' #head(filtered_dd)
 #'
 #' map_ids_uniprot(filtered_dd)
 #'
-map_ids_uniprot <- function(data, ID_col = "UniprotID" , from =  "ACC+ID", to = "P_ENTREZGENEID", format = "tab"){
+#'
+map_ids_uniprot <- function(data,
+                            ID_col = "UniprotID" ,
+                            from =  "ACC+ID",
+                            to = "P_ENTREZGENEID",
+                            format = "tab"){
+
   ids_to_map <- unique(na.omit(data[[ID_col]]))
 
   url = "https://www.uniprot.org/uploadlists/"
@@ -33,7 +37,7 @@ map_ids_uniprot <- function(data, ID_col = "UniprotID" , from =  "ACC+ID", to = 
   r <- httr::POST(url, body = params, encode = "form")
   mapping <- readr::read_tsv(httr::content(r))
   mapping <- mapping %>% dplyr::rename( !!ID_col := "From", !!to := "To" )
-  res <- right_join(mapping, data, by = ID_col)
+  res <- dplyr::right_join(mapping, data, by = ID_col)
 
   return(res)
 }
