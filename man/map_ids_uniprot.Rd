@@ -26,9 +26,8 @@ Access to uniprot web API. For more detail see https://www.uniprot.org/help/uplo
 fc_estimates <- fgczgseaora::exampleContrastData
 
 filtered_dd <- getUniprotFromFastaHeader(fc_estimates, idcolumn = "protein_Id")
-head(filtered_dd)
-#head(filtered_dd)
 
 map_ids_uniprot(filtered_dd)
+
 
 }
