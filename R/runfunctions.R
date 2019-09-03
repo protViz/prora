@@ -15,6 +15,7 @@
   }
 
 #' workflow for GSEA
+#'
 #' @param data data
 #' @param fpath file path to write to
 #' @param ID_col column name containing IDs
@@ -23,10 +24,12 @@
 #' @param target target database, default: geneontology_Biological_Process
 #' @param nperm number of permutations
 #' @param outdir output directory
+#' @param interestGeneType what type of identifier default : "uniprotswissprot"
 #' @importFrom WebGestaltR WebGestaltR
 #' @importFrom readr read_delim
 #' @importFrom tidyr separate_rows
 #' @export
+#'
 runGSEA <- function(data,
                     fpath,
                     ID_col = "UniprotID",
@@ -74,6 +77,7 @@ runGSEA <- function(data,
     paste0("Project_", fpath),
     paste0("interestingID_mappingTable_", fpath, ".txt")
   )
+
   mappingTable <- read_delim(f_mappingTable, delim = "\t") %>%
     mutate(entrezgene = as.character(!!sym("entrezgene")))
   GSEA_res_sep <-
@@ -89,10 +93,11 @@ runGSEA <- function(data,
   )
 
   GSEA <- list(
-    organism = organism,
+    outdir = outdir,
     target = target,
+    fpath = fpath,
+    organism = organism,
     input_data = ranktable,
-    output_dir = fpath,
     merged_data = merged_data,
     nperm = nperm
   )
@@ -225,6 +230,8 @@ runSIGORA <-
 #' @param nperm number of permutations
 #' @param outdir output directory
 #' @param greater indicating direction of threshold
+#' @param interestGeneType what type of identifier default : "uniprotswissprot"
+#'
 #' @importFrom WebGestaltR WebGestaltR
 #' @export
 runWebGestaltORA <- function(data,
