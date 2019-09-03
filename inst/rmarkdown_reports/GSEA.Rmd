@@ -37,17 +37,17 @@ library(knitr)
 
 The following analysis compares the enrichment of particular gene/protein set members towards the upper and lower end of the provided ranked protein list (*e.g.* ranked by fold changes, *P*-values, henceforth denoted generally as *"score"*). This analysis is commonly referred to as *Gene Set Enrichment Analysis* and a more detailed description of the method can be found in @Subramanian15545. In principle, the protein list is ranked by the provided scores and an enrichment score is calculated based on the relative positions the members of a particular gene set take in the whole list. To calculate a *P*-value and a corresponding FDR, adjusted for multiplicity [@BH1995], a permutation test approach is used. The default number of permutations `WebGestaltR` uses is $n_\text{perm}=1000$ \footnote{Note that due to run time issues the number of permutations is 10 per default in the `fgczgseaora` run scripts. If more accurate results are required `nperm` has to be adjusted accordingly in the run script.}.
 
+
 ### Parameters
 
 * Organism: `r GSEA$organism`
 
 * Target Database: `r GSEA$target`
 
-* Output Directory: `r GSEA$output_dir`
-
-* Contrast: `r GSEA$contrast`
+* Contrast: `r GSEA$fpath`
 
 * Number of permutations: `r GSEA$nperm`
+
 
 ### GSEA Results {.tabset .tabset-pills}
 
@@ -60,7 +60,11 @@ genesets <- GSEA$merged_data %>%
   dplyr::select(set, description, enrichmentScore, normalizedEnrichmentScore, pValue, FDR)
 
 genesets <- genesets %>% arrange(normalizedEnrichmentScore)
-DT::datatable(genesets, escape = FALSE, colnames = c("Pathway", "Description", "enrichmentScore", "normalizedEnrichmentScore", "P-value","Adj. P-value"), style = "bootstrap") %>% DT::formatRound(digits = 3, columns = c("enrichmentScore", "normalizedEnrichmentScore", "pValue", "FDR"))
+DT::datatable(genesets,
+              escape = FALSE,
+              colnames = c("Pathway", "Description", "enrichmentScore", "normalizedEnrichmentScore", "P-value","Adj. P-value"),
+              style = "bootstrap") %>% 
+  DT::formatRound(digits = 3, columns = c("enrichmentScore", "normalizedEnrichmentScore", "pValue", "FDR"))
 ```
 
 #### Input Data
@@ -112,7 +116,7 @@ if(length(toplot) <= 1) {
   message("UpSetR plot cannot be displayed. Only one pathway enriched.")
 } else {
   UpSetR::fromList(toplot) %>%
-  UpSetR::upset(mb.ratio = c(0.5, 0.5), order.by = "freq", nsets = 20)
+    UpSetR::upset(mb.ratio = c(0.5, 0.5), order.by = "freq", nsets = 20)
 }
 ```
 
