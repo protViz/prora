@@ -24,6 +24,8 @@ runGSEA(data, fpath, ID_col = "UniprotID", fc_col = "estimate",
 \item{nperm}{number of permutations}
 
 \item{outdir}{output directory}
+
+\item{interestGeneType}{what type of identifier default : "uniprotswissprot"}
 }
 \description{
 workflow for GSEA

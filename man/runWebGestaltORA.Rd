@@ -29,6 +29,8 @@ runWebGestaltORA(data, fpath, organism = "hsapiens",
 \item{fc_col}{column name containing estimates}
 
 \item{outdir}{output directory}
+
+\item{interestGeneType}{what type of identifier default : "uniprotswissprot"}
 }
 \description{
 workflow for ORA

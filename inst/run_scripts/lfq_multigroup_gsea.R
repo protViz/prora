@@ -98,22 +98,20 @@ for(target in target_GSEA)
   for(name in names(filtered_dd_list))
   {
     filtered_dd <- filtered_dd_list[[name]]
-    cat("\n\n processing target : ",target," for contrast : ", name, "\n\n")
+    cat("\n\n PROCESSING TARGET : ",target," FOR CONTRAST : ", name, "\n\n")
 
-    res_contrast[[name]] <- lapply(target_GSEA, function(x) {
-      message(x)
+    res_contrast[[name]] <-
       fgczgseaora::runGSEA(
         data = filtered_dd,
         fpath = name,
         ID_col = ID_col,
         fc_col = fc_col,
         organism = organism,
-        target = x,
+        target = target,
         nperm = nperm,
         outdir = result_dir,
         interestGeneType = idtype
       )
-    })
   }
   res[[target]] <- res_contrast
 }
