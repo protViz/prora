@@ -8,7 +8,7 @@ Options:
   -o --organism=<organism> organism [default: hsapiens]
   -r --outdir=<outdir> output directory [default: results_gsea]
   -t --idtype=<idtype> type of id used for mapping [default: uniprotswissprot]
-  -i --ID_col=<ID_col> Column containing the UniprotIDs [default: top_protein]
+  -i --ID_col=<ID_col> Column containing the UniprotIDs [default: UniprotID]
   -n --nperm=<nperm> number of permutations to calculate enrichment scores [default: 50]
 
 Arguments:
@@ -115,5 +115,11 @@ for(target in target_GSEA)
   }
   res[[target]] <- res_contrast
 }
+saveRDS(res, file.path(result_dir, "GSEA_Results.Rda"))
+copy_gsea_report(result_dir)
+rmarkdown::render(file.path(result_dir, "GSEA_Results_Overview.Rmd"),
+                    params=list(GSEA = res),
+                    output_file = "index.html",
+                    output_dir = result_dir)
 
-saveRDS(res, file="whats_in_GSEA_res.Rda")
+

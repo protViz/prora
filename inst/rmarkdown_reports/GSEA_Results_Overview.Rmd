@@ -1,0 +1,50 @@
+---
+title: "Results for Webgestalt GSEA analysis"
+author: "FGCZ"
+date: "03/09/2019"
+output: 
+  html_document:
+    includes:
+      in_header: fgcz_header.html
+      after_body: fgcz_footer.html
+params:
+  GSEA: NULL
+  bioinf: "Witold Wolski <wew@fgcz.ethz.ch>"
+---
+
+
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(echo = FALSE)
+library(purrr)
+library(tidyverse)
+
+bioinf <- eval(params$bioinf)
+
+```
+
+The fold change estimates for all contrast of all the proteins are used to perform Gene Set Enrichment Analysis (GSEA) using [WebGestalt](www.webgestalt.org). 
+
+<span style="color:red"> If some of the contrasts did NOT produce any significant gene set enrichments, they are not listed in the table below. </span>
+
+
+```{r cars}
+
+tmp <- unlist(params$GSEA, recursive=FALSE)
+make_gsea_path <- function(x){
+ res <- c(target =  x$target,
+          contrast = x$fpath,
+          result =  paste0("[enrichment result](",file.path(x$target, paste0("Project_", x$fpath), "GSEA.html"),"){target=\"_blank\"}"))
+ return(data.frame(t(res), stringsAsFactors = FALSE))
+}
+
+
+paths <- map(tmp,make_gsea_path)
+paths <- bind_rows(paths)
+knitr::kable(paths, caption = "Links to GSEA results.")
+
+```
+
+The GSEA analysis was exectuted by : `r bioinf`.
+
