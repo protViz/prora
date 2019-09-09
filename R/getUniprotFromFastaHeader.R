@@ -15,7 +15,7 @@
 #' data("exampleContrastData", package = "fgczgseaora")
 #' getUniprotFromFastaHeader(exampleContrastData)
 getUniprotFromFastaHeader <- function(df, idcolumn = "protein_Id") {
-  df %>%
+  map <- df %>% dplyr::select(idcolumn) %>% distinct() %>%
     dplyr::filter(grepl(pattern = "^sp|^tr", !!sym(idcolumn))) %>%
     tidyr::separate(col = !!sym(idcolumn),
                     sep = "_",
@@ -26,6 +26,7 @@ getUniprotFromFastaHeader <- function(df, idcolumn = "protein_Id") {
       sep = "\\|",
       into = c("prefix", "UniprotID", "Symbol")
     ) %>%
-    dplyr::select(-!!sym("prefix"), -!!sym("Symbol"), -!!sym("end")) %>%
-    return()
+    dplyr::select(-!!sym("prefix"), -!!sym("Symbol"), -!!sym("end"))
+  res <- right_join(map, df , by= idcolumn)
+  return(res)
 }
