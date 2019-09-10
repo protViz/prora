@@ -42,7 +42,8 @@ make_gsea_path <- function(x){
 
 paths <- map(tmp,make_gsea_path)
 paths <- bind_rows(paths)
-knitr::kable(paths, caption = "Links to GSEA results.")
+
+knitr::kable(paths, caption = "Links to GSEA results.") %>% kableExtra::group_rows(group_label ="contrast")
 
 ```
 
