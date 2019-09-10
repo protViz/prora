@@ -1,7 +1,7 @@
 #' Translate Fasta header to UniprotSwissprot ID
 #'
 #' @export getUniprotFromFastaHeader
-#' @importFrom dplyr filter select
+#' @importFrom dplyr filter select right_join
 #' @importFrom tidyr separate
 #' @importFrom magrittr %>%
 #' @importFrom rlang sym
@@ -27,6 +27,6 @@ getUniprotFromFastaHeader <- function(df, idcolumn = "protein_Id") {
       into = c("prefix", "UniprotID", "Symbol")
     ) %>%
     dplyr::select(-!!sym("prefix"), -!!sym("Symbol"), -!!sym("end"))
-  res <- right_join(map, df , by= idcolumn)
+  res <- dplyr::right_join(map, df , by= idcolumn)
   return(res)
 }
