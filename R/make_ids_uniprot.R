@@ -7,6 +7,8 @@
 #' @param from id type
 #' @param to id type
 #' @param format in which format to return the mapping
+#' @importFrom httr POST content
+#' @improtFrom rlang :=
 #' @export
 #'
 #' @examples
