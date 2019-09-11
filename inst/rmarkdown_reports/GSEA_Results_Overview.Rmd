@@ -33,8 +33,8 @@ The fold change estimates for all contrast of all the proteins are used to perfo
 
 tmp <- unlist(params$GSEA, recursive=FALSE)
 make_gsea_path <- function(x){
- res <- c(target =  x$target,
-          contrast = x$fpath,
+ res <- c(contrast = x$fpath,
+          target =  x$target,
           result =  paste0("[enrichment result](",file.path(x$target, paste0("Project_", x$fpath), "GSEA.html"),"){target=\"_blank\"}"))
  return(data.frame(t(res), stringsAsFactors = FALSE))
 }
@@ -42,8 +42,10 @@ make_gsea_path <- function(x){
 
 paths <- map(tmp,make_gsea_path)
 paths <- bind_rows(paths)
-
-knitr::kable(paths, caption = "Links to GSEA results.") %>% kableExtra::group_rows(group_label ="contrast")
+paths %>% arrange(contrast, target ) %>%
+  knitr::kable( caption = "Links to GSEA results.", style = "bootstrap") %>%
+  kableExtra::collapse_rows(1, latex_hline = "major") %>%
+  kableExtra::kable_styling()
 
 ```
 
