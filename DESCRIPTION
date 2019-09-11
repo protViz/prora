@@ -18,22 +18,23 @@ License: GPL-2
 Encoding: UTF-8
 LazyData: true
 Imports: AnnotationDbi,
-    GO.db,
-    S4Vectors,
-    UpSetR,
     dplyr,
     DT,
     ggplot2,
+    GO.db,
+    httr,
     magrittr,
     org.Hs.eg.db,
     quantable,
     reactome.db,
     readr,
     rlang,
+    S4Vectors,
     sigora,
     tibble,
     tidyr,
-    tidyverse
+    tidyverse,
+    UpSetR
 RoxygenNote: 6.1.1
 VignetteBuilder: knitr
 Suggests: knitr, rmarkdown, bookdown, slam, BiocStyle, docopt
