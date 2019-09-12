@@ -19,6 +19,7 @@ params:
 knitr::opts_chunk$set(echo = FALSE)
 library(purrr)
 library(tidyverse)
+library(flextable)
 
 bioinf <- eval(params$bioinf)
 
@@ -33,20 +34,24 @@ The fold change estimates for all contrast of all the proteins are used to perfo
 
 tmp <- unlist(params$GSEA, recursive=FALSE)
 make_gsea_path <- function(x){
- res <- c(contrast = x$fpath,
-          target =  x$target,
-          result =  paste0("[enrichment result](",file.path(x$target, paste0("Project_", x$fpath), "GSEA.html"),"){target=\"_blank\"}"))
- return(data.frame(t(res), stringsAsFactors = FALSE))
+  res <- c(contrast = x$fpath,
+           target =  x$target,
+           file_path = file.path(".",x$target, paste0("Project_", x$fpath), "GSEA.html"))
+  return(data.frame(t(res), stringsAsFactors = FALSE))
 }
 
 
 paths <- map(tmp,make_gsea_path)
 paths <- bind_rows(paths)
-paths %>% arrange(contrast, target ) %>%
-  knitr::kable( caption = "Links to GSEA results.", style = "bootstrap") %>%
-  kableExtra::collapse_rows(1, latex_hline = "major") %>%
-  kableExtra::kable_styling()
-
+paths <- paths %>% dplyr::arrange(contrast)
+#install.packages("flextable")
+myfl <- flextable(paths)
+myfl <- myfl %>% compose( j = "file_path",
+         value = as_paragraph( hyperlink_text(x = "enrichment result",
+                                              url = file_path ) ) )
+myfl <- myfl %>% merge_v(j = ~   contrast )
+myfl <- myfl %>% autofit() %>% theme_box() %>%  color(j = "file_path", color = "#337ab7") 
+myfl
 ```
 
 The GSEA analysis was exectuted by : `r bioinf`.
