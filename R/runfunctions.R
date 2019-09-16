@@ -25,6 +25,7 @@
 #' @param nperm number of permutations
 #' @param outdir output directory
 #' @param interestGeneType what type of identifier default : "uniprotswissprot"
+#' @param contrast_name for pretty printing
 #' @importFrom WebGestaltR WebGestaltR
 #' @importFrom readr read_delim
 #' @importFrom tidyr separate_rows
@@ -38,7 +39,8 @@ runGSEA <- function(data,
                     target = "geneontology_Biological_Process",
                     nperm = 10,
                     outdir = "GSEA",
-                    interestGeneType = "uniprotswissprot")
+                    interestGeneType = "uniprotswissprot",
+                    contrast_name = fpath)
 {
   outdir <- file.path(outdir, target)
 
@@ -99,7 +101,8 @@ runGSEA <- function(data,
     organism = organism,
     input_data = ranktable,
     merged_data = merged_data,
-    nperm = nperm
+    nperm = nperm,
+    contrast_name = contrast_name
   )
 
   rdataPath <- file.path(outdir, paste0("Project_", fpath), "GSEA.Rdata")

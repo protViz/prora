@@ -6,7 +6,8 @@
 \usage{
 runGSEA(data, fpath, ID_col = "UniprotID", fc_col = "estimate",
   organism = "hsapiens", target = "geneontology_Biological_Process",
-  nperm = 10, outdir = "GSEA", interestGeneType = "uniprotswissprot")
+  nperm = 10, outdir = "GSEA", interestGeneType = "uniprotswissprot",
+  contrast_name = fpath)
 }
 \arguments{
 \item{data}{data}
@@ -26,6 +27,8 @@ runGSEA(data, fpath, ID_col = "UniprotID", fc_col = "estimate",
 \item{outdir}{output directory}
 
 \item{interestGeneType}{what type of identifier default : "uniprotswissprot"}
+
+\item{contrast_name}{for pretty printing}
 }
 \description{
 workflow for GSEA

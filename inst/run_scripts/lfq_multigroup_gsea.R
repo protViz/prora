@@ -110,7 +110,8 @@ for(target in target_GSEA)
         target = target,
         nperm = nperm,
         outdir = result_dir,
-        interestGeneType = idtype
+        interestGeneType = idtype,
+        contrast_name = filtered_dd$contrast[[1]]
       )
   }
   res[[target]] <- res_contrast

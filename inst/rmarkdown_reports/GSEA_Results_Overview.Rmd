@@ -35,6 +35,7 @@ The fold change estimates for all contrast of all the proteins are used to perfo
 tmp <- unlist(params$GSEA, recursive=FALSE)
 make_gsea_path <- function(x){
   res <- c(contrast = x$fpath,
+           contrast_name = x$contrast_name,
            target =  x$target,
            file_path = file.path(".",x$target, paste0("Project_", x$fpath), "GSEA.html"))
   return(data.frame(t(res), stringsAsFactors = FALSE))
@@ -45,11 +46,11 @@ paths <- map(tmp,make_gsea_path)
 paths <- bind_rows(paths)
 paths <- paths %>% dplyr::arrange(contrast)
 #install.packages("flextable")
-myfl <- flextable(paths)
+myfl <- flextable(paths) %>% set_caption("Gene Set Enrichment Analysis results (GSEA) using fgczgseaora and WebgestaltR.")
 myfl <- myfl %>% compose( j = "file_path",
          value = as_paragraph( hyperlink_text(x = "enrichment result",
                                               url = file_path ) ) )
-myfl <- myfl %>% merge_v(j = ~   contrast )
+myfl <- myfl %>% merge_v(j = ~   contrast + contrast_name)
 myfl <- myfl %>% autofit() %>% theme_box() %>%  color(j = "file_path", color = "#337ab7") 
 myfl
 ```
