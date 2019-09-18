@@ -125,8 +125,9 @@ if(length(toplot) <= 1) {
 
 ```{r results='asis'}
 repfile <- list.files(pattern = "Report_")
-cat("Since `WebGestaltR` provides its own summary report, please refer to [this file](", file.path(repfile), ").", sep = "")
 ```
+
+Since `WebGestaltR` provides its own summary report, please refer to [this file](`r file.path(repfile)`){target="_blank"}.
 
 ### References
 
