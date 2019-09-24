@@ -1,8 +1,11 @@
 #!/usr/bin/Rscript
+
+options(nwarnings = 10000)
+
 "WebGestaltR GSEA for multigroup reports
 
 Usage:
-  test.R <grp2file> [--organism=<organism>] [--outdir=<outdir>] [--nperm=<nperm>] [--idtype=<idtype>] [--ID_col=<ID_col>]
+  test.R <grp2file> [--organism=<organism>] [--outdir=<outdir>] [--idtype=<idtype>] [--ID_col=<ID_col>]  [--nperm=<nperm>] [--score_col=<score_col>] [--contrast=<contrast>]
 
 Options:
   -o --organism=<organism> organism [default: hsapiens]
@@ -10,6 +13,8 @@ Options:
   -t --idtype=<idtype> type of id used for mapping [default: uniprotswissprot]
   -i --ID_col=<ID_col> Column containing the UniprotIDs [default: UniprotID]
   -n --nperm=<nperm> number of permutations to calculate enrichment scores [default: 500]
+  -e --score_col=<score_col> column containing fold changes [default: estimate]
+  -c --contrast=<contrast> column containing fold changes [default: contrast]
 
 Arguments:
   grp2file  input file
@@ -36,7 +41,9 @@ cat("\nParameters used:\n\t grp2report:", grp2report <- opt$grp2file, "\n\t",
     "  organism:", organism <- opt[["--organism"]], "\n\t",
     "    idtype:", idtype <- opt[["--idtype"]], "\n\t",
     "    ID_col:", idcolumn <- opt[["--ID_col"]], "\n\t",
-    "     nperm:", nperm <- as.numeric(opt[["--nperm"]]), "\n\n\n")
+    "     nperm:", nperm <- as.numeric(opt[["--nperm"]]), "\n\t",
+    "  contrast:", contrast <- opt[["--contrast"]], "\n\t",
+    "  score_col:", score_col <- opt[["--score_col"]], "\n\n\n")
 
 
 target_GSEA <- c(
@@ -46,8 +53,7 @@ target_GSEA <- c(
 )
 
 ID_col <- idcolumn
-fc_col <- "estimate"
-contrast <- "contrast"
+fc_col <- score_col
 
 organisms <- listOrganism(hostName = "http://www.webgestalt.org/", cache = NULL)
 
@@ -114,7 +120,7 @@ for(target in target_GSEA)
         data = filtered_dd,
         fpath = name,
         ID_col = ID_col,
-        fc_col = fc_col,
+        score_col = fc_col,
         organism = organism,
         target = target,
         nperm = nperm,
@@ -125,6 +131,9 @@ for(target in target_GSEA)
   }
   res[[target]] <- res_contrast
 }
+
+print(summary(warnings()))
+
 saveRDS(res, file.path(result_dir, "GSEA_Results.Rda"))
 copy_gsea_report(result_dir)
 rmarkdown::render(file.path(result_dir, "GSEA_Results_Overview.Rmd"),

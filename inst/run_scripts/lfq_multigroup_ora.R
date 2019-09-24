@@ -1,5 +1,7 @@
 #!/usr/bin/Rscript
 
+options(nwarnings = 10000)
+
 "WebGestaltR ORA for multigroup reports
 
 Usage:
@@ -12,8 +14,8 @@ Options:
   -t --idtype=<idtype> type of id used for mapping [default: uniprotswissprot]
   -i --ID_col=<ID_col> Column containing the UniprotIDs [default: top_protein]
   -n --nperm=<nperm> number of permutations to calculate enrichment scores [default: 500]
-  -e --score_col=<score_col> column containing fold changes [default:estimate]
-  -c --contrast=<contrast> column containing fold changes [default:contrast]
+  -e --score_col=<score_col> column containing fold changes [default: estimate]
+  -c --contrast=<contrast> column containing fold changes [default: contrast]
 
 Arguments:
   grp2file  input file
@@ -85,7 +87,7 @@ if(dir.exists(result_dir)){
 }
 dir.create(result_dir)
 
-
+cat("AAAAAAAAAAAAAAAAA", c(ID_col, fc_col, contrast),"\n\n")
 
 fc_estimates <- readxl::read_xlsx(grp2report)
 fc_estimates <- fc_estimates %>% select_at(c(ID_col, fc_col, contrast))
@@ -144,7 +146,7 @@ for(target in target_GSEA){
           threshold = log2fc,
           greater = is_greater,
           nperm = nperm,
-          fc_col = fc_col,
+          score_col = fc_col,
           outdir = subdir,
           interestGeneType = idtype
         )
@@ -154,12 +156,7 @@ for(target in target_GSEA){
   res[[target]] <- res_sign
 }
 
-ORA <- list()
-ORA$ORA <- res
-ORA$log2fc <- log2fc
-ORA$result_dir <- result_dir
-ORA$filtered_data <- filtered_data
-
+print(summary(warnings()))
 
 saveRDS(res, file=file.path(result_dir,"ORA_results.Rda") )
 
