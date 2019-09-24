@@ -82,8 +82,8 @@ runGSEA <- function(data,
 
   mappingTable <- read_delim(f_mappingTable, delim = "\t") %>%
     mutate(entrezgene = as.character(!!sym("entrezgene")))
-  GSEA_res_sep <-
-    GSEA_res %>% separate_rows(!!sym("leadingEdgeId"), sep = ";")
+  GSEA_res_sep <-  GSEA_res %>%
+    separate_rows(!!sym("leadingEdgeId"), sep = ";")
   merged_data <- inner_join(mappingTable,
                             GSEA_res_sep,
                             by = c("entrezgene" = "leadingEdgeId"))
@@ -102,11 +102,11 @@ runGSEA <- function(data,
     input_data = ranktable,
     merged_data = merged_data,
     nperm = nperm,
+    interestGeneType = interestGeneType,
     contrast_name = contrast_name
   )
 
   rdataPath <- file.path(outdir, paste0("Project_", fpath), "GSEA.Rdata")
-
   message("storing GSEA.rdata to: ", rdataPath)
   saveRDS(GSEA, file= rdataPath)
 
@@ -132,12 +132,12 @@ runGSEA <- function(data,
   )
 
   message("rendering :", rmarkdownPath)
-
   rmarkdown::render(
     rmarkdownPath,
     bookdown::html_document2(number_sections = FALSE),
     params = list(GSEA = GSEA),
-    clean = TRUE
+    clean = TRUE,
+    envir = new.env()
   )
   return(GSEA)
 }
@@ -247,7 +247,8 @@ runWebGestaltORA <- function(data,
                              nperm = 10,
                              fc_col = "estimate",
                              outdir = "WebGestalt_ORA",
-                             interestGeneType = "uniprotswissprot") {
+                             interestGeneType = "uniprotswissprot",
+                             contrast_name = fpath) {
   outdir <- file.path(outdir, target)
 
   if (!dir.exists(outdir)) {
@@ -285,6 +286,20 @@ runWebGestaltORA <- function(data,
       projectName = fpath
     ), error = function(e){message(e) ; return(NULL) })
   message("\n\n Finished ORA \n\n")
+
+  ORA <- list(
+    outdir = outdir,
+    target = target,
+    fpath = fpath,
+    organism = organism,
+    input_data = data,
+    threshold = threshold,
+    greater = greater,
+    merged_data = ORA_res,
+    nperm = nperm,
+    interestGeneType = interestGeneType,
+    contrast_name = contrast_name
+  )
 
   return(ORA_res)
 }
