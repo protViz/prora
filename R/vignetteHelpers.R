@@ -16,16 +16,33 @@
 }
 
 
-#' copy all files need to run mixed model analysis.
+#' copy all files needed to generate GSEA report.
+#'
 #' @param workdir directory where to copy file - default is current working directory.
 #' @export
 #'
 copy_gsea_report <- function(workdir = getwd()){
+
   runscripts <- c("fgcz_formatting/fgcz_header.html",
                   "fgcz_formatting/fgcz_footer.html",
                   "fgcz_formatting/fgcz.css",
                   "fgcz_formatting/fgcz_banner.png",
                   "rmarkdown_reports/GSEA_Results_Overview.Rmd")
+
+  .scriptCopyHelperVec(runscripts, workdir = workdir)
+}
+#' copy all files needed to generate ORA report
+#'
+#' @param workdir directory where to copy file - default is current working directory.
+#' @export
+#'
+copy_ora_report <- function(workdir = getwd()){
+
+  runscripts <- c("fgcz_formatting/fgcz_header.html",
+                  "fgcz_formatting/fgcz_footer.html",
+                  "fgcz_formatting/fgcz.css",
+                  "fgcz_formatting/fgcz_banner.png",
+                  "rmarkdown_reports/ORA_Results_Overview.Rmd")
 
   .scriptCopyHelperVec(runscripts, workdir = workdir)
 }

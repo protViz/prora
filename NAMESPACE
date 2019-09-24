@@ -2,6 +2,7 @@
 
 export(checkIDmappingEfficiency)
 export(copy_gsea_report)
+export(copy_ora_report)
 export(getUniprotFromFastaHeader)
 export(makeGPS_wrappR)
 export(map_ids_uniprot)
