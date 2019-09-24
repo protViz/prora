@@ -9,7 +9,7 @@ Options:
   -r --outdir=<outdir> output directory [default: results_gsea]
   -t --idtype=<idtype> type of id used for mapping [default: uniprotswissprot]
   -i --ID_col=<ID_col> Column containing the UniprotIDs [default: UniprotID]
-  -n --nperm=<nperm> number of permutations to calculate enrichment scores [default: 50]
+  -n --nperm=<nperm> number of permutations to calculate enrichment scores [default: 500]
 
 Arguments:
   grp2file  input file
@@ -52,23 +52,32 @@ contrast <- "contrast"
 organisms <- listOrganism(hostName = "http://www.webgestalt.org/", cache = NULL)
 
 if(! organism %in% organisms){
+  cat("ERROR !\n")
+  cat("Organism : " , organism , "is not in the list of available organisms!")
+  cat("List of available orginisms\n")
   cat( paste(organisms, collapse="\n") )
-  stop("organism : " , organism , "is not in the list of available organisms!" )
+  stop("ERROR !\n" )
 }
 
 idtypes <- listIdType(organism = organism, hostName = "http://www.webgestalt.org/", cache = NULL)
 
 if(! idtype %in% idtypes){
+  cat("ERROR !\n")
+  cat("idtype : " , idtype , "is not in the list of available idtypes!\n" )
+  cat("list of available idtypes?\n")
   cat(paste(idtypes, collapse="\n"))
-  stop("idtype : " , idtypes , "is not in the list of available idtypes!" )
+  stop("ERROR !\n")
 }
 
 # Parameters --------------------------------------------------------------
 
 
-if(!dir.exists(result_dir)){
-  dir.create(result_dir)
+result_dir <- paste0(result_dir,"_",format(Sys.time(), '%d%b%Y_%H%M%S'))
+cat("creating dir ", result_dir,"\n")
+if(dir.exists(result_dir)){
+  unlink(result_dir, recursive = TRUE)
 }
+dir.create(result_dir)
 
 fc_estimates <- readxl::read_xlsx(grp2report)
 fc_estimates <- fc_estimates %>% select_at(c(ID_col, fc_col, contrast))
@@ -119,8 +128,8 @@ for(target in target_GSEA)
 saveRDS(res, file.path(result_dir, "GSEA_Results.Rda"))
 copy_gsea_report(result_dir)
 rmarkdown::render(file.path(result_dir, "GSEA_Results_Overview.Rmd"),
-                    params=list(GSEA = res),
-                    output_file = "index.html",
-                    output_dir = result_dir)
+                  params=list(GSEA = res),
+                  output_file = "index.html",
+                  output_dir = result_dir)
 
 
