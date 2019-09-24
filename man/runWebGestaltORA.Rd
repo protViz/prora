@@ -6,8 +6,9 @@
 \usage{
 runWebGestaltORA(data, fpath, organism = "hsapiens",
   ID_col = "UniprotID", target = "geneontology_Biological_Process",
-  threshold = 0.5, greater = TRUE, nperm = 10, fc_col = "estimate",
-  outdir = "WebGestalt_ORA", interestGeneType = "uniprotswissprot")
+  threshold = 0.5, greater = TRUE, nperm = 10,
+  score_col = "estimate", outdir = "WebGestalt_ORA",
+  interestGeneType = "uniprotswissprot", contrast_name = fpath)
 }
 \arguments{
 \item{data}{data}
@@ -26,7 +27,7 @@ runWebGestaltORA(data, fpath, organism = "hsapiens",
 
 \item{nperm}{number of permutations}
 
-\item{fc_col}{column name containing estimates}
+\item{score_col}{column name containing estimates}
 
 \item{outdir}{output directory}
 

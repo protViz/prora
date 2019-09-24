@@ -4,7 +4,7 @@
 \alias{runSIGORA}
 \title{workflow for sigORA}
 \usage{
-runSIGORA(data, target = "GO", fc_col = "estimate",
+runSIGORA(data, target = "GO", score_col = "estimate",
   ID_col = "UniprotID", fc_threshold = 0.5, outdir = "sigORA",
   greater = TRUE)
 }
@@ -13,7 +13,7 @@ runSIGORA(data, target = "GO", fc_col = "estimate",
 
 \item{target}{target database, default: "GO"}
 
-\item{fc_col}{column name containing estimates}
+\item{score_col}{column name containing estimates}
 
 \item{ID_col}{column name containing IDs}
 

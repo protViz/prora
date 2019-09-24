@@ -4,7 +4,7 @@
 \alias{runGSEA}
 \title{workflow for GSEA}
 \usage{
-runGSEA(data, fpath, ID_col = "UniprotID", fc_col = "estimate",
+runGSEA(data, fpath, ID_col = "UniprotID", score_col = "estimate",
   organism = "hsapiens", target = "geneontology_Biological_Process",
   nperm = 10, outdir = "GSEA", interestGeneType = "uniprotswissprot",
   contrast_name = fpath)
@@ -16,7 +16,7 @@ runGSEA(data, fpath, ID_col = "UniprotID", fc_col = "estimate",
 
 \item{ID_col}{column name containing IDs}
 
-\item{fc_col}{column name containing estimates}
+\item{score_col}{column name containing estimates}
 
 \item{organism}{organism}
 

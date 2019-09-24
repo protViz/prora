@@ -22,12 +22,12 @@ map_ids_uniprot(data, ID_col = "UniprotID", from = "ACC+ID",
 Access to uniprot web API. For more detail see https://www.uniprot.org/help/uploadlists
 }
 \examples{
-
+library(tidyverse)
 fc_estimates <- fgczgseaora::exampleContrastData
 
 filtered_dd <- getUniprotFromFastaHeader(fc_estimates, idcolumn = "protein_Id")
 
-map_ids_uniprot(filtered_dd)
+map_ids_uniprot( filtered_dd )
 
 
 }
