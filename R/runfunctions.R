@@ -301,5 +301,5 @@ runWebGestaltORA <- function(data,
     contrast_name = contrast_name
   )
 
-  return(ORA_res)
+  return(ORA)
 }
