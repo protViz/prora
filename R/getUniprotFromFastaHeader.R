@@ -1,6 +1,6 @@
 #' Translate Fasta header to UniprotSwissprot ID
 #'
-#' @export getUniprotFromFastaHeader
+#' @export
 #' @importFrom dplyr filter select right_join
 #' @importFrom tidyr separate
 #' @importFrom magrittr %>%

@@ -8,20 +8,20 @@
 #' @param to id type
 #' @param format in which format to return the mapping
 #' @importFrom httr POST content
-#' @improtFrom rlang :=
+#' @importFrom rlang :=
 #' @export
 #'
 #' @examples
-#'
+#' library(tidyverse)
 #' fc_estimates <- fgczgseaora::exampleContrastData
 #'
 #' filtered_dd <- getUniprotFromFastaHeader(fc_estimates, idcolumn = "protein_Id")
 #'
-#' map_ids_uniprot(filtered_dd)
+#' map_ids_uniprot( filtered_dd )
 #'
 #'
 map_ids_uniprot <- function(data,
-                            ID_col = "UniprotID" ,
+                            ID_col = "UniprotID",
                             from =  "ACC+ID",
                             to = "P_ENTREZGENEID",
                             format = "tab"){
