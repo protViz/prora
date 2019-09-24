@@ -2,7 +2,7 @@
 % Please edit documentation in R/vignetteHelpers.R
 \name{copy_gsea_report}
 \alias{copy_gsea_report}
-\title{copy all files need to run mixed model analysis.}
+\title{copy all files needed to generate GSEA report.}
 \usage{
 copy_gsea_report(workdir = getwd())
 }
@@ -10,5 +10,5 @@ copy_gsea_report(workdir = getwd())
 \item{workdir}{directory where to copy file - default is current working directory.}
 }
 \description{
-copy all files need to run mixed model analysis.
+copy all files needed to generate GSEA report.
 }

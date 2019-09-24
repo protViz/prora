@@ -1,0 +1,73 @@
+---
+title: "Results for Webgestalt ORA analysis"
+author: "FGCZ"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output: 
+  html_document:
+    includes:
+      in_header: fgcz_header.html
+      after_body: fgcz_footer.html
+params:
+  ORA: NULL
+  bioinf: "Witold Wolski <wew@fgcz.ethz.ch>"
+---
+
+
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(echo = FALSE)
+library(purrr)
+library(tidyverse)
+library(flextable)
+
+bioinf <- eval(params$bioinf)
+
+```
+
+The Overrepresentation analysis was run with the following settigns:
+
+- fold change threshold `r params$fc
+
+The fold change estimates for all contrast of all proteins are used to perform Gene Set Enrichment Analysis (GSEA) using [WebGestalt](www.webgestalt.org). 
+
+<span style="color:red"> If some of the contrasts did NOT produce any significant gene set enrichments, they are not listed in the table below. </span>
+
+
+```{r cars}
+
+#tmp <- readRDS("D:/Dropbox/DataAnalysis/p2558_With_TOBI_K/p2558_o5358/OLD_UPLOAD/results_modelling/results_ora_24Sep2019_121117/ORA_results.Rda")
+tmp <- unlist(params$ORA, recursive=FALSE)
+dd <- unlist(tmp, recursive = FALSE)
+ddd <- unlist(dd, recursive = FALSE)
+
+make_gsea_path <- function(x){
+  res <- list(outpath = x$outdir,
+              contrast = x$fpath,
+              contrast_name = x$contrast_name,
+              target = x$target,
+              greater = x$greater,
+              threshold =  x$threshold,
+              file_path = file.path(".",x$outdir, paste0("Project_", x$fname), paste0("Report_",x$fname,".html")), 
+              merged_data = !is.null(x$merged_data))
+  return(res)
+}
+
+paths <- purrr::map_df(ddd,make_gsea_path)
+
+paths <- paths %>%  mutate(filter = paste0(dplyr::case_when(greater ~ "score > ", TRUE ~ "score < "  ), threshold))
+paths <- paths %>% filter( merged_data == TRUE) %>% select(contrast, contrast_name, filter, target,  file_path)
+#install.packages("flextable")
+paths <- paths %>% dplyr::arrange(contrast, filter)
+myfl <- flextable(paths) %>% set_caption("Over Representation Analysis (ORA) results using fgczgseaora and WebgestaltR. (vs - versus, gv - given).")
+myfl <- myfl %>% compose( j = "file_path",
+                          value = as_paragraph( hyperlink_text(x = "ora result",
+                                                               url = file_path ) ) )
+
+myfl <- myfl %>% merge_v(j = ~   contrast + contrast_name + filter)
+myfl <- myfl %>% autofit() %>% theme_box() %>%  color(j = "file_path", color = "#337ab7") 
+myfl
+```
+
+The ORA analysis was exectuted by : `r bioinf`.
+

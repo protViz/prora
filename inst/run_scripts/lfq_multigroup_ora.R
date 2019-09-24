@@ -13,7 +13,7 @@ Options:
   -l --log2fc=<log2fc> fc threshold [default: 1]
   -t --idtype=<idtype> type of id used for mapping [default: uniprotswissprot]
   -i --ID_col=<ID_col> Column containing the UniprotIDs [default: top_protein]
-  -n --nperm=<nperm> number of permutations to calculate enrichment scores [default: 500]
+  -n --nperm=<nperm> number of permutations to calculate enrichment scores [default: 10]
   -e --score_col=<score_col> column containing fold changes [default: estimate]
   -c --contrast=<contrast> column containing fold changes [default: contrast]
 
@@ -87,7 +87,6 @@ if(dir.exists(result_dir)){
 }
 dir.create(result_dir)
 
-cat("AAAAAAAAAAAAAAAAA", c(ID_col, fc_col, contrast),"\n\n")
 
 fc_estimates <- readxl::read_xlsx(grp2report)
 fc_estimates <- fc_estimates %>% select_at(c(ID_col, fc_col, contrast))
@@ -159,4 +158,11 @@ for(target in target_GSEA){
 print(summary(warnings()))
 
 saveRDS(res, file=file.path(result_dir,"ORA_results.Rda") )
+
+copy_ora_report(result_dir)
+rmarkdown::render(file.path(result_dir, "ORA_Results_Overview.Rmd"),
+                  params=list(ORA = res),
+                  output_file = "index.html",
+                  output_dir = result_dir)
+
 
