@@ -3,7 +3,7 @@
 "WebGestaltR ORA for multigroup reports
 
 Usage:
-  test.R <grp2file> [--organism=<organism>] [--outdir=<outdir>] [--log2fc=<log2fc>] [--idtype=<idtype>] [--ID_col=<ID_col>] [--nperm=<nperm>] [--estimate=<estimate>] [--contrast=<contrast>]
+  test.R <grp2file> [--organism=<organism>] [--outdir=<outdir>] [--log2fc=<log2fc>] [--idtype=<idtype>] [--ID_col=<ID_col>] [--nperm=<nperm>] [--score_col=<score_col>] [--contrast=<contrast>]
 
 Options:
   -o --organism=<organism> organism [default: hsapiens]
@@ -12,7 +12,7 @@ Options:
   -t --idtype=<idtype> type of id used for mapping [default: uniprotswissprot]
   -i --ID_col=<ID_col> Column containing the UniprotIDs [default: top_protein]
   -n --nperm=<nperm> number of permutations to calculate enrichment scores [default: 500]
-  -e --estimate=<estimate> column containing fold changes [default:estimate]
+  -e --score_col=<score_col> column containing fold changes [default:estimate]
   -c --contrast=<contrast> column containing fold changes [default:contrast]
 
 Arguments:
@@ -43,7 +43,7 @@ cat("\nParameters used:\n\t",
     "    ID_col:", idcolumn <- opt[["--ID_col"]], "\n\t",
     "     nperm:", nperm <- as.numeric(opt[["--nperm"]]), "\n\t",
     "  contrast:", contrast <- opt[["--contrast"]], "\n\t",
-    "  estimate:", estimate <- opt[["--estimate"]], "\n\n\n")
+    "  score_col:", score_col <- opt[["--score_col"]], "\n\n\n")
 
 
 target_GSEA <- c(
@@ -53,7 +53,7 @@ target_GSEA <- c(
 )
 
 ID_col <- idcolumn
-fc_col <- estimate
+fc_col <- score_col
 
 organisms <- listOrganism(hostName = "http://www.webgestalt.org/", cache = NULL)
 
