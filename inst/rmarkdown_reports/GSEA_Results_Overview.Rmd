@@ -1,7 +1,7 @@
 ---
 title: "Results for Webgestalt GSEA analysis"
 author: "FGCZ"
-date: "03/09/2019"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
 output: 
   html_document:
     includes:
@@ -46,7 +46,7 @@ paths <- map(tmp,make_gsea_path)
 paths <- bind_rows(paths)
 paths <- paths %>% dplyr::arrange(contrast)
 #install.packages("flextable")
-myfl <- flextable(paths) %>% set_caption("Gene Set Enrichment Analysis results (GSEA) using fgczgseaora and WebgestaltR.")
+myfl <- flextable(paths) %>% set_caption("Gene Set Enrichment Analysis results (GSEA) using fgczgseaora and WebgestaltR. (vs - versus, gv - given) ")
 myfl <- myfl %>% compose( j = "file_path",
          value = as_paragraph( hyperlink_text(x = "enrichment result",
                                               url = file_path ) ) )
