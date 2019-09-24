@@ -19,7 +19,7 @@
 #' @param data data
 #' @param fpath file path to write to
 #' @param ID_col column name containing IDs
-#' @param fc_col column name containing estimates
+#' @param score_col column name containing estimates
 #' @param organism organism
 #' @param target target database, default: geneontology_Biological_Process
 #' @param nperm number of permutations
@@ -34,7 +34,7 @@
 runGSEA <- function(data,
                     fpath,
                     ID_col = "UniprotID",
-                    fc_col = "estimate",
+                    score_col = "estimate",
                     organism = "hsapiens",
                     target = "geneontology_Biological_Process",
                     nperm = 10,
@@ -49,7 +49,7 @@ runGSEA <- function(data,
   }
 
   ranktable <- data %>%
-    dplyr::select(!!sym(ID_col), Score = !!sym(fc_col))
+    dplyr::select(!!sym(ID_col), Score = !!sym(score_col))
 
   GSEA_res <-
     WebGestaltR(
@@ -145,7 +145,7 @@ runGSEA <- function(data,
 #' workflow for sigORA
 #' @param data data
 #' @param ID_col column name containing IDs
-#' @param fc_col column name containing estimates
+#' @param score_col column name containing estimates
 #' @param fc_threshold threshold for estimate
 #' @param greater flag whether to filter > threshold or < threshold
 #' @param target target database, default: "GO"
@@ -154,7 +154,7 @@ runGSEA <- function(data,
 runSIGORA <-
   function(data,
            target = "GO",
-           fc_col = "estimate",
+           score_col = "estimate",
            ID_col = "UniprotID",
            fc_threshold = 0.5,
            outdir = "sigORA",
@@ -174,7 +174,7 @@ runSIGORA <-
     sigora_res <-
       try(sigoraWrappR(
         fc_threshold = fc_threshold,
-        fc_col = fc_col,
+        score_col = score_col,
         df = data,
         GPSrepos = myGPSrepo,
         db = target,
@@ -226,7 +226,7 @@ runSIGORA <-
 #' @param data data
 #' @param fpath file path to write to
 #' @param ID_col column name containing IDs
-#' @param fc_col column name containing estimates
+#' @param score_col column name containing estimates
 #' @param organism organism
 #' @param target target database, default: "geneontology_Biological_Process"
 #' @param threshold threshold for estimate
@@ -245,7 +245,7 @@ runWebGestaltORA <- function(data,
                              threshold = 0.5,
                              greater = TRUE,
                              nperm = 10,
-                             fc_col = "estimate",
+                             score_col = "estimate",
                              outdir = "WebGestalt_ORA",
                              interestGeneType = "uniprotswissprot",
                              contrast_name = fpath) {
@@ -256,7 +256,7 @@ runWebGestaltORA <- function(data,
   }
 
   dat <- data %>%
-    dplyr::select(!!sym(ID_col), Score = !!sym(fc_col))
+    dplyr::select(!!sym(ID_col), Score = !!sym(score_col))
 
   ranktable <-
     .apply_threshold(df = dat,
@@ -264,7 +264,7 @@ runWebGestaltORA <- function(data,
                      greater = greater)
 
   message("There are ", nrow(dat), " proteins in the background\n\n")
-  message("There are ",nrow(ranktable) , " proteins in the selected set\n\n" )
+  message("There are ", nrow(ranktable) , " proteins in the selected set\n\n" )
 
   if(nrow(ranktable) == 0){
     message("NO proteins in the subset!\n")
