@@ -242,17 +242,29 @@ runWebGestaltORA <- function(data,
                              organism = "hsapiens",
                              ID_col = "UniprotID",
                              target = "geneontology_Biological_Process",
-                             threshold = 0.5,
+                             threshold = 0.59,
                              greater = TRUE,
                              nperm = 10,
                              score_col = "estimate",
                              outdir = "WebGestalt_ORA",
+                             subdir_name = NULL,
                              interestGeneType = "uniprotswissprot",
                              contrast_name = fpath) {
-  outdir <- file.path(outdir, target)
 
-  if (!dir.exists(outdir)) {
-    dir.create(outdir, recursive = TRUE)
+  if(is.null(subdir_name)){
+    subdir_name <- paste0("fc_threshold_",abs(threshold),"_is_greater_",greater)
+  }
+  subdir_path <- file.path(result_dir, subdir_name)
+
+  if(!dir.exists(subdir_path)){
+    message("created directory : ", subdir_path, "\n\n")
+    dir.create(subdir_path)
+  }
+
+  outdir_path <- file.path(subdir_path, target)
+  if (!dir.exists(outdir_path)) {
+    message("created directory : ", outdir_path, "\n\n")
+    dir.create(outdir_path, recursive = TRUE)
   }
 
   dat <- data %>%
@@ -280,7 +292,8 @@ runWebGestaltORA <- function(data,
       referenceGene = data[[ID_col]],
       interestGeneType = interestGeneType,
       referenceGeneType = interestGeneType,
-      outputDirectory = outdir,
+      outputDirectory = outdir_path,
+      subdir = subdir_name,
       isOutput = TRUE,
       perNum = nperm,
       projectName = fpath
@@ -289,6 +302,7 @@ runWebGestaltORA <- function(data,
 
   ORA <- list(
     outdir = outdir,
+    subdir_name = subdir_name,
     target = target,
     fpath = fpath,
     organism = organism,

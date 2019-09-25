@@ -13,7 +13,7 @@ Options:
   -l --log2fc=<log2fc> fc threshold [default: 1]
   -t --idtype=<idtype> type of id used for mapping [default: uniprotswissprot]
   -i --ID_col=<ID_col> Column containing the UniprotIDs [default: top_protein]
-  -n --nperm=<nperm> number of permutations to calculate enrichment scores [default: 10]
+  -n --nperm=<nperm> number of permutations to calculate enrichment scores [default: 500]
   -e --score_col=<score_col> column containing fold changes [default: estimate]
   -c --contrast=<contrast> column containing fold changes [default: contrast]
 
@@ -122,11 +122,6 @@ for(target in target_GSEA){
 
 
     subdir_name <- paste0("fc_threshold_",abs(log2fc),"_is_greater_",is_greater)
-    subdir <- file.path(result_dir, subdir_name)
-    if(!dir.exists(subdir)){
-      message("created directory : ", subdir, "\n\n")
-      dir.create(subdir)
-    }
 
 
     res_contrast <- list()
@@ -146,7 +141,8 @@ for(target in target_GSEA){
           greater = is_greater,
           nperm = nperm,
           score_col = fc_col,
-          outdir = subdir,
+          outdir = result_dir,
+          subdir_name = subdir_name,
           interestGeneType = idtype
         )
     }
@@ -155,14 +151,22 @@ for(target in target_GSEA){
   res[[target]] <- res_sign
 }
 
-print(summary(warnings()))
-
+message("Storing results")
 saveRDS(res, file=file.path(result_dir,"ORA_results.Rda") )
 
+#if(FALSE){
+#  res <- readRDS("d:/Dropbox/DataAnalysis/p2558_With_TOBI_K/p2558_o5358/OLD_UPLOAD/results_modelling/results_ora_25Sep2019_093859/ORA_results.Rda")
+#  result_dir <- "."
+#}
+
+message("Rendering")
 copy_ora_report(result_dir)
 rmarkdown::render(file.path(result_dir, "ORA_Results_Overview.Rmd"),
                   params=list(ORA = res),
                   output_file = "index.html",
-                  output_dir = result_dir)
+                  output_dir = result_dir,
+                  envir = new.env())
 
 
+
+print(summary(warnings()))
