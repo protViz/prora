@@ -32,7 +32,7 @@ odir <- file.path(result_dir , make.names(fpath_se))
 dd <- read_tsv(grp2report)
 dd <- dd %>% select_at(c(ID_col, fc_col))
 
-filtered_dd <- getUniprotFromFastaHeader(dd,idcolumn = ID_col) %>%
+filtered_dd <- get_UniprotID_from_fasta_header(dd,idcolumn = ID_col) %>%
   filter(!is.na(UniprotID))
 
 # Parameters --------------------------------------------------------------

@@ -32,7 +32,7 @@ if (!dir.exists(odir)) {
 }
 
 colnames(dd) <- make.names(colnames(dd))
-dd <- getUniprotFromFastaHeader(dd) %>%
+dd <- get_UniprotID_from_fasta_header(dd) %>%
   filter(!is.na(UniprotID))
 sapply(target_SIGORA, function(x) {
   fgczgseaora::runSIGORA(

@@ -80,7 +80,7 @@ fc_estimates <- fc_estimates %>% select_at(c(ID_col, fc_col))
 print("Selected columns: ")
 print(sample_n(fc_estimates, 10))
 
-filtered_dd <- getUniprotFromFastaHeader(fc_estimates, idcolumn = ID_col) %>%
+filtered_dd <- get_UniprotID_from_fasta_header(fc_estimates, idcolumn = ID_col) %>%
   filter(!is.na(UniprotID))
 filtered_dd <- na.omit(filtered_dd)
 print("After ID filtering columns: ")

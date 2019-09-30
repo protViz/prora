@@ -47,7 +47,7 @@ returns a \code{list} used for the generation of an \code{.Rmd} report.
 \examples{
 data("exampleContrastData", package = "fgczgseaora")
 data("idmap", package = "sigora")
-df <- getUniprotFromFastaHeader(exampleContrastData)
+df <- get_UniprotID_from_fasta_header(exampleContrastData)
 myGPSrepo <- makeGPS_wrappR(ids = df$UniprotID)
 res <- sigoraWrappR(fc_col = "estimate", GPSrepos = myGPSrepo,
                     df = df, fc_threshold = 0.5)

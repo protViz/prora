@@ -87,7 +87,7 @@ and the second column fold change estimates. _e.g._ as obtained by a
 into Uniprot accessions for subsequent ID mapping.
 
 ```{r}
-dd <- fgczgseaora::getUniprotFromFastaHeader(exampleContrastData)
+dd <- fgczgseaora::get_UniprotID_from_fasta_header(exampleContrastData)
 glimpse(dd)
 ```
 

@@ -10,7 +10,7 @@
 #'
 #' @examples
 #' data("exampleContrastData", package = "fgczgseaora")
-#' df <- getUniprotFromFastaHeader(exampleContrastData)
+#' df <- get_UniprotID_from_fasta_header(exampleContrastData)
 #' checkIDmappingEfficiency(df$UniprotID, keytype = "UNIPROT")
 #'
 #' @export checkIDmappingEfficiency

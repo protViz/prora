@@ -42,7 +42,7 @@ for (i in seq_len(length(dfiles))) {
 
   dd <- read_delim(dfiles[i], delim = "\t")
   colnames(dd) <- make.names(colnames(dd))
-  dd <- getUniprotFromFastaHeader(dd, idcolumn = "TopProteinName") %>%
+  dd <- get_UniprotID_from_fasta_header(dd, idcolumn = "TopProteinName") %>%
     filter(!is.na(UniprotID))
 
   sapply(target_GSEA, function(x) {

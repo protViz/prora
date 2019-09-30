@@ -13,8 +13,8 @@
 #'
 #' @examples
 #' data("exampleContrastData", package = "fgczgseaora")
-#' getUniprotFromFastaHeader(exampleContrastData)
-getUniprotFromFastaHeader <- function(df, idcolumn = "protein_Id") {
+#' get_UniprotID_from_fasta_header(exampleContrastData)
+get_UniprotID_from_fasta_header <- function(df, idcolumn = "protein_Id") {
   map <- df %>% dplyr::select(idcolumn) %>% distinct() %>%
     dplyr::filter(grepl(pattern = "^sp|^tr", !!sym(idcolumn))) %>%
     tidyr::separate(col = !!sym(idcolumn),
