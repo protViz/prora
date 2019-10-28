@@ -100,7 +100,7 @@ res <- lapply(target_GSEA, function(x) {
     threshold = log2fc,
     greater = is_greater,
     nperm = nperm,
-    fc_col = fc_col,
+    score_col = fc_col,
     outdir = subdir
   )
 })

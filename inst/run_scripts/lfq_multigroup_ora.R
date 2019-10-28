@@ -12,7 +12,7 @@ Options:
   -r --outdir=<outdir> output directory [default: results_ora]
   -l --log2fc=<log2fc> fc threshold [default: 1]
   -t --idtype=<idtype> type of id used for mapping [default: uniprotswissprot]
-  -i --ID_col=<ID_col> Column containing the UniprotIDs [default: top_protein]
+  -i --ID_col=<ID_col> Column containing the UniprotIDs [default: UniprotID]
   -n --nperm=<nperm> number of permutations to calculate enrichment scores [default: 500]
   -e --score_col=<score_col> column containing fold changes [default: estimate]
   -c --contrast=<contrast> column containing fold changes [default: contrast]
@@ -100,8 +100,6 @@ print("After ID filtering columns: ")
 print(sample_n(filtered_dd, 10))
 
 
-
-
 filtered_dd_list <- base::split(filtered_dd, filtered_dd$contrast)
 contr_names <- names(filtered_dd_list)
 contr_names <- gsub(" ","", contr_names)
@@ -135,7 +133,7 @@ for(target in target_GSEA){
           data = filtered_dd,
           fpath = name,
           organism = organism,
-          ID_col = "UniprotID",
+          ID_col = idcolumn,
           target = target,
           threshold = log2fc,
           greater = is_greater,

@@ -70,7 +70,7 @@ for (i in seq_len(length(dfiles))) {
       threshold = fc_threshold,
       greater = greater,
       nperm = nperm,
-      fc_col = fc_col,
+      score_col = fc_col,
       outdir = file.path(odir, "WebGestaltORA")
     )
   })
