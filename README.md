@@ -10,7 +10,7 @@ results. `fgczgseaora` primarily consists of wrapper functions around the
 `r CRANpkg("sigora")` and `r CRANpkg("WebGestaltR")` packages from CRAN and 
 `r CRANpkg("rmarkdown")` based reports for visualisation and contextualisation 
 of analysis results.
-Plans for the future include the integrating the R packages `r Biocpkg(topGo)` and of the `r CRANpkg("enrichr")`.
+Plans for the future include the integration of the R packages `r Biocpkg(topGo)` and of the `r CRANpkg("enrichr")`.
 as well as providing executable R script files which can be run on windows or linux (experimental):
 
 # Webgestalt ORA
