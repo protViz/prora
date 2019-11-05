@@ -100,7 +100,7 @@ print("After ID filtering columns: ")
 print(sample_n(filtered_dd, 10))
 
 
-filtered_dd_list <- base::split(filtered_dd, filtered_dd$contrast)
+filtered_dd_list <- base::split(filtered_dd, filtered_dd[[contrast]])
 contr_names <- names(filtered_dd_list)
 contr_names <- gsub(" ","", contr_names)
 contr_names <- gsub("-","_vs_", contr_names)
