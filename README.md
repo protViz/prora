@@ -1,8 +1,17 @@
 # fgczgseaora
 running ora or gsea on lists of proteinidentifiers
 
-
-This package also provides executable R script files which can be run on windows or linux as follows:
+A plethora of R packages exist on CRAN and Bioconductor to perform over-representation 
+analysis (ORA) and gene set enrichment analysis (GSEA). However, consistency in the 
+underlying nomenclature for specific analyses and user friendly implementation is 
+still lacking. `fgczgseaora` aims at unifying ID mapping and enrichment analysis 
+in a syntactically coherent and intuitive way, while ensuring reproducibility of 
+results. `fgczgseaora` primarily consists of wrapper functions around the 
+`r CRANpkg("sigora")` and `r CRANpkg("WebGestaltR")` packages from CRAN and 
+`r CRANpkg("rmarkdown")` based reports for visualisation and contextualisation 
+of analysis results.
+Plans for the future include the integration of the R packages `r Biocpkg(topGo)` and of the `r CRANpkg("enrichr")`.
+as well as providing executable R script files which can be run on windows or linux (experimental):
 
 # Webgestalt ORA
 
