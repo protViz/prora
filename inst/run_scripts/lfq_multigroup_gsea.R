@@ -21,7 +21,10 @@ Arguments:
 " -> doc
 
 library(docopt)
+
 opt <- docopt(doc)
+# Hack to override systemArgs
+#opt <- docopt(doc, args = "D:\\Dropbox\\DataAnalysis\\p2109_PEPTIDE_Analysis\\p2109_Diabetes_plaque\\results_modelling_WHO\\modelling_results_peptide\\foldchange_estimates.xlsx")
 
 options(warn = -1)
 suppressMessages(library(WebGestaltR))
@@ -104,6 +107,9 @@ contr_names <- gsub("-","_vs_", contr_names)
 contr_names <- make.names(contr_names)
 
 names(filtered_dd_list) <- contr_names
+
+print(sample_n(filtered_dd, 10))
+
 
 res <- list()
 
