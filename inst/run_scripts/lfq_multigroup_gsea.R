@@ -1,5 +1,6 @@
 #!/usr/bin/Rscript
 
+print(commandArgs(TRUE))
 options(nwarnings = 10000)
 
 "WebGestaltR GSEA for multigroup reports
@@ -22,7 +23,17 @@ Arguments:
 
 library(docopt)
 
-opt <- docopt(doc)
+if(FALSE){
+  args <- c("-e",
+            "pseudo_estimate",
+            "D:\\Dropbox\\DataAnalysis\\p2109_PEPTIDE_Analysis\\p2109_Diabetes_plaque\\results_modelling_WHO_noSex\\modelling_results_peptide\\foldchange_estimates.xlsx")
+            #"D:\\Dropbox\\DataAnalysis\\p2109_PEPTIDE_Analysis\\p2109_Diabetes_plaque\\results_modelling_NICE\\modelling_results_peptide\\foldchange_estimates.xlsx")
+
+  opt <- docopt(doc, args = args)
+}else{
+  opt <- docopt(doc)
+
+}
 # Hack to override systemArgs
 #opt <- docopt(doc, args = "D:\\Dropbox\\DataAnalysis\\p2109_PEPTIDE_Analysis\\p2109_Diabetes_plaque\\results_modelling_WHO\\modelling_results_peptide\\foldchange_estimates.xlsx")
 
@@ -94,8 +105,9 @@ fc_estimates <- fc_estimates %>% select_at(c(ID_col, fc_col, contrast))
 print("Selected columns: ")
 print(sample_n(fc_estimates, 10))
 
-
 filtered_dd <- na.omit(fc_estimates)
+filtered_dd %>% dplyr::filter(!!sym(ID_col) != "NA") -> filtered_dd
+
 print("After ID filtering columns: ")
 print(sample_n(filtered_dd, 10))
 
@@ -108,7 +120,7 @@ contr_names <- make.names(contr_names)
 
 names(filtered_dd_list) <- contr_names
 
-print(sample_n(filtered_dd, 10))
+#print(sample_n(filtered_dd_list, 10))
 
 
 res <- list()
