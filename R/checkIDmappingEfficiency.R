@@ -8,19 +8,20 @@
 #' @importFrom tibble enframe
 #' @return Returns a data.frame containing information of mapping efficiency on GO, ENTREZ and KEGG IDs
 #'
+#'
+#' @export checkIDmappingEfficiency
+#'
 #' @examples
 #' data("exampleContrastData", package = "fgczgseaora")
 #' df <- get_UniprotID_from_fasta_header(exampleContrastData)
 #' checkIDmappingEfficiency(df$UniprotID, keytype = "UNIPROT")
-#'
-#' @export checkIDmappingEfficiency
 #'
 checkIDmappingEfficiency <- function(IDs, keytype, db = org.Hs.eg.db) {
   uniqueInputIDs <- unique(IDs)
   number_unique_InputIDs <- length(uniqueInputIDs)
 
   mapping <- function(column) {
-    mpd <- mapIds(
+    mpd <- AnnotationDbi::mapIds(
       x = db,
       keys = uniqueInputIDs,
       keytype = keytype,
