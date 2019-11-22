@@ -96,9 +96,7 @@ makeGPS_wrappR <-
     keytype = k1,
     column = k2
   ) %>% unlist %>% enframe(name = "pathwayID", value = "pathwayName")
-
   out <- list(gp_tab = gp_table, pn_tab = pn_table)
-
   return(out)
 }
 
