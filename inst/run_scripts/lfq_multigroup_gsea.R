@@ -164,7 +164,7 @@ for(target in target_GSEA)
     cat("\n\n PROCESSING TARGET : ",target," FOR CONTRAST : ", name, "\n\n")
 
     res_contrast[[name]] <-
-      fgczgseaora::runGSEA(
+      fgczgseaora::runWebGestaltGSEA(
         data = filtered_dd,
         fpath = name,
         ID_col = ID_col,
