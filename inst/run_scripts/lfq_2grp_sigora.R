@@ -10,7 +10,7 @@ library(readr)
 
 # Files -------------------------------------------------------------------
 
-grp2report <- "data/2Grp_CF_a_vs_CF_b.txt"
+grp2report <- "../../data/2Grp_CF_a_vs_CF_b.txt"
 result_dir <- "gsea_ora_results"
 
 

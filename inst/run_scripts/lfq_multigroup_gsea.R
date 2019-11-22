@@ -6,7 +6,7 @@ options(nwarnings = 10000)
 "WebGestaltR GSEA for multigroup reports
 
 Usage:
-  test.R <grp2file> [--organism=<organism>] [--outdir=<outdir>] [--idtype=<idtype>] [--ID_col=<ID_col>]  [--nperm=<nperm>] [--score_col=<score_col>] [--contrast=<contrast>]
+  lfq_multigroup_gsea.R <grp2file> [--organism=<organism>] [--outdir=<outdir>] [--idtype=<idtype>] [--ID_col=<ID_col>]  [--nperm=<nperm>] [--score_col=<score_col>] [--contrast=<contrast>]
 
 Options:
   -o --organism=<organism> organism [default: hsapiens]
@@ -24,11 +24,39 @@ Arguments:
 library(docopt)
 
 if(FALSE){
+
+
   args <- c("-e",
             "pseudo_estimate",
             "D:\\Dropbox\\DataAnalysis\\p2109_PEPTIDE_Analysis\\p2109_Diabetes_plaque\\results_modelling_WHO_noSex\\modelling_results_peptide\\foldchange_estimates.xlsx")
-            #"D:\\Dropbox\\DataAnalysis\\p2109_PEPTIDE_Analysis\\p2109_Diabetes_plaque\\results_modelling_NICE\\modelling_results_peptide\\foldchange_estimates.xlsx")
+  #"D:\\Dropbox\\DataAnalysis\\p2109_PEPTIDE_Analysis\\p2109_Diabetes_plaque\\results_modelling_NICE\\modelling_results_peptide\\foldchange_estimates.xlsx")
 
+  args <- c("-e",
+            "pseudo_estimate",
+            "D:\\Dropbox\\DataAnalysis\\p3273_Manuela\\results_modelling_with_interactions\\modelling_results_peptide\\foldchange_estimates.xlsx")
+
+  args <- c("-e",
+            "pseudo_estimate",
+            "D:\\Dropbox\\DataAnalysis\\p2598_ChrisMillan_GSEA_ORA\\results_modelling_3D_only\\modelling_results_peptide\\foldchange_estimates.xlsx")
+
+  args <- c("-e",
+            "pseudo_estimate",
+            "D:\\Dropbox\\DataAnalysis\\p2598_ChrisMillan_GSEA_ORA\\results_modelling\\modelling_results_peptide\\foldchange_estimates.xlsx")
+
+
+  if(TRUE){
+  args <- c("D:\\Dropbox\\DataAnalysis\\p2874_MOHSIN\\allContrasts.xlsx",
+                "-e",
+                "pseudo.log2FC",
+                "-o",
+                "mmusculus"
+  )
+  }
+
+  #"D:\\Dropbox\\DataAnalysis\\p2109_PEPTIDE_Analysis\\p2109_Diabetes_plaque\\results_modelling_NICE\\modelling_results_peptide\\foldchange_estimates.xlsx")
+
+  #print(args2grp)
+  #args2grp
   opt <- docopt(doc, args = args)
 }else{
   opt <- docopt(doc)
@@ -98,6 +126,8 @@ if(dir.exists(result_dir)){
   unlink(result_dir, recursive = TRUE)
 }
 dir.create(result_dir)
+
+
 
 fc_estimates <- readxl::read_xlsx(grp2report)
 fc_estimates <- fc_estimates %>% select_at(c(ID_col, fc_col, contrast))
