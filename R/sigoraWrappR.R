@@ -36,8 +36,8 @@
 #' data("idmap", package = "sigora")
 #' df <- get_UniprotID_from_fasta_header(exampleContrastData)
 #' myGPSrepo <- makeGPS_wrappR(ids = df$UniprotID)
-#' res <- sigoraWrappR(df,fc_col = "estimate", GPSrepos = myGPSrepo,
-#'                      fc_threshold = 0.5)
+#' res <- sigoraWrappR(df,score_col = "estimate", GPSrepos = myGPSrepo,
+#'                      threshold = 0.5)
 #'
 sigoraWrappR <-
   function(data,
@@ -79,7 +79,7 @@ sigoraWrappR <-
 #' UpSetR wrapper for sigora results
 #'
 #' @param sigora_res Object returned by the \code{\link{sigoraWrappR}} function
-#' @param GPStable Object returned by \code{\link{makeGPS_wrappR}} function, setting \code{dev=TRUE}
+#' @param GPStable Object returned by \code{\link{appR}} function, setting \code{dev=TRUE}
 #' @param ... other parameters to \code{upset}
 #'
 #' @importFrom UpSetR fromList upset

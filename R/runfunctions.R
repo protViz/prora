@@ -151,12 +151,17 @@ runGSEA <- function(data,
 #' @param target target database, default: "GO"
 #' @param outdir output directory
 #' @export
+#'
+#' @examples
+#' fc_estimates <- fgczgseaora::exampleContrastData
+#' filtered_dd <- get_UniprotID_from_fasta_header(fc_estimates, idcolumn = "protein_Id")
+#' runSIGORA(filtered_dd)
 runSIGORA <-
   function(data,
            target = "GO",
            score_col = "estimate",
            ID_col = "UniprotID",
-           fc_threshold = 0.5,
+           threshold = 0.5,
            outdir = "sigORA",
            greater = TRUE) {
     outdir <- paste0(outdir, "_", target)
@@ -165,17 +170,17 @@ runSIGORA <-
       dir.create(outdir, recursive = TRUE)
     }
 
-    GPStab <-
-      makeGPS_wrappR(data[[ID_col]], target = target, dev = TRUE)
+    #GPStab <-
+    #  makeGPS_wrappR(data[[ID_col]], target = target, dev = TRUE)
 
     myGPSrepo <-
       makeGPS_wrappR(data[[ID_col]], target = target)
 
     sigora_res <-
       try(sigoraWrappR(
-        fc_threshold = fc_threshold,
-        score_col = score_col,
         df = data,
+        threshold = threshold,
+        score_col = score_col,
         GPSrepos = myGPSrepo,
         db = target,
         greater_than = greater

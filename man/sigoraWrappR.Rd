@@ -4,22 +4,16 @@
 \alias{sigoraWrappR}
 \title{sigora Wrapper function}
 \usage{
-sigoraWrappR(fc_threshold = 0.5, fc_col = "",
-  GPSrepos = sigora::kegH, df, db = "", greater_than = TRUE,
+sigoraWrappR(data, threshold = 0.5, score_col = "",
+  GPSrepos = sigora::kegH, db = "", greater_than = TRUE,
   idmap = sigora::idmap)
 }
 \arguments{
-\item{fc_threshold}{fold change threshold above which (in absolute terms) a protein
-is considered differentially regulated}
-
-\item{fc_col}{Name of the fold change column, in case the input file contains
-multiple contrasts}
+\item{data}{input data.frame (at least two columns, first column containing IDs,
+other columns numerical ranks, i.e. fold changes)}
 
 \item{GPSrepos}{GPS repository used as background, can be
 generated via \code{\link{sigoraWrappR}}}
-
-\item{df}{input data.frame (at least two columns, first column containing IDs,
-other columns numerical ranks, i.e. fold changes)}
 
 \item{db}{database used for the generation of the GPS repository}
 
@@ -27,6 +21,12 @@ other columns numerical ranks, i.e. fold changes)}
 greater_than (default is \code{TRUE}) or strictly less than (\code{FALSE})}
 
 \item{idmap}{id mapping table, dafault sigora::idmap}
+
+\item{fc_threshold}{fold change threshold above which (in absolute terms) a protein
+is considered differentially regulated}
+
+\item{fc_col}{Name of the fold change column, in case the input file contains
+multiple contrasts}
 }
 \value{
 Returns a \code{list} containing the following elements:
@@ -49,7 +49,7 @@ data("exampleContrastData", package = "fgczgseaora")
 data("idmap", package = "sigora")
 df <- get_UniprotID_from_fasta_header(exampleContrastData)
 myGPSrepo <- makeGPS_wrappR(ids = df$UniprotID)
-res <- sigoraWrappR(fc_col = "estimate", GPSrepos = myGPSrepo,
-                    df = df, fc_threshold = 0.5)
+res <- sigoraWrappR(df,score_col = "estimate", GPSrepos = myGPSrepo,
+                     threshold = 0.5)
 
 }

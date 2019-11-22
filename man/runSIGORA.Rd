@@ -5,7 +5,7 @@
 \title{workflow for sigORA}
 \usage{
 runSIGORA(data, target = "GO", score_col = "estimate",
-  ID_col = "UniprotID", fc_threshold = 0.5, outdir = "sigORA",
+  ID_col = "UniprotID", threshold = 0.5, outdir = "sigORA",
   greater = TRUE)
 }
 \arguments{
@@ -17,12 +17,17 @@ runSIGORA(data, target = "GO", score_col = "estimate",
 
 \item{ID_col}{column name containing IDs}
 
-\item{fc_threshold}{threshold for estimate}
-
 \item{outdir}{output directory}
 
 \item{greater}{flag whether to filter > threshold or < threshold}
+
+\item{fc_threshold}{threshold for estimate}
 }
 \description{
 workflow for sigORA
+}
+\examples{
+fc_estimates <- fgczgseaora::exampleContrastData
+filtered_dd <- get_UniprotID_from_fasta_header(fc_estimates, idcolumn = "protein_Id")
+runSIGORA(filtered_dd)
 }
