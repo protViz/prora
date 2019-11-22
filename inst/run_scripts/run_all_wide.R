@@ -46,7 +46,7 @@ for (i in seq_len(length(dfiles))) {
     filter(!is.na(UniprotID))
 
   sapply(target_GSEA, function(x) {
-    fgczgseaora::runGSEA(
+    fgczgseaora::runWebGestaltGSEA(
       data = dd,
       fpath = "",
       ID_col = ID_col,

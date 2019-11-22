@@ -40,7 +40,7 @@ dd <- get_UniprotID_from_fasta_header(dd) %>%
   filter(!is.na(UniprotID))
 
 sapply(target_GSEA, function(x) {
-  fgczgseaora::runGSEA(
+  fgczgseaora::runWebGestaltGSEA(
     data = dd,
     fpath = "",
     ID_col = ID_col,

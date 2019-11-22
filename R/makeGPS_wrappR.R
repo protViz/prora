@@ -25,15 +25,15 @@
 #' myGPSrepo <- makeGPS_wrappR(ids = exampleUniprotIDs, target = "GO")
 #' myGPSrepo <- makeGPS_wrappR(ids = exampleUniprotIDs, target = "react")
 makeGPS_wrappR <-
-  function(ids,
+  function(ids, keytype = "UNIPROT",
            target = c("KEGG", "GO", "reactome"),
            dev = FALSE) {
     target <- match.arg(target)
 
     if (target == "KEGG") {
-      tabs <- .get_tables_KEGG(ids = ids)
+      tabs <- .get_tables_KEGG(ids = ids, keytype = "UNIPROT")
     } else if (target %in% c("GO", "reactome")) {
-      tabs <- .get_tables_ractome_GO(ids = ids, target = target)
+      tabs <- .get_tables_ractome_GO(ids = ids, keytype = "UNIPROT",  target = target)
     } else {
       stop("Specify a valid target database (one of KEGG, GO, reactome)")
     }
@@ -54,7 +54,8 @@ makeGPS_wrappR <-
     }
   }
 
-.get_tables_ractome_GO <- function(ids, target) {
+.get_tables_ractome_GO <- function(ids, keytype = "UNIPROT", target = c("reactome",  "GO")) {
+  target <- match.arg(target)
   if (target == "reactome") {
     gp_db <- reactome.db
     pn_db <- reactome.db
@@ -62,7 +63,7 @@ makeGPS_wrappR <-
     ids <- AnnotationDbi::mapIds(
       org.Hs.eg.db,
       keys = ids,
-      keytype = "UNIPROT",
+      keytype = keytype,
       column = "ENTREZID",
       multiVals = "CharacterList"
     ) %>% unlist %>% S4Vectors::na.omit()
@@ -97,12 +98,12 @@ makeGPS_wrappR <-
     column = k2
   ) %>% unlist %>% enframe(name = "pathwayID", value = "pathwayName")
 
-  out <- list(gp_tab = gp_table, pn_tab = pn_table)
 
+  out <- list(gp_tab = gp_table, pn_tab = pn_table)
   return(out)
 }
 
-.get_tables_KEGG <- function(ids) {
+.get_tables_KEGG <- function(ids, keytype = "UNIPROT") {
   gp_db <- org.Hs.eg.db
   target_column <- "PATH"
 
@@ -113,7 +114,7 @@ makeGPS_wrappR <-
   gp_table <- AnnotationDbi::mapIds(
     gp_db,
     keys = ids,
-    keytype = "UNIPROT",
+    keytype = keytype,
     column = target_column,
     multiVals = "CharacterList"
   ) %>% unlist %>% enframe(name = "Symbol", value = "pathwayID")

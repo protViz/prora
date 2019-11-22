@@ -103,7 +103,7 @@ time consuming.
 ```{r results='hide'}
 data("idmap", package = "sigora")
 myGPSrepo <- makeGPS_wrappR(ids = dd$UniprotID, target = "GO")
-res <- sigoraWrappR(df = dd, fc_threshold = 0.2, fc_col = "estimate",
+res <- sigoraWrappR(data =  dd, threshold = 0.2, score_col = "estimate",
                     GPSrepos = myGPSrepo, greater_than = TRUE)
 ```
 

@@ -195,7 +195,7 @@ knitr::include_graphics("Figures/wg_bar.svg")
 
 - `WebGestaltR` ORA: `runWebGestaltORA()`
 
-- `WebGestaltR` GSEA: `runGSEA()`
+- `WebGestaltR` GSEA: `runWebGestaltGSEA()`
 
 <div class="notes">
 So why write wrappers and additional functionalities around the existing packages?
