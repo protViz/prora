@@ -14,7 +14,7 @@ Options:
   -t --idtype=<idtype> type of id used for mapping [default: uniprotswissprot]
   -i --ID_col=<ID_col> Column containing the UniprotIDs [default: UniprotID]
   -n --nperm=<nperm> number of permutations to calculate enrichment scores [default: 500]
-  -e --score_col=<score_col> column containing fold changes [default: estimate]
+  -e --score_col=<score_col> column containing fold changes [default: pseudo_estimate]
   -c --contrast=<contrast> column containing fold changes [default: contrast]
 
 Arguments:
