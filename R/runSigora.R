@@ -74,10 +74,11 @@ runSIGORA <-
       GPStable = GPStab,
       direction_greater = greater
     )
+
     rmarkdown::render(
       rmarkdownPath,
       bookdown::html_document2(number_sections = FALSE),
-      params = ,
+      params = sigoraData,
       clean = TRUE
     )
     return(sigoraData)
