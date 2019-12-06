@@ -4,9 +4,15 @@
 \alias{sigoraWrappR}
 \title{sigora Wrapper function}
 \usage{
-sigoraWrappR(data, threshold = 0.5, score_col = "",
-  GPSrepos = sigora::kegH, db = "", greater_than = TRUE,
-  idmap = sigora::idmap)
+sigoraWrappR(
+  data,
+  threshold = 0.5,
+  score_col = "",
+  GPSrepos = sigora::kegH,
+  db = "",
+  greater_than = TRUE,
+  idmap = sigora::idmap
+)
 }
 \arguments{
 \item{data}{input data.frame (at least two columns, first column containing IDs,

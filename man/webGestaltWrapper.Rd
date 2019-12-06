@@ -4,8 +4,16 @@
 \alias{webGestaltWrapper}
 \title{Wrapper for WebGestaltR overrepresentation analysis}
 \usage{
-webGestaltWrapper(quant_data, enrichDatabase, organism, se_threshold,
-  work_dir = "output", nrNas, method, nclust = 2)
+webGestaltWrapper(
+  quant_data,
+  enrichDatabase,
+  organism,
+  se_threshold,
+  work_dir = "output",
+  nrNas,
+  method,
+  nclust = 2
+)
 }
 \arguments{
 \item{quant_data}{data.frame of intensity values with protein identifiers as row names}

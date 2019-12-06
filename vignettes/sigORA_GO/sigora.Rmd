@@ -1,0 +1,161 @@
+---
+title: "FGCZ Signature Over-Representation Analysis (sigORA)"
+author: "Functional Genomics Center Zurich"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+  html_document:
+    number_sections: no
+editor_options:
+  chunk_output_type: console
+params:
+  results: !r quote(fgczgseaora::sigora_example)
+  plot1: "abc"
+  GPStable: !r quote(fgczgseaora::GPStab)
+  direction_greater: TRUE
+  contrast: ""
+subtitle: Using the `sigora` package
+bibliography: bibliography.bib
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  message = FALSE,
+  warning = FALSE
+)
+
+if(!exists("progress")){
+  progress <- function(howmuch, detail){
+    invisible(NULL)
+  }
+}
+
+res <- eval(params$results)
+p1 <- params$plot1
+GPStab <- eval(params$GPStable)
+direction_greater <- eval(params$direction_greater)
+contrast <- params$contrast
+
+library(tidyverse)
+library(fgczgseaora)
+library(knitr)
+```
+
+### Introduction
+
+The following analysis compares filters proteins based on a fold change threshold and uses signature over-representation analysis (*sigORA*) to identify dysregulated pathways. In principle, *sigORA* compares the weighted number of observed pairs of proteins (unique to a single pathway)  in the cluster of interest to the number one would expect to show up by chance (in this case the reference is comprised by the whole database, i.e. KEGG). These statistics are then translated into a *P*-value and adjusted for multiplicity, since potentially many pathways are tested [@Leong2009]. This then yields the reported adjusted *P*-value in the table *Signifcantly enriched pathways*. *sigORA* is implemented in the `R` package `sigora` [@Foroushani2013].
+
+### Parameters
+
+- Number of User IDs: `r nrow(res$data)`
+
+- Contrast: `r contrast`
+
+- Score threshold: `r res$fc_threshold`
+
+- Direction of the threshold: `r ifelse(direction_greater, "greater than", "less than")`
+
+- Number of User IDs after filtering: `r res$proteinsAfterFiltering`
+
+- Database used to produce GPS repository: `r res$database`
+
+### ORA results {.tabset .tabset-pills}
+
+#### Significantly enriched pathways
+
+```{r}
+res$ora %>%
+  dplyr::select(pathwyid, description, success, pathwaySize, pvalues, Bonfer) %>%
+  DT::datatable(
+    caption = "ORA results: classical overrepresentation analysis using Fisher's exact test",
+    colnames = c(
+      "Pathway",
+      "Description",
+      "Successes",
+      "Pathway Size",
+      "P value",
+      "Adj. P value"
+    ),
+    style = "bootstrap"
+  ) %>% DT::formatRound(digits = 3,
+                        columns = c("pvalues", "Bonfer"))
+```
+
+
+### sigORA results {.tabset .tabset-pills}
+
+#### Significantly enriched pathways
+
+
+```{r resulttab}
+res$sigora$summary_results %>% 
+  dplyr::select(pathwy.id, description, successes, PathwaySize, pvalues, Bonferroni) %>% 
+  dplyr::filter(Bonferroni <= 0.05) %>% 
+  DT::datatable(caption = "sigORA results: ORA using gene pair signatures", 
+                colnames = c(
+                  "Pathway",
+                  "Description",
+                  "Successess",
+                  "Pathway Size",
+                  "P value",
+                  "Adj. P value"
+                )
+  ) %>% DT::formatRound(digits = 3, columns = c("pvalues", "Bonferroni"))
+```
+
+#### All pathways matched
+
+```{r}
+res$sigora$summary_results %>% 
+  dplyr::select(pathwy.id, description, pvalues, Bonferroni) %>% 
+  DT::datatable(caption = "sigORA results: All matched pathways", 
+               colnames = c(
+                 "Pathway",
+                 "Description",
+                 "P value",
+                 "Adj. P value"
+               )
+  ) %>% DT::formatRound(digits = 3, columns = c("pvalues", "Bonferroni"))
+```
+
+#### Weighting scheme
+
+```{r}
+res$sigora$detailed_results %>% 
+  DT::datatable(caption = "sigORA: Weighting scheme of gene pair signatures used",
+               colnames = c(
+                 "User ID 1",
+                 "User ID 2",
+                 "Pathway",
+                 "Weight"
+               )
+  ) %>% DT::formatRound(digits = 3, columns = "weight")
+```
+
+### Visualisation
+
+```{r fig.cap="Heatmap of fold change patterns in significantly enriched pathways identified by sigORA.", fig.width=10, fig.height=20, eval=FALSE}
+if (is_character(p1)) {
+  message("No pathways to visualise")
+} else {
+  p1
+}
+```
+
+```{r siguorupset, fig.cap="Intersection sizes between significantly enriched pathways identified by sigORA visualised using the UpSetR package"}
+try(sigora_upsetR(sigora_res = res, GPStable = GPStab))
+```
+
+
+### Data used
+
+```{r}
+colnames(res$data) <- c("User ID", "Score")
+res$data %>%
+  mutate(`Score` = round(`Score`, 2)) %>% 
+  DT::datatable(colnames = c("User ID", "Score"), width = 700, style = "bootstrap") %>%
+  DT::formatRound(digits = 3, columns = "Score")
+```
+
+
+### References

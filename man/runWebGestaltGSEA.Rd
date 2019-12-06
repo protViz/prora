@@ -4,11 +4,18 @@
 \alias{runWebGestaltGSEA}
 \title{workflow for GSEA}
 \usage{
-runWebGestaltGSEA(data, fpath, ID_col = "UniprotID",
-  score_col = "estimate", organism = "hsapiens",
-  target = "geneontology_Biological_Process", nperm = 10,
-  outdir = "GSEA", interestGeneType = "uniprotswissprot",
-  contrast_name = fpath)
+runWebGestaltGSEA(
+  data,
+  fpath,
+  ID_col = "UniprotID",
+  score_col = "estimate",
+  organism = "hsapiens",
+  target = "geneontology_Biological_Process",
+  nperm = 10,
+  outdir = "GSEA",
+  interestGeneType = "uniprotswissprot",
+  contrast_name = fpath
+)
 }
 \arguments{
 \item{data}{data}

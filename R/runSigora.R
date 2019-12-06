@@ -11,6 +11,7 @@
 #' @examples
 #' fc_estimates <- fgczgseaora::exampleContrastData
 #' filtered_dd <- get_UniprotID_from_fasta_header(fc_estimates, idcolumn = "protein_Id")
+#'
 #' runSIGORA(filtered_dd)
 runSIGORA <-
   function(data,
@@ -26,15 +27,12 @@ runSIGORA <-
       dir.create(outdir, recursive = TRUE)
     }
 
-    #GPStab <-
-    #  makeGPS_wrappR(data[[ID_col]], target = target, dev = TRUE)
-
     myGPSrepo <-
       makeGPS_wrappR(data[[ID_col]], target = target)
 
     sigora_res <-
       try(sigoraWrappR(
-        df = data,
+        data,
         threshold = threshold,
         score_col = score_col,
         GPSrepos = myGPSrepo,
@@ -47,7 +45,9 @@ runSIGORA <-
       return(invisible(NULL))
     }
 
-
+    if(!dir.exists(outdir)){
+      dir.create(outdir)
+    }
     rmarkdownPath <- file.path(outdir, "sigora.Rmd")
 
     file.copy(

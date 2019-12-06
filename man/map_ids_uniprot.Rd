@@ -4,8 +4,13 @@
 \alias{map_ids_uniprot}
 \title{map_ids_uniprot}
 \usage{
-map_ids_uniprot(data, ID_col = "UniprotID", from = "ACC+ID",
-  to = "P_ENTREZGENEID", format = "tab")
+map_ids_uniprot(
+  data,
+  ID_col = "UniprotID",
+  from = "ACC+ID",
+  to = "P_ENTREZGENEID",
+  format = "tab"
+)
 }
 \arguments{
 \item{data}{data}
