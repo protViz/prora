@@ -1,6 +1,8 @@
 #!/usr/bin/Rscript
 
 options(nwarnings = 10000)
+library(docopt)
+
 
 "WebGestaltR ORA for multigroup reports
 
@@ -21,8 +23,26 @@ Arguments:
   grp2file  input file
 " -> doc
 
-library(docopt)
-opt <- docopt(doc)
+if(FALSE){
+
+
+  args <- c("D:\\Dropbox\\DataAnalysis\\p2558_With_TOBI_K\\p2558_o5748\\results_modelling_testing\\modelling_results_peptide\\foldchange_estimates.xlsx",
+  "-o",
+  "rnorvegicus",
+  "-i",
+  "P_ENTREZGENEID",
+  "-t",
+  "entrezgene")
+
+
+  #"D:\\Dropbox\\DataAnalysis\\p2109_PEPTIDE_Analysis\\p2109_Diabetes_plaque\\results_modelling_NICE\\modelling_results_peptide\\foldchange_estimates.xlsx")
+
+  #print(args2grp)
+  #args2grp
+  opt <- docopt(doc, args = args)
+}else{
+  opt <- docopt(doc)
+}
 
 suppressMessages(library(WebGestaltR))
 suppressMessages(library(tidyverse))
@@ -32,7 +52,6 @@ suppressMessages(library(GO.db))
 suppressMessages(library(slam))
 suppressMessages(library(fgczgseaora))
 suppressMessages(library(readr))
-
 
 # Check command args ------------------------------------------------------
 
@@ -108,8 +127,6 @@ contr_names <- make.names(contr_names)
 names(filtered_dd_list) <- contr_names
 
 
-
-
 log2fc_s <- c(log2fc, -as.numeric(log2fc))
 
 res <- list()
@@ -118,15 +135,14 @@ for(target in target_GSEA){
   for(log2fc in log2fc_s){
     is_greater <- if(log2fc > 0 ){TRUE}else{FALSE}
 
-
     subdir_name <- paste0("fc_threshold_",abs(log2fc),"_is_greater_",is_greater)
-
 
     res_contrast <- list()
     for(name in names(filtered_dd_list)){
       filtered_dd <- filtered_dd_list[[name]]
 
       cat("\n\n processing contrast :",name, "\n\n")
+
 
       res_contrast[[name]]  <-
         fgczgseaora::runWebGestaltORA(
@@ -141,7 +157,8 @@ for(target in target_GSEA){
           score_col = fc_col,
           outdir = result_dir,
           subdir_name = subdir_name,
-          interestGeneType = idtype
+          interestGeneType = idtype,
+          contrast_name = filtered_dd[[contrast]][[1]]
         )
     }
     res_sign[[subdir_name]] <- res_contrast

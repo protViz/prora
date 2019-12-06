@@ -4,12 +4,21 @@
 \alias{runWebGestaltORA}
 \title{workflow for ORA}
 \usage{
-runWebGestaltORA(data, fpath, organism = "hsapiens",
-  ID_col = "UniprotID", target = "geneontology_Biological_Process",
-  threshold = 0.59, greater = TRUE, nperm = 10,
-  score_col = "estimate", outdir = "WebGestalt_ORA",
-  subdir_name = NULL, interestGeneType = "uniprotswissprot",
-  contrast_name = fpath)
+runWebGestaltORA(
+  data,
+  fpath,
+  organism = "hsapiens",
+  ID_col = "UniprotID",
+  target = "geneontology_Biological_Process",
+  threshold = 0.59,
+  greater = TRUE,
+  nperm = 10,
+  score_col = "estimate",
+  outdir = "WebGestalt_ORA",
+  subdir_name = NULL,
+  interestGeneType = "uniprotswissprot",
+  contrast_name = fpath
+)
 }
 \arguments{
 \item{data}{data}

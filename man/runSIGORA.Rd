@@ -4,9 +4,16 @@
 \alias{runSIGORA}
 \title{workflow for sigORA}
 \usage{
-runSIGORA(data, target = "GO", score_col = "estimate",
-  ID_col = "UniprotID", threshold = 0.5, outdir = "sigORA",
-  greater = TRUE)
+runSIGORA(
+  data,
+  target = "GO",
+  score_col = "estimate",
+  ID_col = "UniprotID",
+  threshold = 0.5,
+  outdir = "sigORA",
+  greater = TRUE,
+  myGPSrepo = NULL
+)
 }
 \arguments{
 \item{data}{data}
@@ -27,7 +34,15 @@ runSIGORA(data, target = "GO", score_col = "estimate",
 workflow for sigORA
 }
 \examples{
+
+library(fgczgseaora)
 fc_estimates <- fgczgseaora::exampleContrastData
 filtered_dd <- get_UniprotID_from_fasta_header(fc_estimates, idcolumn = "protein_Id")
-runSIGORA(filtered_dd)
+
+myGPSrepo <- makeGPS_wrappR(filtered_dd$UniprotID, target = "GO")
+names(myGPSrepo)
+res <- runSIGORA(filtered_dd, myGPSrepo = myGPSrepo)
+names(res)
+#rmarkdown::render(res$rmarkdownPath,bookdown::html_document2(number_sections = FALSE),params = res$sigoraData,clean = TRUE)
+
 }

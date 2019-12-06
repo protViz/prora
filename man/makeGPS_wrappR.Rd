@@ -5,8 +5,7 @@
 \title{makeGPS Wrapper
 Function for generating background GPS repository for sigora and ora}
 \usage{
-makeGPS_wrappR(ids, keytype = "UNIPROT", target = c("KEGG", "GO",
-  "reactome"), dev = FALSE)
+makeGPS_wrappR(ids, keytype = "UNIPROT", target = c("KEGG", "GO", "reactome"))
 }
 \arguments{
 \item{ids}{Character vector of gene symbols (experimental background)}

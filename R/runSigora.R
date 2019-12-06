@@ -9,9 +9,18 @@
 #' @export
 #'
 #' @examples
+#'
+#' library(fgczgseaora)
 #' fc_estimates <- fgczgseaora::exampleContrastData
 #' filtered_dd <- get_UniprotID_from_fasta_header(fc_estimates, idcolumn = "protein_Id")
-#' runSIGORA(filtered_dd)
+#'
+#' myGPSrepo <- makeGPS_wrappR(filtered_dd$UniprotID, target = "GO")
+#' usethis::use_data(myGPSrepo)
+#' names(myGPSrepo)
+#' res <- runSIGORA(filtered_dd, myGPSrepo = myGPSrepo)
+#' names(res)
+#' #rmarkdown::render(res$rmarkdownPath,bookdown::html_document2(number_sections = FALSE),params = res$sigoraData,clean = TRUE)
+#'
 runSIGORA <-
   function(data,
            target = "GO",
@@ -19,25 +28,26 @@ runSIGORA <-
            ID_col = "UniprotID",
            threshold = 0.5,
            outdir = "sigORA",
-           greater = TRUE) {
+           greater = TRUE,
+           myGPSrepo = NULL
+           ) {
     outdir <- paste0(outdir, "_", target)
 
     if (!dir.exists(outdir)) {
       dir.create(outdir, recursive = TRUE)
     }
 
-    #GPStab <-
-    #  makeGPS_wrappR(data[[ID_col]], target = target, dev = TRUE)
-
-    myGPSrepo <-
-      makeGPS_wrappR(data[[ID_col]], target = target)
+    if(is.null(myGPSrepo)){
+      myGPSrepo <-
+        makeGPS_wrappR(data[[ID_col]], target = target)
+    }
 
     sigora_res <-
       try(sigoraWrappR(
-        df = data,
+        data,
         threshold = threshold,
         score_col = score_col,
-        GPSrepos = myGPSrepo,
+        GPSrepos = myGPSrepo$gps,
         db = target,
         greater_than = greater
       ))
@@ -47,7 +57,9 @@ runSIGORA <-
       return(invisible(NULL))
     }
 
-
+    if(!dir.exists(outdir)){
+      dir.create(outdir)
+    }
     rmarkdownPath <- file.path(outdir, "sigora.Rmd")
 
     file.copy(
@@ -71,14 +83,15 @@ runSIGORA <-
 
     sigoraData <- list(
       results = sigora_res,
-      GPStable = GPStab,
+      GPStable = myGPSrepo$gpsTable ,
       direction_greater = greater
     )
+
     rmarkdown::render(
       rmarkdownPath,
       bookdown::html_document2(number_sections = FALSE),
-      params = ,
+      params = sigoraData,
       clean = TRUE
     )
-    return(sigoraData)
+    return(list(sigoraData = sigoraData, rmarkdownPath =  rmarkdownPath))
   }

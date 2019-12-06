@@ -32,13 +32,12 @@
 #' @export sigoraWrappR sigoraWrappR
 #'
 #' @examples
-#' data("exampleContrastData", package = "fgczgseaora")
-#' data("idmap", package = "sigora")
-#' df <- get_UniprotID_from_fasta_header(exampleContrastData)
-#' myGPSrepo <- makeGPS_wrappR(ids = df$UniprotID)
-#' res <- sigoraWrappR(df,score_col = "estimate", GPSrepos = myGPSrepo,
-#'                      threshold = 0.5)
 #'
+#' df <- get_UniprotID_from_fasta_header(fgczgseaora::exampleContrastData)
+#' myGPSrepo <- makeGPS_wrappR(ids = df$UniprotID)
+#' names(myGPSrepo)
+#' res <- sigoraWrappR(df,score_col = "estimate", GPSrepos = myGPSrepo$gps,
+#'                      threshold = 0.5)
 sigoraWrappR <-
   function(data,
            threshold = 0.5,
@@ -76,6 +75,16 @@ sigoraWrappR <-
   }
 
 
+.mergeR <- function(sigora_res, GPStable) {
+  tab1 <- sigora_res$sigora$summary_results
+  tab2 <- sigora_res$data
+  colnames(tab1)[1] <- "pathwayId"
+  colnames(tab2) <- c("gene", "fc")
+  tab3 <- dplyr::inner_join(GPStable, tab1)
+  tab4 <- dplyr::inner_join(tab3, tab2) %>% filter(!!sym("Bonferroni") < 0.05)
+  return(tab4)
+}
+
 #' UpSetR wrapper for sigora results
 #'
 #' @param sigora_res Object returned by the \code{\link{sigoraWrappR}} function
@@ -89,24 +98,28 @@ sigoraWrappR <-
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #' @export
+#' @examples
+#' sigora_res <- fgczgseaora::sigora_example
+#' GPStable <- fgczgseaora::GPStab
+#'
+#' sigora_upsetR(sigora_res, GPStable)
+#'
+#'
+#' df <- get_UniprotID_from_fasta_header(fgczgseaora::exampleContrastData)
+#' myGPSrepo <- makeGPS_wrappR(ids = df$UniprotID)
+#' names(myGPSrepo)
+#' res <- sigoraWrappR(df,score_col = "estimate", GPSrepos = myGPSrepo$gps,
+#'                      threshold = 0.5)
+#' sigora_upsetR(res, myGPSrepo$gpsTable)
+#'
 sigora_upsetR <- function(sigora_res, GPStable, ...) {
-  mergeR <- function(sigora_res, GPStable) {
-    tab1 <- sigora_res$sigora$summary_results
-    tab2 <- sigora_res$data
-    colnames(tab1)[1] <- "pathwayId"
-    colnames(tab2) <- c("gene", "fc")
-    tab3 <- dplyr::inner_join(GPStable, tab1)
-    tab4 <- dplyr::inner_join(tab3, tab2) %>% filter(!!sym("Bonferroni") < 0.05)
-    return(tab4)
-  }
-
-  df <- mergeR(sigora_res, GPStable)
+  df <- .mergeR(sigora_res, GPStable)
 
   if(any(dim(df)==0)) return(NULL)
 
   toplot <- df %>%
     dplyr::select(!!sym("pathwayId"), !!sym("gene")) %>%
-    dplyr::mutate(ID = seq_len(nrow(.data))) %>%
+    dplyr::mutate(ID = seq_len(nrow(df))) %>%
     tidyr::spread(!!sym("pathwayId"), !!sym("gene")) %>%
     dplyr::select(-!!sym("ID")) %>%
     as.list() %>%
