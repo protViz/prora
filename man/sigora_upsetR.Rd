@@ -16,3 +16,18 @@ sigora_upsetR(sigora_res, GPStable, ...)
 \description{
 UpSetR wrapper for sigora results
 }
+\examples{
+sigora_res <- fgczgseaora::sigora_example
+GPStable <- fgczgseaora::GPStab
+
+sigora_upsetR(sigora_res, GPStable)
+
+
+df <- get_UniprotID_from_fasta_header(fgczgseaora::exampleContrastData)
+myGPSrepo <- makeGPS_wrappR(ids = df$UniprotID)
+names(myGPSrepo)
+res <- sigoraWrappR(df,score_col = "estimate", GPSrepos = myGPSrepo$gps,
+                     threshold = 0.5)
+sigora_upsetR(res, myGPSrepo$gpsTable)
+
+}

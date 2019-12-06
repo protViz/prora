@@ -26,8 +26,7 @@
 #' myGPSrepo <- makeGPS_wrappR(ids = exampleUniprotIDs, target = "react")
 makeGPS_wrappR <-
   function(ids, keytype = "UNIPROT",
-           target = c("KEGG", "GO", "reactome"),
-           dev = FALSE) {
+           target = c("KEGG", "GO", "reactome")) {
     target <- match.arg(target)
 
     if (target == "KEGG") {
@@ -44,11 +43,8 @@ makeGPS_wrappR <-
 
     colnames(mkGPStable) <- c("pathwayId", "pathwayName", "gene")
 
-    if (dev) {
-      return(mkGPStable)
-    } else if (all(dim(mkGPStable) > 0)) {
-      out <- sigora::makeGPS(mkGPStable)
-      return(out)
+    if (all(dim(mkGPStable) > 0)) {
+      return(list(gps = sigora::makeGPS(mkGPStable),gpsTable = mkGPStable))
     } else {
       stop("No pathway, gene, description mappings. Cannot produce GPS repository.")
     }

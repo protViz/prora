@@ -30,7 +30,7 @@ if(!exists("progress")){
   }
 }
 
-res <- eval(params$results)
+res_sigora <- eval(params$results)
 p1 <- params$plot1
 GPStab <- eval(params$GPStable)
 direction_greater <- eval(params$direction_greater)
@@ -47,24 +47,24 @@ The following analysis compares filters proteins based on a fold change threshol
 
 ### Parameters
 
-- Number of User IDs: `r nrow(res$data)`
+- Number of User IDs: `r nrow(res_sigora$data)`
 
 - Contrast: `r contrast`
 
-- Score threshold: `r res$fc_threshold`
+- Score threshold: `r res_sigora$fc_threshold`
 
 - Direction of the threshold: `r ifelse(direction_greater, "greater than", "less than")`
 
-- Number of User IDs after filtering: `r res$proteinsAfterFiltering`
+- Number of User IDs after filtering: `r res_sigora$proteinsAfterFiltering`
 
-- Database used to produce GPS repository: `r res$database`
+- Database used to produce GPS repository: `r res_sigora$database`
 
 ### ORA results {.tabset .tabset-pills}
 
 #### Significantly enriched pathways
 
 ```{r}
-res$ora %>%
+res_sigora$ora %>%
   dplyr::select(pathwyid, description, success, pathwaySize, pvalues, Bonfer) %>%
   DT::datatable(
     caption = "ORA results: classical overrepresentation analysis using Fisher's exact test",
@@ -88,7 +88,7 @@ res$ora %>%
 
 
 ```{r resulttab}
-res$sigora$summary_results %>% 
+res_sigora$sigora$summary_results %>% 
   dplyr::select(pathwy.id, description, successes, PathwaySize, pvalues, Bonferroni) %>% 
   dplyr::filter(Bonferroni <= 0.05) %>% 
   DT::datatable(caption = "sigORA results: ORA using gene pair signatures", 
@@ -106,7 +106,7 @@ res$sigora$summary_results %>%
 #### All pathways matched
 
 ```{r}
-res$sigora$summary_results %>% 
+res_sigora$sigora$summary_results %>% 
   dplyr::select(pathwy.id, description, pvalues, Bonferroni) %>% 
   DT::datatable(caption = "sigORA results: All matched pathways", 
                colnames = c(
@@ -121,7 +121,7 @@ res$sigora$summary_results %>%
 #### Weighting scheme
 
 ```{r}
-res$sigora$detailed_results %>% 
+res_sigora$sigora$detailed_results %>% 
   DT::datatable(caption = "sigORA: Weighting scheme of gene pair signatures used",
                colnames = c(
                  "User ID 1",
@@ -142,16 +142,16 @@ if (is_character(p1)) {
 }
 ```
 
-```{r siguorupset, fig.cap="Intersection sizes between significantly enriched pathways identified by sigORA visualised using the UpSetR package"}
-try(sigora_upsetR(sigora_res = res, GPStable = GPStab))
+```{r fig.cap="Intersection sizes between significantly enriched pathways identified by sigORA visualised using the UpSetR package"}
+try(sigora_upsetR(sigora_res = res_sigora, GPStable = GPStab))
 ```
 
 
 ### Data used
 
 ```{r}
-colnames(res$data) <- c("User ID", "Score")
-res$data %>%
+colnames(res_sigora$data) <- c("User ID", "Score")
+res_sigora$data %>%
   mutate(`Score` = round(`Score`, 2)) %>% 
   DT::datatable(colnames = c("User ID", "Score"), width = 700, style = "bootstrap") %>%
   DT::formatRound(digits = 3, columns = "Score")

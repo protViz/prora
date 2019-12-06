@@ -51,11 +51,10 @@ Provides a wrapper for \code{sigora::sigora()} combined with \code{sigora::ora()
 returns a \code{list} used for the generation of an \code{.Rmd} report.
 }
 \examples{
-data("exampleContrastData", package = "fgczgseaora")
-data("idmap", package = "sigora")
-df <- get_UniprotID_from_fasta_header(exampleContrastData)
-myGPSrepo <- makeGPS_wrappR(ids = df$UniprotID)
-res <- sigoraWrappR(df,score_col = "estimate", GPSrepos = myGPSrepo,
-                     threshold = 0.5)
 
+df <- get_UniprotID_from_fasta_header(fgczgseaora::exampleContrastData)
+myGPSrepo <- makeGPS_wrappR(ids = df$UniprotID)
+names(myGPSrepo)
+res <- sigoraWrappR(df,score_col = "estimate", GPSrepos = myGPSrepo$gps,
+                     threshold = 0.5)
 }
