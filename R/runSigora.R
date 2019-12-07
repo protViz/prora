@@ -18,7 +18,7 @@
 #' usethis::use_data(myGPSrepo,overwrite = TRUE)
 #' undebug(runSIGORA)
 #' undebug(sigoraWrappR)
-#' res <- runSIGORA(filtered_dd, myGPSrepo = fgczgseaora::myGPSrepo)
+#' res <- runSIGORA(filtered_dd, myGPSrepo = fgczgseaora::myGPSrepo, DEBUG=TRUE)
 #' #rmarkdown::render(res$rmarkdownPath,bookdown::html_document2(number_sections = FALSE),params = res$sigoraData,clean = TRUE)
 #'
 runSIGORA <-
@@ -29,13 +29,9 @@ runSIGORA <-
            threshold = 0.5,
            outdir = "sigORA",
            greater = TRUE,
-           myGPSrepo = NULL
+           myGPSrepo = NULL,
+           DEBUG=FALSE
            ) {
-    outdir <- paste0(outdir, "_", target)
-
-    if (!dir.exists(outdir)) {
-      dir.create(outdir, recursive = TRUE)
-    }
 
     if(is.null(myGPSrepo)){
       myGPSrepo <-
@@ -57,46 +53,51 @@ runSIGORA <-
       return(invisible(NULL))
     }
 
-    if(!dir.exists(outdir)){
-      dir.create(outdir)
-    }
-
-    rmarkdownPath <- file.path(outdir, "sigora.Rmd")
-    rmarkdownPath_src <- file.path(
-      find.package("fgczgseaora"),
-      "rmarkdown_reports/sigora.Rmd"
-    )
-    if(!file.copy(rmarkdownPath_src,
-      rmarkdownPath,
-      overwrite = TRUE
-    )){
-      warning("could not copy",rmarkdownPath_src, "to ", rmarkdownPath)
-    }
-
-    bibpath <- file.path(outdir, "bibliography.bib")
-    bibpath_src <- file.path(
-      find.package("fgczgseaora"),
-      "rmarkdown_reports/bibliography.bib"
-    )
-    if(!file.copy(
-      bibpath_src,
-      bibpath,
-      overwrite = TRUE
-    )){
-      warning("could not copy",bibpath_src, "to ", bibpath)
-    }
-
     sigoraData <- list(
       results = sigora_res,
       GPStable = myGPSrepo$gpsTable ,
       direction_greater = greater
     )
 
-    rmarkdown::render(
-      rmarkdownPath,
-      bookdown::html_document2(number_sections = FALSE),
-      params = sigoraData,
-      clean = TRUE
-    )
+    outdir <- paste0(outdir, "_", target)
+    rmarkdownPath <- file.path(outdir, "sigora.Rmd")
+
+    if(!DEBUG){
+      if(!dir.exists(outdir)){
+        dir.create(outdir)
+      }
+
+      rmarkdownPath_src <- file.path(
+        find.package("fgczgseaora"),
+        "rmarkdown_reports/sigora.Rmd"
+      )
+      if(!file.copy(rmarkdownPath_src,
+                    rmarkdownPath,
+                    overwrite = TRUE
+      )){
+        warning("could not copy",rmarkdownPath_src, "to ", rmarkdownPath)
+      }
+
+      bibpath <- file.path(outdir, "bibliography.bib")
+      bibpath_src <- file.path(
+        find.package("fgczgseaora"),
+        "rmarkdown_reports/bibliography.bib"
+      )
+      if(!file.copy(
+        bibpath_src,
+        bibpath,
+        overwrite = TRUE
+      )){
+        warning("could not copy",bibpath_src, "to ", bibpath)
+      }
+      rmarkdown::render(
+        rmarkdownPath,
+        bookdown::html_document2(number_sections = FALSE),
+        params = sigoraData,
+        clean = TRUE
+      )
+    }
+
+
     return(list(sigoraData = sigoraData, rmarkdownPath =  rmarkdownPath))
   }
