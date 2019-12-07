@@ -33,6 +33,7 @@
 #'
 #' @examples
 #'
+#' library(fgczgseaora)
 #' df <- get_UniprotID_from_fasta_header(fgczgseaora::exampleContrastData)
 #' myGPSrepo <- makeGPS_wrappR(ids = df$UniprotID,target = "KEGG")
 #' res <- sigoraWrappR(df,score_col = "estimate", GPSrepos = myGPSrepo$gps,
