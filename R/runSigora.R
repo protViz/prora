@@ -13,12 +13,12 @@
 #' library(fgczgseaora)
 #' fc_estimates <- fgczgseaora::exampleContrastData
 #' filtered_dd <- get_UniprotID_from_fasta_header(fc_estimates, idcolumn = "protein_Id")
-#'
 #' myGPSrepo <- makeGPS_wrappR(filtered_dd$UniprotID, target = "GO")
-#' usethis::use_data(myGPSrepo)
-#' names(myGPSrepo)
-#' res <- runSIGORA(filtered_dd, myGPSrepo = myGPSrepo)
-#' names(res)
+#'
+#' usethis::use_data(myGPSrepo,overwrite = TRUE)
+#' undebug(runSIGORA)
+#' undebug(sigoraWrappR)
+#' res <- runSIGORA(filtered_dd, myGPSrepo = fgczgseaora::myGPSrepo)
 #' #rmarkdown::render(res$rmarkdownPath,bookdown::html_document2(number_sections = FALSE),params = res$sigoraData,clean = TRUE)
 #'
 runSIGORA <-
@@ -60,26 +60,31 @@ runSIGORA <-
     if(!dir.exists(outdir)){
       dir.create(outdir)
     }
-    rmarkdownPath <- file.path(outdir, "sigora.Rmd")
 
-    file.copy(
-      file.path(
-        find.package("fgczgseaora"),
-        "rmarkdown_reports/sigora.Rmd"
-      ),
+    rmarkdownPath <- file.path(outdir, "sigora.Rmd")
+    rmarkdownPath_src <- file.path(
+      find.package("fgczgseaora"),
+      "rmarkdown_reports/sigora.Rmd"
+    )
+    if(!file.copy(rmarkdownPath_src,
       rmarkdownPath,
       overwrite = TRUE
-    )
+    )){
+      warning("could not copy",rmarkdownPath_src, "to ", rmarkdownPath)
+    }
 
     bibpath <- file.path(outdir, "bibliography.bib")
-    file.copy(
-      file.path(
-        find.package("fgczgseaora"),
-        "rmarkdown_reports/bibliography.bib"
-      ),
+    bibpath_src <- file.path(
+      find.package("fgczgseaora"),
+      "rmarkdown_reports/bibliography.bib"
+    )
+    if(!file.copy(
+      bibpath_src,
       bibpath,
       overwrite = TRUE
-    )
+    )){
+      warning("could not copy",bibpath_src, "to ", bibpath)
+    }
 
     sigoraData <- list(
       results = sigora_res,

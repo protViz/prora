@@ -40,6 +40,7 @@ fc_estimates <- fgczgseaora::exampleContrastData
 filtered_dd <- get_UniprotID_from_fasta_header(fc_estimates, idcolumn = "protein_Id")
 
 myGPSrepo <- makeGPS_wrappR(filtered_dd$UniprotID, target = "GO")
+usethis::use_data(myGPSrepo)
 names(myGPSrepo)
 res <- runSIGORA(filtered_dd, myGPSrepo = myGPSrepo)
 names(res)
