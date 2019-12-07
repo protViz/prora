@@ -1,10 +1,12 @@
 ---
 title: "fgczgseaora: Unifying methods on gene set enrichment"
-author: 
-- Lucas Heinrich Kook
-- Witold Wolski
+author:  
+- Lucas Heinrich Kook^[University of Zurich]
+- Witold Wolski^[University of Zurich]
+date: "`r format(Sys.time(), '%d %B %Y')`"
 output:
-  pdf_document
+  pdf_document:
+    template: NULL
 bibliography: bibliography.bib
 vignette: >
   %\VignetteIndexEntry{fgczgseaora: Unifying methods on gene set enrichment}
@@ -80,7 +82,7 @@ We shall analyse proteomic data with the following format:
 
 ```{r exampleContrastData}
 data("exampleContrastData")
-glimpse(exampleContrastData)
+#glimpse(exampleContrastData)
 ```
 
 The first column `protein_Id` contains FASTA formatted human protein accessions 
@@ -90,7 +92,7 @@ into Uniprot accessions for subsequent ID mapping.
 
 ```{r getUniprot}
 dd <- fgczgseaora::get_UniprotID_from_fasta_header(exampleContrastData)
-glimpse(dd)
+#glimpse(dd)
 ```
 
 We see that we have lost `r nrow(exampleContrastData) - nrow(dd)` accessions 
@@ -172,7 +174,7 @@ The following code chunk iterates the `runGSEA()` function over all possible
 GSEA target databases. Internally, `runGSEA()` calls `WebGestaltR()` for the 
 analysis and compiles `fgczgseaora's` in the same output directory.
 
-```{r runGSEA ,eval=TRUE}
+```{r runGSEA ,eval=FALSE}
 sapply(target_GSEA, function(x) {
   runWebGestaltGSEA(
     data = dd,
@@ -182,7 +184,7 @@ sapply(target_GSEA, function(x) {
     organism = organism,
     target = x,
     nperm = nperm,
-    outdir = file.path(odir, "GSEA")
+    outdir = file.path(odir, "WebGestaltGSEA")
   )
 })
 ```
@@ -215,8 +217,8 @@ sapply(target_SIGORA, function(x) {
   runSIGORA(
     data = dd,
     target = x,
-    fc_col = fc_col,
-    fc_threshold = fc_threshold,
+    score_col = fc_col,
+    threshold = fc_threshold,
     greater = greater,
     outdir = file.path(odir, "sigORA")
   )
@@ -233,7 +235,7 @@ and `fgczgseaora` results can then be found in the output directory.
 
 # Command line tools
 
-The main enrichment methods in this package (ORA, sigORA, GSEA) come with a 
+The enrichment methods in this package (ORA, GSEA sigORA) come with a 
 `r CRANpkg("docopt")` based command line tool to facilitate analysing batches of
 files^[Those scripts can be found in 
 `system.file("run_scripts", package = "fgczgseaora")`]. 
@@ -242,22 +244,26 @@ documentation where it is also possible to provide default values. For running
 GSEA, the command line tool is:
 
 ```{r commandLineexample, eval=FALSE}
-#!/usr/bin/Rscript
 "WebGestaltR GSEA for multigroup reports
 
 Usage:
-  test.R <grp2file> [--organism=<organism>] [--outdir=<outdir>] [--nperm=<nperm>]
+  lfq_multigroup_gsea.R <grp2file> [--organism=<organism>] [--outdir=<outdir>] [--idtype=<idtype>] [--ID_col=<ID_col>]  [--nperm=<nperm>] [--score_col=<score_col>] [--contrast=<contrast>]
 
 Options:
   -o --organism=<organism> organism [default: hsapiens]
   -r --outdir=<outdir> output directory [default: results_gsea]
-  -n --nperm=<nperm> number of permutations to calculate enrichment scores [default: 50]
+  -t --idtype=<idtype> type of id used for mapping [default: uniprotswissprot]
+  -i --ID_col=<ID_col> Column containing the UniprotIDs [default: UniprotID]
+  -n --nperm=<nperm> number of permutations to calculate enrichment scores [default: 500]
+  -e --score_col=<score_col> column containing fold changes [default: pseudo_estimate]
+  -c --contrast=<contrast> column containing fold changes [default: contrast]
 
 Arguments:
   grp2file  input file
 " -> doc
 
 library(docopt)
+
 opt <- docopt(doc)
 ```
 
@@ -265,21 +271,13 @@ It can be run using the following command in a UNIX/Linux terminal, specifying
 the organism as mouse:
 
 ```{bash eval=FALSE}
-Rscript path/to/lfq_2grp_webgestalt_gsea.R path/to/group2file.txt -o mmusculus
-```
-
-or equivalently:
-
-```{bash eval=FALSE}
-Rscript path/to/lfq_2grp_webgestalt_gsea.R path/to/group2file.txt 
---organism=mmusculus
+Rscript path/to/lfq_multigroup_gsea.R path/to/group2file.xlsx -o mmusculus
 ```
 
 The help file can also be accessed via the command line using:
 
 ```{bash eval=FALSE}
-Rscript path/to/lfq_2grp_webgestalt_gsea.R -h # or
-Rscript path/to/lfq_2grp_webgestalt_gsea.R --help
+Rscript path/to/lfq_multigroup_gsea.R -h
 ```
 
 
