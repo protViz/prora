@@ -1,25 +1,21 @@
 ---
 title: "fgczgseaora: Unifying methods on gene set enrichment"
-author:
-- name: Lucas Heinrich Kook
-  affiliation: Functional Genomics Center Zurich, ETH Zurich, University of Zurich
-- name: Witold Wolski
-  affiliation: Functional Genomics Center Zurich, ETH Zurich, University of Zurich
-  email: wew@fgcz.ethz.ch
-package: fgczgseaora
+author: 
+- Lucas Heinrich Kook
+- Witold Wolski
 output:
   pdf_document
 bibliography: bibliography.bib
-abstract: >
 vignette: >
-  %\VignetteIndexEntry{Vignette Title}
-  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteIndexEntry{fgczgseaora: Unifying methods on gene set enrichment}
   %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
 ---
   
 
 
 ```{r setup, include=FALSE}
+library(BiocStyle)
 library(tidyverse)
 library(fgczgseaora)
 knitr::opts_chunk$set(
@@ -114,7 +110,7 @@ myGPSrepo <- makeGPS_wrappR(ids = dd$UniprotID, target = "GO")
 res <- sigoraWrappR(data =  dd,
                     threshold = 0.2,
                     score_col = "estimate",
-                    GPSrepos = myGPSrepo,
+                    GPSrepos = myGPSrepo$gps,
                     greater_than = TRUE)
 ```
 
@@ -176,13 +172,13 @@ The following code chunk iterates the `runGSEA()` function over all possible
 GSEA target databases. Internally, `runGSEA()` calls `WebGestaltR()` for the 
 analysis and compiles `fgczgseaora's` in the same output directory.
 
-```{r runGSEA ,eval=FALSE}
+```{r runGSEA ,eval=TRUE}
 sapply(target_GSEA, function(x) {
-  runGSEA(
+  runWebGestaltGSEA(
     data = dd,
     fpath = "",
     ID_col = ID_col,
-    fc_col = fc_col,
+    score_col = fc_col,
     organism = organism,
     target = x,
     nperm = nperm,
