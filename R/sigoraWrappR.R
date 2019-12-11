@@ -33,11 +33,22 @@
 #'
 #' @examples
 #'
+#' library(fgczgseaora)
 #' df <- get_UniprotID_from_fasta_header(fgczgseaora::exampleContrastData)
-#' myGPSrepo <- makeGPS_wrappR(ids = df$UniprotID)
-#' names(myGPSrepo)
+#' myGPSrepo <- makeGPS_wrappR(ids = df$UniprotID,target = "KEGG")
 #' res <- sigoraWrappR(df,score_col = "estimate", GPSrepos = myGPSrepo$gps,
 #'                      threshold = 0.5)
+#' res$ora
+#' res$data
+#'
+#' myGPSrepoGO <- makeGPS_wrappR(df$UniprotID, target = "GO")
+#' res <- sigoraWrappR(df,score_col = "estimate", GPSrepos = myGPSrepoGO$gps,
+#'                      threshold = 0.5)
+#' res$ora
+#' res$data
+#' GPSrepo <-  myGPSrepoGO$gps
+#' sigora::ora(geneList = df$UniprotID[df$estimate >0.8], GPSrepo = myGPSrepoGO$gps, idmap = sigora::idmap)
+#'
 sigoraWrappR <-
   function(data,
            threshold = 0.5,
@@ -59,7 +70,7 @@ sigoraWrappR <-
              idmap = idmap)
     ora_res <-
       sigora::ora(geneList = enriched$UniprotID,
-          GPSrepo = GPSrepos)
+          GPSrepo = GPSrepos, idmap = idmap)
 
     output <- list(
       sigora = sigora_res,
@@ -67,7 +78,7 @@ sigoraWrappR <-
       threshold = threshold,
       GPSrepository = GPSrepos,
       database = db,
-      data = df[, c("UniprotID", score_col)],
+      data = data[, c("UniprotID", score_col)],
       proteinsAfterFiltering = nrow(enriched),
       direction = ifelse(greater_than, yes = "greater than", no = "less than")
     )

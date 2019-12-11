@@ -175,7 +175,7 @@ runWebGestaltORA <- function(data,
   if(is.null(subdir_name)){
     subdir_name <- paste0("fc_threshold_",abs(threshold),"_is_greater_",greater)
   }
-  subdir_path <- file.path(result_dir, subdir_name)
+  subdir_path <- file.path(outdir, subdir_name)
 
   if(!dir.exists(subdir_path)){
     message("created directory : ", subdir_path, "\n\n")
