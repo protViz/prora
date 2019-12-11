@@ -6,9 +6,9 @@
 #'
 #' @param data input data.frame (at least two columns, first column containing IDs,
 #' other columns numerical ranks, i.e. fold changes)
-#' @param fc_threshold fold change threshold above which (in absolute terms) a protein
+#' @param threshold fold change threshold above which (in absolute terms) a protein
 #' is considered differentially regulated
-#' @param fc_col Name of the fold change column, in case the input file contains
+#' @param score_col Name of the fold change column, in case the input file contains
 #' multiple contrasts
 #' @param GPSrepos GPS repository used as background, can be
 #' generated via \code{\link{sigoraWrappR}}
