@@ -24,31 +24,30 @@
 #' myGPSrepo <- makeGPS_wrappR(ids = exampleUniprotIDs)
 #' myGPSrepo <- makeGPS_wrappR(ids = exampleUniprotIDs, target = "GO")
 #' myGPSrepo <- makeGPS_wrappR(ids = exampleUniprotIDs, target = "react")
-makeGPS_wrappR <-
-  function(ids, keytype = "UNIPROT",
-           target = c("KEGG", "GO", "reactome")) {
-    target <- match.arg(target)
+makeGPS_wrappR <- function(ids, keytype = "UNIPROT",
+                           target = c("KEGG", "GO", "reactome")) {
+  target <- match.arg(target)
 
-    if (target == "KEGG") {
-      tabs <- .get_tables_KEGG(ids = ids, keytype = "UNIPROT")
-    } else if (target %in% c("GO", "reactome")) {
-      tabs <- .get_tables_ractome_GO(ids = ids, keytype = "UNIPROT",  target = target)
-    } else {
-      stop("Specify a valid target database (one of KEGG, GO, reactome)")
-    }
-
-    mkGPStable <-
-      dplyr::inner_join(tabs$pn_tab, tabs$gp_tab) %>%
-      dplyr::distinct()
-
-    colnames(mkGPStable) <- c("pathwayId", "pathwayName", "gene")
-
-    if (all(dim(mkGPStable) > 0)) {
-      return(list(gps = sigora::makeGPS(mkGPStable),gpsTable = mkGPStable))
-    } else {
-      stop("No pathway, gene, description mappings. Cannot produce GPS repository.")
-    }
+  if (target == "KEGG") {
+    tabs <- .get_tables_KEGG(ids = ids, keytype = "UNIPROT")
+  } else if (target %in% c("GO", "reactome")) {
+    tabs <- .get_tables_ractome_GO(ids = ids, keytype = "UNIPROT",  target = target)
+  } else {
+    stop("Specify a valid target database (one of KEGG, GO, reactome)")
   }
+
+  mkGPStable <-
+    dplyr::inner_join(tabs$pn_tab, tabs$gp_tab) %>%
+    dplyr::distinct()
+
+  colnames(mkGPStable) <- c("pathwayId", "pathwayName", "gene")
+
+  if (all(dim(mkGPStable) > 0)) {
+    return(list(gps = sigora::makeGPS(as.data.frame(mkGPStable)),gpsTable = mkGPStable))
+  } else {
+    stop("No pathway, gene, description mappings. Cannot produce GPS repository.")
+  }
+}
 
 .get_tables_ractome_GO <- function(ids, keytype = "UNIPROT", target = c("reactome",  "GO")) {
   target <- match.arg(target)
