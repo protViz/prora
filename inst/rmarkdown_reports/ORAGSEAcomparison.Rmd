@@ -173,13 +173,13 @@ sigora(
 \begin{tabular}{ccccccc}
 \hline
 \textbf{Package} & \textbf{Provider} & \textbf{Maintainance} & \textbf{Offline} & \textbf{ID Mapping} & \textbf{ORA} & \textbf{GSEA} \\ \hline
-WebGestaltR      & CRAN              & +                     & --                & +                   & +            & +             \\
-FGNet            & Bioc              & +                     & (--)              & (--)                 & --            & +             \\
-HTSanalyzeR      & Bioc              & --                     & (--)              & --                   & +            & +             \\
-sigora           & CRAN              & +                     & +                & (--)                 & +            & --             \\
-SetRank          & CRAN              & --                     & (--)                & --                   & --            & +             \\
-STRINGdb         & Bioc              & +                     & --                & (--)                 & +            & +             \\
-enrichR          & CRAN              & +                     & --                & +                    & +            & +              \\ \hline
+WebGestaltR      & CRAN              & + (09/2019)          & --               & +                   & +            & +             \\
+FGNet            & Bioc              & +                    & (--)             & (--)               & --            & +             \\
+HTSanalyzeR      & Bioc              & --                   & (--)             & --                & +            & +             \\
+sigora           & CRAN              & +                    & +                & (--)                & +            & --             \\
+SetRank          & CRAN              & --                   & (--)             & --              & --            & +             \\
+STRINGdb         & Bioc              & +                    & --               & (--)               & +            & +             \\
+enrichR          & CRAN              & +                    & --               & +                  & (+)          & +              \\ \hline
 \end{tabular}%
 }
 \end{table}

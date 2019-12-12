@@ -1,16 +1,15 @@
 ---
 title: "`fgczgseaora`"
-subtitle: "R package for gene set enrichment analysis"
 author: "Lucas Kook"
 date: "`r Sys.Date()`"
-bibliography: bibliography.bib
-output: 
+output:
   ioslides_presentation:
+    numbers: no
     smaller: no
     transition: 0
-    # logo: uzh_logo_e_pos.pdf
-    css: style.css
-    numbers: no
+  beamer_presentation: default
+subtitle: R package for gene set enrichment analysis
+bibliography: bibliography.bib
 ---
 
 ```{r setup, include=FALSE}
