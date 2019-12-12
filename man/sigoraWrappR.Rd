@@ -18,6 +18,12 @@ sigoraWrappR(
 \item{data}{input data.frame (at least two columns, first column containing IDs,
 other columns numerical ranks, i.e. fold changes)}
 
+\item{threshold}{fold change threshold above which (in absolute terms) a protein
+is considered differentially regulated}
+
+\item{score_col}{Name of the fold change column, in case the input file contains
+multiple contrasts}
+
 \item{GPSrepos}{GPS repository used as background, can be
 generated via \code{\link{sigoraWrappR}}}
 
@@ -27,12 +33,6 @@ generated via \code{\link{sigoraWrappR}}}
 greater_than (default is \code{TRUE}) or strictly less than (\code{FALSE})}
 
 \item{idmap}{id mapping table, dafault sigora::idmap}
-
-\item{fc_threshold}{fold change threshold above which (in absolute terms) a protein
-is considered differentially regulated}
-
-\item{fc_col}{Name of the fold change column, in case the input file contains
-multiple contrasts}
 }
 \value{
 Returns a \code{list} containing the following elements:
