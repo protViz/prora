@@ -57,15 +57,13 @@ df <- get_UniprotID_from_fasta_header(fgczgseaora::exampleContrastData)
 myGPSrepo <- makeGPS_wrappR(ids = df$UniprotID,target = "KEGG")
 res <- sigoraWrappR(df,score_col = "estimate", GPSrepos = myGPSrepo$gps,
                      threshold = 0.5)
-res$ora
-res$data
 
 myGPSrepoGO <- makeGPS_wrappR(df$UniprotID, target = "GO")
 res <- sigoraWrappR(df,score_col = "estimate", GPSrepos = myGPSrepoGO$gps,
                      threshold = 0.5)
 res$ora
+res$sigora$summary_results
 res$data
 GPSrepo <-  myGPSrepoGO$gps
-sigora::ora(geneList = df$UniprotID[df$estimate >0.8], GPSrepo = myGPSrepoGO$gps, idmap = sigora::idmap)
 
 }
