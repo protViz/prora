@@ -43,6 +43,7 @@ runWebGestaltGSEA <- function(data,
                     contrast_name = fpath)
 {
   outdir <- file.path(outdir, target)
+  fpath <- WebGestaltR:::sanitizeFileName(fpath)
 
   if (!dir.exists(outdir)) {
     dir.create(outdir, recursive = TRUE)
@@ -51,8 +52,7 @@ runWebGestaltGSEA <- function(data,
   ranktable <- data %>%
     dplyr::select(!!sym(ID_col), Score = !!sym(score_col))
 
-  GSEA_res <-
-    WebGestaltR(
+  GSEA_res <- WebGestaltR(
       enrichMethod = "GSEA",
       organism = organism,
       enrichDatabase = target,
