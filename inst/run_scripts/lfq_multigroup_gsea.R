@@ -24,8 +24,6 @@ Arguments:
 library(docopt)
 
 if(FALSE){
-
-
   args <- c("-e",
             "pseudo_estimate",
             "D:\\Dropbox\\DataAnalysis\\p2109_PEPTIDE_Analysis\\p2109_Diabetes_plaque\\results_modelling_WHO_noSex\\modelling_results_peptide\\foldchange_estimates.xlsx")
@@ -44,24 +42,22 @@ if(FALSE){
             "D:\\Dropbox\\DataAnalysis\\p2598_ChrisMillan_GSEA_ORA\\results_modelling\\modelling_results_peptide\\foldchange_estimates.xlsx")
 
 
-  if(TRUE){
   args <- c("D:\\Dropbox\\DataAnalysis\\p2874_MOHSIN\\allContrasts.xlsx",
                 "-e",
                 "pseudo.log2FC",
                 "-o",
-                "mmusculus"
-  )
-  }
+                "mmusculus")
+  args <- c("D:\\Dropbox\\DataAnalysis\\p2617\\allData.xlsx",
+            "--nperm","500","--score_col","log2FC","--contrast","file")
 
   #"D:\\Dropbox\\DataAnalysis\\p2109_PEPTIDE_Analysis\\p2109_Diabetes_plaque\\results_modelling_NICE\\modelling_results_peptide\\foldchange_estimates.xlsx")
-
   #print(args2grp)
   #args2grp
   opt <- docopt(doc, args = args)
 }else{
   opt <- docopt(doc)
-
 }
+
 # Hack to override systemArgs
 #opt <- docopt(doc, args = "D:\\Dropbox\\DataAnalysis\\p2109_PEPTIDE_Analysis\\p2109_Diabetes_plaque\\results_modelling_WHO\\modelling_results_peptide\\foldchange_estimates.xlsx")
 
