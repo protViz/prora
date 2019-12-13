@@ -1,0 +1,12 @@
+FGCZ-GSEA-ORA a Tool for Pathway Analysis in Proteomics
+
+Protein expression information from high throughput proteomics LC-MS experiments is among the most popular proteomics services provided by the Functional Genomics Center Zurich (FGCZ). Scientists can use Quantitative protein expression data to test existing hypotheses and to generate new scientific insights. Pathway analysis methods such as Gene Set Enrichment Analysis (GSEA) and Overrepresentation Analysis (ORA) are two commonly used tools to test a scientific hypothesis based on quantitative protein data.
+A plethora of R packages exist on the Comprehensive R Archive Network [1] and Bioconductor [2] to perform ORA GSEA analysis. However, consistency in the underlying nomenclature for specific analyses and user-friendly implementation is still lacking.  FGCZ-GSEA-ORA[3]  aims at unifying ID mapping and enrichment analysis in a syntactically coherent and intuitive way while ensuring reproducibility of results.  Our R package generates HTML reports with visualisations and contextualisation of pathway analysis results of pathway analysis tools. As of now, we integrated the pathway analysis using WebgestaltR[4] and sigora[5].
+These reports are delivered as part of our LFQ analysis.
+
+
+[1] CRAN https://cran.r-project.org/
+[2] Bioconductor (http://bioconductor.org/)
+[3] fgczgseaora https://github.com/protViz/fgczgseaora)
+[4] WebgestaltR (http://www.webgestalt.org/)
+[5] sigora (https://CRAN.R-project.org/package=sigora)
