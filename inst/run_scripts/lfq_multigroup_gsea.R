@@ -43,10 +43,10 @@ if(FALSE){
 
 
   args <- c("D:\\Dropbox\\DataAnalysis\\p2874_MOHSIN\\allContrasts.xlsx",
-                "-e",
-                "pseudo.log2FC",
-                "-o",
-                "mmusculus")
+            "-e",
+            "pseudo.log2FC",
+            "-o",
+            "mmusculus")
   args <- c("D:\\Dropbox\\DataAnalysis\\p2617\\allData.xlsx",
             "--nperm","500","--score_col","log2FC","--contrast","file")
 
