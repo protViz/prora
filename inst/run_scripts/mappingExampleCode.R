@@ -1,5 +1,5 @@
 library(tidyverse)
-library(fgczgseaora)
+library(fgcz.gsea.ora)
 library(httr)
 
 # more information

@@ -68,7 +68,7 @@ suppressMessages(library(org.Hs.eg.db))
 suppressMessages(library(sigora))
 suppressMessages(library(GO.db))
 suppressMessages(library(slam))
-suppressMessages(library(fgczgseaora))
+suppressMessages(library(fgcz.gsea.ora))
 suppressMessages(library(readr))
 
 
@@ -160,7 +160,7 @@ for(target in target_GSEA)
     cat("\n\n PROCESSING TARGET : ",target," FOR CONTRAST : ", name, "\n\n")
 
     res_contrast[[name]] <-
-      fgczgseaora::runWebGestaltGSEA(
+      fgcz.gsea.ora::runWebGestaltGSEA(
         data = filtered_dd,
         fpath = name,
         ID_col = ID_col,

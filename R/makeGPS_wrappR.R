@@ -20,7 +20,7 @@
 #'
 #' @examples
 #'
-#' data("exampleUniprotIDs", package = "fgczgseaora")
+#' data("exampleUniprotIDs", package = "fgcz.gsea.ora")
 #' myGPSrepo <- makeGPS_wrappR(ids = exampleUniprotIDs)
 #' myGPSrepo <- makeGPS_wrappR(ids = exampleUniprotIDs, target = "GO")
 #' myGPSrepo <- makeGPS_wrappR(ids = exampleUniprotIDs, target = "react")

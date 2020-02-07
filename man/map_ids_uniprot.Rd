@@ -28,7 +28,7 @@ Access to uniprot web API. For more detail see https://www.uniprot.org/help/uplo
 }
 \examples{
 library(tidyverse)
-fc_estimates <- fgczgseaora::exampleContrastData
+fc_estimates <- fgcz.gsea.ora::exampleContrastData
 
 filtered_dd <- get_UniprotID_from_fasta_header(fc_estimates, idcolumn = "protein_Id")
 

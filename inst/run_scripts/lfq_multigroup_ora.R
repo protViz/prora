@@ -50,7 +50,7 @@ suppressMessages(library(org.Hs.eg.db))
 suppressMessages(library(sigora))
 suppressMessages(library(GO.db))
 suppressMessages(library(slam))
-suppressMessages(library(fgczgseaora))
+suppressMessages(library(fgcz.gsea.ora))
 suppressMessages(library(readr))
 
 # Check command args ------------------------------------------------------
@@ -145,7 +145,7 @@ for(target in target_GSEA){
 
 
       res_contrast[[name]]  <-
-        fgczgseaora::runWebGestaltORA(
+        fgcz.gsea.ora::runWebGestaltORA(
           data = filtered_dd,
           fpath = name,
           organism = organism,
