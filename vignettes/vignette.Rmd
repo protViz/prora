@@ -1,17 +1,18 @@
 ---
 title: "fgczgseaora: Unifying methods on gene set enrichment"
-author:  
-- Lucas Heinrich Kook^[University of Zurich]
-- Witold Wolski^[University of Zurich]
+author:
+- name: Lucas Heinrich Kook
+  affiliation: University of Zurich
+- name: Witold Wolski
+  affiliation: University of Zurich
 date: "`r format(Sys.time(), '%d %B %Y')`"
 output:
-  pdf_document:
-    template: NULL
+  BiocStyle::pdf_document
 bibliography: bibliography.bib
 vignette: >
   %\VignetteIndexEntry{fgczgseaora: Unifying methods on gene set enrichment}
-  %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
   
 
@@ -19,7 +20,7 @@ vignette: >
 ```{r setup, include=FALSE}
 library(BiocStyle)
 library(tidyverse)
-library(fgczgseaora)
+library(fgcz.gsea.ora)
 knitr::opts_chunk$set(
   echo = TRUE,
   warning = FALSE,
@@ -91,7 +92,7 @@ and the second column fold change estimates. _e.g._ as obtained by a
 into Uniprot accessions for subsequent ID mapping.
 
 ```{r getUniprot}
-dd <- fgczgseaora::get_UniprotID_from_fasta_header(exampleContrastData)
+dd <- fgcz.gsea.ora::get_UniprotID_from_fasta_header(exampleContrastData)
 #glimpse(dd)
 ```
 
