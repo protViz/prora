@@ -31,8 +31,8 @@ The fold change estimates for all contrast of all the proteins are used to perfo
 
 
 ```{r cars}
-
-tmp <- unlist(params$GSEA, recursive=FALSE)
+print("AAAAAA")
+tmp <- unlist(params$GSEA, recursive = FALSE)
 make_gsea_path <- function(x){
   res <- c(contrast = x$fpath,
            contrast_name = x$contrast_name,
@@ -43,16 +43,20 @@ make_gsea_path <- function(x){
 
 
 paths <- map(tmp,make_gsea_path)
-paths <- bind_rows(paths)
+paths <- dplyr::bind_rows(paths)
 paths <- paths %>% dplyr::arrange(contrast)
-#install.packages("flextable")
-myfl <- flextable(paths) %>% set_caption("Gene Set Enrichment Analysis results (GSEA) using fgczgseaora and WebgestaltR. (vs - versus, gv - given) ")
-myfl <- myfl %>% compose( j = "file_path",
-         value = as_paragraph( hyperlink_text(x = "enrichment result",
-                                              url = file_path ) ) )
-myfl <- myfl %>% merge_v(j = ~   contrast + contrast_name)
-myfl <- myfl %>% autofit() %>% theme_box() %>%  color(j = "file_path", color = "#337ab7") 
-myfl
+
+if (ncol(paths) == 0) {
+  cat("NO enrichments:", dim(paths))
+} else {
+  myfl <- flextable(paths) %>% set_caption("Gene Set Enrichment Analysis results (GSEA) using fgcz.gsea.ora and WebgestaltR. (vs - versus, gv - given) ")
+  myfl <- myfl %>% compose( j = "file_path",
+                            value = as_paragraph( hyperlink_text(x = "enrichment result",
+                                                                 url = file_path ) ) )
+  myfl <- myfl %>% merge_v(j = ~   contrast + contrast_name)
+  myfl <- myfl %>% autofit() %>% theme_box() %>%  color(j = "file_path", color = "#337ab7")
+  myfl
+}
 ```
 
 The GSEA analysis was exectuted by : `r bioinf`.

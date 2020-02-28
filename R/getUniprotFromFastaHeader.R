@@ -12,7 +12,7 @@
 #' @return Returns the whole \code{data.frame} with a column called \code{UniprotID} containing UniprotSwissprot IDs instead of Fasta headers. This format is easier to use for subsequent ID mappings using the \code{Annotationdbi} package.
 #'
 #' @examples
-#' data("exampleContrastData", package = "fgczgseaora")
+#' data("exampleContrastData", package = "fgcz.gsea.ora")
 #' get_UniprotID_from_fasta_header(exampleContrastData)
 get_UniprotID_from_fasta_header <- function(df, idcolumn = "protein_Id") {
   map <- df %>% dplyr::select(idcolumn) %>% distinct() %>%

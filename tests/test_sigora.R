@@ -6,9 +6,9 @@ library(org.Hs.eg.db)
 library(sigora)
 library(GO.db)
 library(slam)
-library(fgczgseaora)
+library(fgcz.gsea.ora)
 
-dd <- fgczgseaora::exampleContrastData
+dd <- fgcz.gsea.ora::exampleContrastData
 dfiles <- "example_data.txt"
 
 # Parameters --------------------------------------------------------------
@@ -35,7 +35,7 @@ colnames(dd) <- make.names(colnames(dd))
 dd <- get_UniprotID_from_fasta_header(dd) %>%
   filter(!is.na(UniprotID))
 sapply(target_SIGORA, function(x) {
-  fgczgseaora::runSIGORA(
+  fgcz.gsea.ora::runSIGORA(
     data = dd,
     target = x,
     fc_col = fc_col,

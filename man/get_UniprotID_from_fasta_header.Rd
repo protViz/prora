@@ -18,6 +18,6 @@ Returns the whole \code{data.frame} with a column called \code{UniprotID} contai
 Translate Fasta header to UniprotSwissprot ID
 }
 \examples{
-data("exampleContrastData", package = "fgczgseaora")
+data("exampleContrastData", package = "fgcz.gsea.ora")
 get_UniprotID_from_fasta_header(exampleContrastData)
 }

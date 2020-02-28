@@ -1,5 +1,5 @@
 ---
-title: "fgczgseaora: Unifying methods on gene set enrichment"
+title: "fgcz.gsea.ora: Unifying methods on gene set enrichment"
 author:
 - name: Lucas Heinrich Kook
   affiliation: University of Zurich
@@ -10,7 +10,7 @@ output:
   BiocStyle::pdf_document
 bibliography: bibliography.bib
 vignette: >
-  %\VignetteIndexEntry{fgczgseaora: Unifying methods on gene set enrichment}
+  %\VignetteIndexEntry{fgcz.gsea.ora: Unifying methods on gene set enrichment}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -39,9 +39,9 @@ options(width = 80)
 A plethora of R packages exist on CRAN and Bioconductor to perform over-representation 
 analysis (ORA) and gene set enrichment analysis (GSEA). However, consistency in the 
 underlying nomenclature for specific analyses and user friendly implementation is 
-still lacking. `fgczgseaora` aims at unifying ID mapping and enrichment analysis 
+still lacking. `fgcz.gsea.ora` aims at unifying ID mapping and enrichment analysis 
 in a syntactically coherent and intuitive way, while ensuring reproducibility of 
-results. `fgczgseaora` primarily consists of wrapper functions around the 
+results. `fgcz.gsea.ora` primarily consists of wrapper functions around the 
 `r CRANpkg("sigora")` and `r CRANpkg("WebGestaltR")` packages from CRAN and 
 `r CRANpkg("rmarkdown")` based reports for visualisation and contextualisation 
 of analysis results.
@@ -61,7 +61,7 @@ an _R_ package, _i.e._ ORA in both `r CRANpkg("sigora")` and
 `r CRANpkg("enrichnet")` and the list keeps going on. Naturally, different 
 implementations come with different -- and often inconsistent -- features, such 
 as ID mapping or demand a lot of knowledge from the user in setting up appropriate
-data structures and other preconditions. `fgczgseaora` aims at providing a 
+data structures and other preconditions. `fgcz.gsea.ora` aims at providing a 
 consistent and user friendly interface, which will be introduced in the following 
 section. Elaborating on the methodological and statistical aspects of the underlying 
 methods is beyond the scope of this vignette and the reader is referred to the 
@@ -70,11 +70,11 @@ publications in the reference section.
 # Installation and loading
 
 After installing the packages from _Bioconductor_ as shown below, the package 
-can be loaded using `library(fgczgseaora)`.
+can be loaded using `library(fgcz.gsea.ora)`.
 
 ```{r installing, eval=FALSE}
-BiocManager::install("fgczgseaora")
-library(fgczgseaora)
+BiocManager::install("fgcz.gsea.ora")
+library(fgcz.gsea.ora)
 ```
 
 # Example workflow
@@ -141,7 +141,7 @@ and results should be interpreted with care.
 # Reports
 
 Good reporting and reproducibility of all intermediate and final results is key
-to good scientific practice. In this spirit, `fgczgseaora` provides a reproducible, 
+to good scientific practice. In this spirit, `fgcz.gsea.ora` provides a reproducible, 
 `r CRANpkg("rmarkdown")` based reports for each method. To highlight the most 
 important targets, settings and parameters, a walkthrough is given in this part 
 of the vignette.
@@ -173,7 +173,7 @@ specified output directory with a subfolder for each method and target.
 
 The following code chunk iterates the `runGSEA()` function over all possible 
 GSEA target databases. Internally, `runGSEA()` calls `WebGestaltR()` for the 
-analysis and compiles `fgczgseaora's` in the same output directory.
+analysis and compiles `fgcz.gsea.ora's` in the same output directory.
 
 ```{r runGSEA ,eval=FALSE}
 sapply(target_GSEA, function(x) {
@@ -229,17 +229,17 @@ sapply(target_SIGORA, function(x) {
 In the following the `runGSEA()` function's inner workings will be discussed in 
 more detail. After creating the output directory `outdir` the provided data is 
 fed into `r CRANpkg("WebGestaltR")`'s `WebGestaltR(..., enrichMethod = "GSEA")`. 
-The results are then used to generate the report provided by the `fgczgseaora` 
+The results are then used to generate the report provided by the `fgcz.gsea.ora` 
 package^[The source files for all reports can be found in 
 `system.file("rmarkdown_reports", package = "fgczgseaora")`]. All `WebGestaltR` 
-and `fgczgseaora` results can then be found in the output directory.
+and `fgcz.gsea.ora` results can then be found in the output directory.
 
 # Command line tools
 
 The enrichment methods in this package (ORA, GSEA sigORA) come with a 
 `r CRANpkg("docopt")` based command line tool to facilitate analysing batches of
 files^[Those scripts can be found in 
-`system.file("run_scripts", package = "fgczgseaora")`]. 
+`system.file("run_scripts", package = "fgcz.gsea.ora")`]. 
 The main advantage of docopt is that all tools have to come with a thorough 
 documentation where it is also possible to provide default values. For running 
 GSEA, the command line tool is:

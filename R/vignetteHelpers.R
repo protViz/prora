@@ -1,4 +1,4 @@
-.scriptCopyHelperVec <- function(runscripts, workdir = getwd(), packagename = "fgczgseaora" ){
+.scriptCopyHelperVec <- function(runscripts, workdir = getwd(), packagename = "fgcz.gsea.ora" ){
   res <- NULL
   for(scripts in runscripts){
     src_script <- file.path( find.package(packagename) , scripts )
