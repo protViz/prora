@@ -1,4 +1,19 @@
-# fgczgseaora
+# Installing R package fgcz.gsea.ora
+
+Windows:
+run the following in R:
+
+```
+install.packages("remotes")
+remotes::install_github("protViz/fgcz.gsea.ora")
+```
+
+# fgcz.gsea.ora vignettes:
+
+https://rdrr.io/github/protViz/fgcz.gsea.ora/#vignettes
+
+
+# fgcz.gsea.ora
 running ora or gsea on lists of proteinidentifiers
 
 A plethora of R packages exist on CRAN and Bioconductor to perform over-representation 
@@ -84,4 +99,6 @@ or ad `<fgczgseaora_path>\run_scripts` to the path on linux and execute
 ```
 lfq_2grp_webgestalt_gsea.R --help
 ```
+
+
 
