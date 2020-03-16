@@ -1,0 +1,84 @@
+---
+title: "SIGORA example"
+date: \today
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+library(sigora)
+```
+
+
+
+### How does SIGORA work?
+
+The difference of SIGORA to ORA is that it analyses enrichment of gene pairs instead of individual genes. Usually, genes belong to multiple pathways. However, there are combinations of two genes which are unique for one pathway. Hence, on the level of gene pairs, the relevant pathways can be better identified. For a sigora analysis, two steps are needed:
+
+- Identify the so-called gene pair signatures (unique for one pathway), i.e. a pair of genes with a weight.
+
+- Perform an ORA on these signatures, i.e. determine which pathways are significantly overrepresented (hypergeometric distribution, pay attention to multiple testing).
+
+
+### Example from the SIGORA package description:
+
+The package comes with precomputed GPS-repositories for KEGG human and mouse (kegH and kegM), as well as for Reactome human and mouse (reaH and
+reaM).  
+
+- kegH = Pathway GPS data, extracted from KEGG repository (Human)
+
+- kegM = Pathway GPS data, extracted from KEGG repository (Mouse)
+
+```{r}
+data(kegH)
+## select 50 genes from 3 human KEGG pathways
+a1 <- genesFromRandomPathways(seed=12345, kegH, 3, 50)
+## the genes are
+a1[["genes"]]
+## sigora analyis (for saving results: saveFile = "myResultsKEGG.csv")
+sigoraRes <- sigora(GPSrepo = kegH, queryList = a1[["genes"]], level = 4)
+## Again, the three originally selected pathways were:
+a1[["selectedPathways"]]
+## Genes related to the second most significant result:
+getGenes(sigoraRes,2)
+## Traditional ora identifies dozens of statistically significant pathways!
+oraRes <- ora(a1[["genes"]], kegH)
+dim(oraRes)
+```
+
+In the SIGORA analysis, only 2 pathways are significant. More precisely, 2 of the 3 randomly selected pathways in the query list.
+
+In the ORA analysis, 62 pathways are significant. Why does the ORA analysis identify more than the 3 pathways of interest as significant?
+
+
+### Only for human and mouse? Only certain repositories?
+
+The package provides a function for creating GPS-repositories from user’s
+own gene-function repository of choice (example Gene Ontology Biological Processes).
+
+NOTE: This function relies on package slam, which should be installed from CRAN. It is fairly memory intensive, and it is recommended to be run on a machine with at least 6GB of RAM. Also, make sure to save and reuse the resulting GPS repository in future analyses!
+
+- nciTable = NCI human gene-pathway associations (nciTable is a dataframe
+with 3 columns corresponding to pathwayId, pathwayName and gene)
+
+```{r}
+data(nciTable)
+## what does the input look like?
+head(nciTable)
+## create a SigObject.
+## for future reuse: saveFile='nciH.rda'
+nciH <- makeGPS(pathwayTable = nciTable)
+ils <- grep("^IL", idmap[, "Symbol"], value = TRUE)
+ilnci <- sigora(queryList = ils, GPSrepo = nciH, level=3)
+```
+
+5 pathways significant.
+
+It did not take long... (around 1 sec)!?
+
+Does makeGPS work for dog or pig?
+
+
+
+Maybe idmap (when it is needed) does only work for human and mouse?
+
+
