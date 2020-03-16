@@ -31,7 +31,6 @@ The fold change estimates for all contrast of all the proteins are used to perfo
 
 
 ```{r cars}
-print("AAAAAA")
 tmp <- unlist(params$GSEA, recursive = FALSE)
 make_gsea_path <- function(x){
   res <- c(contrast = x$fpath,
