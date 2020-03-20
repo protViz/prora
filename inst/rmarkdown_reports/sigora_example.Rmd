@@ -6,20 +6,23 @@ output: pdf_document
 
 ```{r setup, include=FALSE}
 library(sigora)
+library(fgcz.gsea.ora)
+library(readxl)
 ```
 
 
 
-### How does SIGORA work?
+## How does SIGORA work?
 
 The difference of SIGORA to ORA is that it analyses enrichment of gene pairs instead of individual genes. Usually, genes belong to multiple pathways. However, there are combinations of two genes which are unique for one pathway. Hence, on the level of gene pairs, the relevant pathways can be better identified. For a sigora analysis, two steps are needed:
 
-- Identify the so-called gene pair signatures (unique for one pathway), i.e. a pair of genes with a weight.
+\begin{enumerate}
+\item Identify the so-called gene pair signatures (unique for one pathway), \emph{i.e.} a pair of genes with a weight.
+\item Perform an ORA on these signatures, \emph{i.e.} determine which pathways are significantly overrepresented (hypergeometric distribution, pay attention to multiple testing).
+\end{enumerate}
 
-- Perform an ORA on these signatures, i.e. determine which pathways are significantly overrepresented (hypergeometric distribution, pay attention to multiple testing).
 
-
-### Example from the SIGORA package description:
+## Example from the SIGORA package description (step 2)
 
 The package comes with precomputed GPS-repositories for KEGG human and mouse (kegH and kegM), as well as for Reactome human and mouse (reaH and
 reaM).  
@@ -47,15 +50,26 @@ dim(oraRes)
 
 In the SIGORA analysis, only 2 pathways are significant. More precisely, 2 of the 3 randomly selected pathways in the query list.
 
-In the ORA analysis, 62 pathways are significant. Why does the ORA analysis identify more than the 3 pathways of interest as significant?
+In the ORA analysis, 62 pathways are significant.
+
+\textbf{Question:} Why does the ORA analysis identify more than the 3 pathways of interest as significant?
 
 
-### Only for human and mouse? Only certain repositories?
+## Create the GPS repository (step 1)
 
-The package provides a function for creating GPS-repositories from user’s
-own gene-function repository of choice (example Gene Ontology Biological Processes).
+The package provides a function makeGPS() to create a GPS repository from the user's repository of choice, \emph{e.g.} Gene Ontology Biological Processes. The repository format should be a tab delimited file or a datafrane with three columns ordered \textbf{PathwayID, PathwayName, Gene}. The function makeGPS() identifies GPSs and PUGs. 
 
-NOTE: This function relies on package slam, which should be installed from CRAN. It is fairly memory intensive, and it is recommended to be run on a machine with at least 6GB of RAM. Also, make sure to save and reuse the resulting GPS repository in future analyses!
+Note: This function relies on package slam, which should be installed from CRAN. It is fairly memory intensive, and it is recommended to be run on a machine with at least 6GB of RAM. Also, make sure to save and reuse the resulting GPS repository in future analyses!
+
+The following functions from package slam are used: 
+
+- slam::simple_triplet_matrix
+
+- slam::tcrossprod_simple_triplet_matrix
+
+The first creates a sparse matrix and the second is used to compute the cross-product for sparse matrices (faster implementation).
+
+Consider now an example from the SIGORA package description to see how makeGPS() can be used.
 
 - nciTable = NCI human gene-pathway associations (nciTable is a dataframe
 with 3 columns corresponding to pathwayId, pathwayName and gene)
@@ -75,9 +89,60 @@ ilnci <- sigora(queryList = ils, GPSrepo = nciH, level=3)
 
 It did not take long... (around 1 sec)!?
 
+
+## ID mapping and assignment to geneset
+
+The package SIGORA can work with Ensembl gene IDs, Entrez gene IDs and Gene Symbols (HGNC/ MGI). You would then load the querylist as follows:
+
+- myquerylist <- ens_converter(scan(‘myfile.txt’, what = ‘character’))
+
+- myquerylist <- entrez_converter(scan(‘myfile.txt’))
+
+The GPS repository and the genelist can have any of those three identifiers and they will be mapped via idmap if not the same identifier is used.
+
+In the following, we try different ID mappings.
+
+```{r}
+## Example data
+dog <- read_excel("../sampleData/CanisLupus.xlsx")
+yeast <- read_excel("../sampleData/YEAST_Example.xlsx")
+
+## bring it to the right format
+d <- dog[, c("top_protein", "estimate")]
+colnames(d) <- c("protein_Id", "estimate")
+head(d)
+y <- yeast[, c("TopProteinName", "pseudo.log2FC")]
+colnames(y) <- c("protein_Id", "estimate")
+head(y)
+
+## FASTA header --> Uniprot
+d_uniprot <- fgcz.gsea.ora::get_UniprotID_from_fasta_header(d)
+head(d_uniprot)
+nrow(d) - nrow(d_uniprot) # is 0 but we have NAs so we lost some?
+# we lost
+length(which(is.na(d_uniprot$UniprotID)))
+
+y_uniprot <- fgcz.gsea.ora::get_UniprotID_from_fasta_header(y)
+head(y_uniprot)
+nrow(y) - nrow(y_uniprot) # is 0 but we have NAs so we lost some?
+# we lost
+length(which(is.na(y_uniprot$UniprotID)))
+```
+
+\textbf{Question:} Why does the fgcz.gsea.ora vignette say that $0$ genes are lost when mapping FASTA header to Uniprot IDs? One can check that there are NAs, so maybe comparing number of rows is not the correct way to identify lost IDs..?
+
+Note: Creating a GPS repository from the GO repository using the function makeGPS_wrappR() indeed does not work using the Uniprot IDs for these dog and yeast datasets.
+
+\textbf{Question:} We should try with makeGPS(). How can we bring the yeast and dog datasets in the right format for this function? We would need the columns \textbf{PathwayID, PathwayName, Gene}, Gene possibly as Ensembl IDs (not sure).
+
+\textbf{Question:} The vignette shows that sigora works with Uniprot IDs. Why is that so? From reading the package description, it looks like it works only for Ensembl IDs, Entrez IDs and Gene Symbols.
+
+
+## Only for human and mouse? Only certain repositories?
+
+For repositories, there should be no limitation. At least that is what the package description of SIGORA says.
+
 Does makeGPS work for dog or pig?
-
-
 
 Maybe idmap (when it is needed) does only work for human and mouse?
 
