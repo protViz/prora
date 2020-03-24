@@ -12,7 +12,7 @@ results.
 `fgcz.gsea.ora` primarily consists of wrapper functions around the 
 `r CRANpkg("sigora")` and `r CRANpkg("WebGestaltR")` packages from CRAN and 
 `r CRANpkg("rmarkdown")` based reports for visualisation and contextualisation 
-of analysis results.
+of analysis results. 
 
 # 1. Future plans
 
