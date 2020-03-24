@@ -31,49 +31,44 @@ of analysis results.
 
 # 3. Installation guide:
 
-## 3.1 **Windows:**
+# 3.1 Dependancies
+
+Run the following lines in R to make sure all required ackages are installed
+
+```
+list_of_packages <- c("AnnotationDbi", "BiocStyle", "dplyr", "DT", "ggplot2", "GO.db", "httr", "magritrr", "org.Hs.eg.db", "reactome.db", "readr", "rlang", "S4Vectors", "sigora", "slam", "tibble", "tidyr", "tidyverse", "UpSetR")
+
+new_packages <- list_of_packages[!(list_of_packages %in% installed.packages()[,"Package"])]
+if(length(new_packages)) install.packages(new_packages)
+```
+
+## 3.2 **Windows:**
 
 Run the following in R:
 
 ```
-install.packages("devtools")
-library(devtools)
-devtools::install_github("protViz/fgcz.gsea.ora", build_vignettes = FALSE)
+install.packages("remotes")
+library(remotes)
+remotes::install_github("protViz/fgcz.gsea.ora", build_vignettes = FALSE)
 ```
+
 For installing package together with vignettes run:
-
 ```
-devtools::install_github("protViz/fgcz.gsea.ora", build_opts = c("--no-resave-data", "--no-manual"), build_vignettes = TRUE)
+remotes::install_github("protViz/fgcz.gsea.ora", build_opts = c("--no-resave-data", "--no-manual"), build_vignettes = TRUE)
 ```
-## 3.2 Dependancies
 
-Required R packages:
-
-    AnnotationDbi,
-    BiocStyle,
-    dplyr,
-    DT,
-    ggplot2,
-    GO.db,
-    httr,
-    magrittr,
-    org.Hs.eg.db,
-    reactome.db,
-    readr,
-    rlang,
-    S4Vectors,
-    sigora,
-    slam,
-    tibble,
-    tidyr,
-    tidyverse,
-    UpSetR
 
 # 4. Vignettes
 
-Vignettes can also be found here:
+See fgcz.gsea.ora vignette:
 
-https://rdrr.io/github/protViz/fgcz.gsea.ora/#vignettes
+```
+vignette("fgcz.gsea.ora")
+```
+
+Vignette can also be found here:
+
+https://rdrr.io/github/protViz/fgcz.gsea.ora/f/vignettes/vignette.Rmd
 
 
 
