@@ -8,6 +8,8 @@ output: pdf_document
 library(sigora)
 library(fgcz.gsea.ora)
 library(readxl)
+library(UpSetR)
+library(msigdbr)
 ```
 
 
@@ -29,30 +31,34 @@ reaM).
 
 - kegH = Pathway GPS data, extracted from KEGG repository (Human)
 
-- kegM = Pathway GPS data, extracted from KEGG repository (Mouse)
-
 ```{r}
+## example data
 data(kegH)
 ## select 50 genes from 3 human KEGG pathways
-a1 <- genesFromRandomPathways(seed=12345, kegH, 3, 50)
+a <- genesFromRandomPathways(seed=12345, kegH, 3, 50)
 ## the genes are
-a1[["genes"]]
+a[["genes"]]
+
 ## sigora analyis (for saving results: saveFile = "myResultsKEGG.csv")
-sigoraRes <- sigora(GPSrepo = kegH, queryList = a1[["genes"]], level = 4)
-## Again, the three originally selected pathways were:
-a1[["selectedPathways"]]
-## Genes related to the second most significant result:
-getGenes(sigoraRes,2)
-## Traditional ora identifies dozens of statistically significant pathways!
-oraRes <- ora(a1[["genes"]], kegH)
-dim(oraRes)
+sigoraRes <- sigora(GPSrepo = kegH, queryList = a[["genes"]], level = 4)
+## again, the three originally selected pathways were:
+a[["selectedPathways"]]
+## genes related to the second most significant result:
+getGenes(sigoraRes, 2)
+## number of genes related to the most significant result:
+nrow(getGenes(sigoraRes, 1))
+## traditional ora identifies dozens of statistically significant pathways!
+oraRes <- ora(a[["genes"]], kegH)
+nrow(oraRes)
+## first 10 pathways:
+oraRes[1:10,]
 ```
 
 In the SIGORA analysis, only 2 pathways are significant. More precisely, 2 of the 3 randomly selected pathways in the query list.
 
-In the ORA analysis, 62 pathways are significant.
+In the ORA analysis, 62 pathways are significant. This is because genes belong to multiple pathways but gene pairs are more unique and identify the relevant pathways better.
 
-\textbf{Question:} Why does the ORA analysis identify more than the 3 pathways of interest as significant?
+\textbf{Question:} How can I make an UpSet plot for the ORA analysis? I would need the set of genes involved in each pathway.
 
 
 ## Create the GPS repository (step 1)
@@ -69,73 +75,177 @@ The following functions from package slam are used:
 
 The first creates a sparse matrix and the second is used to compute the cross-product for sparse matrices (faster implementation).
 
-Consider now an example from the SIGORA package description to see how makeGPS() can be used.
+Consider now an example from the SIGORA package description to see how makeGPS() can be used. Note that sigora::idmap is a table with Ensembl IDs, Entrez IDs and Symbols for human and mouse.
 
-- nciTable = NCI human gene-pathway associations (nciTable is a dataframe
-with 3 columns corresponding to pathwayId, pathwayName and gene)
+- nciTable = National cancer instiute (NCI) human gene-pathway associations
 
 ```{r}
+## example data
 data(nciTable)
-## what does the input look like?
 head(nciTable)
-## create a SigObject.
-## for future reuse: saveFile='nciH.rda'
+
+## create a GPS repository (for future reuse: saveFile='nciH.rda')
 nciH <- makeGPS(pathwayTable = nciTable)
+## set up a gene list by finding all words starting with IL... 
+## in the Symbol column in idmap
 ils <- grep("^IL", idmap[, "Symbol"], value = TRUE)
-ilnci <- sigora(queryList = ils, GPSrepo = nciH, level=3)
+## sigora analysis
+ilnci <- sigora(GPSrepo = nciH, queryList = ils, level = 3)
 ```
 
-5 pathways significant.
-
-It did not take long... (around 1 sec)!?
+5 pathways significant. It did not take long (around 1 sec).
 
 
-## ID mapping and assignment to geneset
+\newpage
+## ID mapping
 
-The package SIGORA can work with Ensembl gene IDs, Entrez gene IDs and Gene Symbols (HGNC/ MGI). You would then load the querylist as follows:
+The package SIGORA works for Ensembl IDs, Entrez IDs and Gene Symbols (HGNC/ MGI). The GPS repository and the gene list can have any of those three identifiers and they will be mapped via idmap if not the same identifier is used. You can load the querylist as follows:
 
 - myquerylist <- ens_converter(scan(‘myfile.txt’, what = ‘character’))
 
 - myquerylist <- entrez_converter(scan(‘myfile.txt’))
 
-The GPS repository and the genelist can have any of those three identifiers and they will be mapped via idmap if not the same identifier is used.
-
 In the following, we try different ID mappings.
 
+
+### Parsing FASTA headers to Uniprot IDs
+
 ```{r}
-## Example data
+## example data
 dog <- read_excel("../sampleData/CanisLupus.xlsx")
 yeast <- read_excel("../sampleData/YEAST_Example.xlsx")
 
 ## bring it to the right format
 d <- dog[, c("top_protein", "estimate")]
 colnames(d) <- c("protein_Id", "estimate")
-head(d)
 y <- yeast[, c("TopProteinName", "pseudo.log2FC")]
 colnames(y) <- c("protein_Id", "estimate")
-head(y)
 
 ## FASTA header --> Uniprot
+
 d_uniprot <- fgcz.gsea.ora::get_UniprotID_from_fasta_header(d)
 head(d_uniprot)
 nrow(d) - nrow(d_uniprot) # is 0 but we have NAs so we lost some?
 # we lost
-length(which(is.na(d_uniprot$UniprotID)))
+sum(is.na(d_uniprot$UniprotID))
 
 y_uniprot <- fgcz.gsea.ora::get_UniprotID_from_fasta_header(y)
 head(y_uniprot)
 nrow(y) - nrow(y_uniprot) # is 0 but we have NAs so we lost some?
 # we lost
-length(which(is.na(y_uniprot$UniprotID)))
+sum(is.na(y_uniprot$UniprotID))
 ```
 
 \textbf{Question:} Why does the fgcz.gsea.ora vignette say that $0$ genes are lost when mapping FASTA header to Uniprot IDs? One can check that there are NAs, so maybe comparing number of rows is not the correct way to identify lost IDs..?
 
-Note: Creating a GPS repository from the GO repository using the function makeGPS_wrappR() indeed does not work using the Uniprot IDs for these dog and yeast datasets.
-
-\textbf{Question:} We should try with makeGPS(). How can we bring the yeast and dog datasets in the right format for this function? We would need the columns \textbf{PathwayID, PathwayName, Gene}, Gene possibly as Ensembl IDs (not sure).
-
 \textbf{Question:} The vignette shows that sigora works with Uniprot IDs. Why is that so? From reading the package description, it looks like it works only for Ensembl IDs, Entrez IDs and Gene Symbols.
+
+Note: Creating a GPS repository from the GO repository using the function makeGPS_wrappR() does not work using the Uniprot IDs for dog and yeast.
+
+We should try with makeGPS(). For this, we need to bring the yeast and dog datasets in the right format. We would need the columns \textbf{PathwayID, PathwayName, Gene} with Ensembl or Entrez IDs.
+
+Note: The function checkIDmappingEfficiency() does not work for this test data.
+
+
+### Mapping Uniprot IDs to Entrez IDs
+
+```{r}
+## Uniprot --> Entrez
+d_uniprot_entrez <- map_ids_uniprot(d_uniprot, ID_col = "UniprotID")
+# we lost
+sum(is.na(d_uniprot_entrez$P_ENTREZGENEID))
+# of
+nrow(d_uniprot_entrez)
+
+y_uniprot_entrez <- map_ids_uniprot(y_uniprot, ID_col = "UniprotID")
+# we lost
+sum(is.na(y_uniprot_entrez$P_ENTREZGENEID))
+# of
+nrow(y_uniprot_entrez)
+```
+
+
+### Use the MSigDB table for creating a GPS repository
+
+```{r}
+## what species are there?
+#msigdbr_show_species()
+
+## example tables
+msig_d <- msigdbr(species = "Canis lupus familiaris")
+nrow(msig_d)
+msig_y <- msigdbr(species = "Saccharomyces cerevisiae")
+nrow(msig_y)
+
+
+## create a pathway table
+## make it compatible
+colnames(d_uniprot_entrez) <- 
+  c("UniprotID", "entrez_gene", "protein_Id", "estimate")
+d_uniprot_entrez$entrez_gene <- as.integer(d_uniprot_entrez$entrez_gene)
+colnames(y_uniprot_entrez) <- 
+  c("UniprotID", "entrez_gene", "protein_Id", "estimate")
+y_uniprot_entrez$entrez_gene <- as.integer(y_uniprot_entrez$entrez_gene)
+## join
+msig_d <- dplyr::inner_join(d_uniprot_entrez, msig_d, by = "entrez_gene")
+msig_y <- dplyr::inner_join(y_uniprot_entrez, msig_y, by = "entrez_gene")
+## bring it to the right format for makeGPS()
+msig_dTable <- msig_d[, c("gs_id", "gs_name", "entrez_gene")]
+colnames(msig_dTable) <- c("PathwayID", "PathwayName", "Gene")
+msig_yTable <- msig_y[, c("gs_id", "gs_name", "entrez_gene")]
+colnames(msig_yTable) <- c("PathwayID", "PathwayName", "Gene")
+
+## create a GPS repository
+msigD <- makeGPS(pathwayTable = msig_dTable)
+msigY <- makeGPS(pathwayTable = msig_yTable)
+
+## sigora analysis
+res_d <- sigora(GPSrepo = msigD, 
+                queryList = d_uniprot_entrez$entrez_gene, 
+                level = 4)
+res_y <- sigora(GPSrepo = msigY, 
+                queryList = y_uniprot_entrez$entrez_gene, 
+                level = 4)
+```
+
+The SIGORA analysis gives no (significant) results.
+
+\textbf{Question:} Is this because idmap cannot be used to map Entrez IDs? That would mean we need such an idmap table for dog and yeast.
+
+
+### Try the mapping procedure with test data from the package
+
+```{r}
+## example data
+data("exampleContrastData")
+dd <- fgcz.gsea.ora::get_UniprotID_from_fasta_header(exampleContrastData)
+dd <- map_ids_uniprot(dd, ID_col = "UniprotID")
+colnames(dd) <- c("UniprotID", "entrez_gene", "protein_Id", "estimate")
+dd$entrez_gene <- as.integer(dd$entrez_gene)
+
+## pathway table
+msig_h <- msigdbr(species = "Homo sapiens")
+msig_hTable <- dplyr::inner_join(dd, msig_h, by = "entrez_gene")
+msig_hTable <- msig_hTable[, c("gs_id", "gs_name", "entrez_gene")]
+colnames(msig_hTable) <- c("PathwayID", "PathwayName", "Gene")
+
+## GPS repository
+msigH <- makeGPS(pathwayTable = msig_hTable)
+
+## sigora analysis
+## trick to use sigoraWrappR
+colnames(dd) <- c("a", "UniprotID", "protein_Id", "estimate")
+res <- sigoraWrappR(data = dd,
+                    threshold = 0.2,
+                    score_col = "estimate",
+                    GPSrepos = msigH,
+                    greater_than = TRUE)
+res_h <- sigora(GPSrepo = msigH, queryList = dd$UniprotID, level = 4)
+```
+
+Still, no result..
+
+\textbf{Question:} sigoraWrappR() uses the estimates, sigora() does not. What does sigora() do without estimates/ fold changes??
 
 
 ## Only for human and mouse? Only certain repositories?
