@@ -116,24 +116,24 @@ dog <- read_excel("../sampleData/CanisLupus.xlsx")
 yeast <- read_excel("../sampleData/YEAST_Example.xlsx")
 
 ## bring it to the right format
-d <- dog[, c("top_protein", "estimate")]
-colnames(d) <- c("protein_Id", "estimate")
-y <- yeast[, c("TopProteinName", "pseudo.log2FC")]
-colnames(y) <- c("protein_Id", "estimate")
+dog <- dog[, c("top_protein", "estimate")]
+colnames(dog) <- c("protein_Id", "estimate")
+yeast <- yeast[, c("TopProteinName", "pseudo.log2FC")]
+colnames(yeast) <- c("protein_Id", "estimate")
 
 ## FASTA header --> Uniprot
 
-d_uniprot <- fgcz.gsea.ora::get_UniprotID_from_fasta_header(d)
-head(d_uniprot)
-nrow(d) - nrow(d_uniprot) # is 0 but we have NAs so we lost some?
+dog_uniprot <- fgcz.gsea.ora::get_UniprotID_from_fasta_header(dog)
+head(dog_uniprot)
+nrow(dog) - nrow(dog_uniprot) # is 0 but we have NAs so we lost some?
 # we lost
-sum(is.na(d_uniprot$UniprotID))
+sum(is.na(dog_uniprot$UniprotID))
 
-y_uniprot <- fgcz.gsea.ora::get_UniprotID_from_fasta_header(y)
-head(y_uniprot)
-nrow(y) - nrow(y_uniprot) # is 0 but we have NAs so we lost some?
+yeast_uniprot <- fgcz.gsea.ora::get_UniprotID_from_fasta_header(yeast)
+head(yeast_uniprot)
+nrow(yeast) - nrow(yeast_uniprot) # is 0 but we have NAs so we lost some?
 # we lost
-sum(is.na(y_uniprot$UniprotID))
+sum(is.na(yeast_uniprot$UniprotID))
 ```
 
 \textbf{Question:} Why does the fgcz.gsea.ora vignette say that $0$ genes are lost when mapping FASTA header to Uniprot IDs? One can check that there are NAs, so maybe comparing number of rows is not the correct way to identify lost IDs..?
@@ -151,17 +151,17 @@ Note: The function checkIDmappingEfficiency() does not work for this test data.
 
 ```{r}
 ## Uniprot --> Entrez
-d_uniprot_entrez <- map_ids_uniprot(d_uniprot, ID_col = "UniprotID")
+dog_uniprot_entrez <- map_ids_uniprot(dog_uniprot, ID_col = "UniprotID")
 # we lost
-sum(is.na(d_uniprot_entrez$P_ENTREZGENEID))
+sum(is.na(dog_uniprot_entrez$P_ENTREZGENEID))
 # of
-nrow(d_uniprot_entrez)
+nrow(dog_uniprot_entrez)
 
-y_uniprot_entrez <- map_ids_uniprot(y_uniprot, ID_col = "UniprotID")
+yeast_uniprot_entrez <- map_ids_uniprot(yeast_uniprot, ID_col = "UniprotID")
 # we lost
-sum(is.na(y_uniprot_entrez$P_ENTREZGENEID))
+sum(is.na(yeast_uniprot_entrez$P_ENTREZGENEID))
 # of
-nrow(y_uniprot_entrez)
+nrow(yeast_uniprot_entrez)
 ```
 
 
@@ -172,51 +172,77 @@ nrow(y_uniprot_entrez)
 #msigdbr_show_species()
 
 ## example tables
-msig_d <- msigdbr(species = "Canis lupus familiaris")
-nrow(msig_d)
-msig_y <- msigdbr(species = "Saccharomyces cerevisiae")
-nrow(msig_y)
+## from GO category and subcategories BP and MF
+msig_dog <- msigdbr(species = "Canis lupus familiaris", 
+                    category = "C5", 
+                    subcategory = "BP")
+nrow(msig_dog)
+
+msig_yeast <- msigdbr(species = "Saccharomyces cerevisiae", 
+                      category = "C5", 
+                      subcategory = "MF")
+nrow(msig_yeast)
 
 
 ## create a pathway table
 ## make it compatible
-colnames(d_uniprot_entrez) <- 
+colnames(dog_uniprot_entrez) <-
   c("UniprotID", "entrez_gene", "protein_Id", "estimate")
-d_uniprot_entrez$entrez_gene <- as.integer(d_uniprot_entrez$entrez_gene)
-colnames(y_uniprot_entrez) <- 
+dog_uniprot_entrez$entrez_gene <-
+  as.integer(dog_uniprot_entrez$entrez_gene)
+
+colnames(yeast_uniprot_entrez) <-
   c("UniprotID", "entrez_gene", "protein_Id", "estimate")
-y_uniprot_entrez$entrez_gene <- as.integer(y_uniprot_entrez$entrez_gene)
+yeast_uniprot_entrez$entrez_gene <-
+  as.integer(yeast_uniprot_entrez$entrez_gene)
 ## join
-msig_d <- dplyr::inner_join(d_uniprot_entrez, msig_d, by = "entrez_gene")
-msig_y <- dplyr::inner_join(y_uniprot_entrez, msig_y, by = "entrez_gene")
+msig_dog <- dplyr::inner_join(dog_uniprot_entrez, msig_dog, 
+                              by = "entrez_gene")
+# we lost
+nrow(dog_uniprot_entrez) -
+  sum(is.na(dog_uniprot_entrez$entrez_gene)) -
+  dim(table(msig_dog$entrez_gene))
+
+msig_yeast <- dplyr::inner_join(yeast_uniprot_entrez, msig_yeast, 
+                                by = "entrez_gene")
+# we lost
+nrow(yeast_uniprot_entrez) -
+  sum(is.na(yeast_uniprot_entrez$entrez_gene)) -
+  dim(table(msig_yeast$entrez_gene))
 ## bring it to the right format for makeGPS()
-msig_dTable <- msig_d[, c("gs_id", "gs_name", "entrez_gene")]
-colnames(msig_dTable) <- c("PathwayID", "PathwayName", "Gene")
-msig_yTable <- msig_y[, c("gs_id", "gs_name", "entrez_gene")]
-colnames(msig_yTable) <- c("PathwayID", "PathwayName", "Gene")
+msig_dogTable <- msig_dog[, c("gs_id", "gs_name", "entrez_gene")]
+colnames(msig_dogTable) <- c("PathwayID", "PathwayName", "Gene")
+
+msig_yeastTable <- msig_yeast[, c("gs_id", "gs_name", "entrez_gene")]
+colnames(msig_yeastTable) <- c("PathwayID", "PathwayName", "Gene")
 
 ## create a GPS repository
-msigD <- makeGPS(pathwayTable = msig_dTable)
-msigY <- makeGPS(pathwayTable = msig_yTable)
+msigDog <- makeGPS(pathwayTable = msig_dogTable)
+msigYeast <- makeGPS(pathwayTable = msig_yeastTable)
+
+## set up the query list
+listDog <- genesFromRandomPathways(seed=12345, msigDog, 3, 50)
+listYeast <- genesFromRandomPathways(seed=12345, msigYeast, 3, 50)
+## the genes are
+listDog[["genes"]]
+listYeast[["genes"]]
 
 ## sigora analysis
-res_d <- sigora(GPSrepo = msigD, 
-                queryList = d_uniprot_entrez$entrez_gene, 
+res_d <- sigora(GPSrepo = msigDog, 
+                queryList = listDog[["genes"]], 
                 level = 4)
-res_y <- sigora(GPSrepo = msigY, 
-                queryList = y_uniprot_entrez$entrez_gene, 
+res_y <- sigora(GPSrepo = msigYeast, 
+                queryList = listYeast[["genes"]], 
                 level = 4)
 ```
 
-The SIGORA analysis gives no (significant) results.
-
-\textbf{Question:} Is this because idmap cannot be used to map Entrez IDs? That would mean we need such an idmap table for dog and yeast.
+The SIGORA analysis returns three enriched pathways for dog and four enriched pathways for yeast.
 
 
 ### Try the mapping procedure with test data from the package
 
 ```{r}
-## example data
+## example data --> Uniprot --> Entrez
 data("exampleContrastData")
 dd <- fgcz.gsea.ora::get_UniprotID_from_fasta_header(exampleContrastData)
 dd <- map_ids_uniprot(dd, ID_col = "UniprotID")
@@ -224,7 +250,9 @@ colnames(dd) <- c("UniprotID", "entrez_gene", "protein_Id", "estimate")
 dd$entrez_gene <- as.integer(dd$entrez_gene)
 
 ## pathway table
-msig_h <- msigdbr(species = "Homo sapiens")
+msig_h <- msigdbr(species = "Homo sapiens", 
+                  category = "C5", 
+                  subcategory = "BP")
 msig_hTable <- dplyr::inner_join(dd, msig_h, by = "entrez_gene")
 msig_hTable <- msig_hTable[, c("gs_id", "gs_name", "entrez_gene")]
 colnames(msig_hTable) <- c("PathwayID", "PathwayName", "Gene")
@@ -233,17 +261,19 @@ colnames(msig_hTable) <- c("PathwayID", "PathwayName", "Gene")
 msigH <- makeGPS(pathwayTable = msig_hTable)
 
 ## sigora analysis
-## trick to use sigoraWrappR
+# trick to use sigoraWrappR
 colnames(dd) <- c("a", "UniprotID", "protein_Id", "estimate")
-res <- sigoraWrappR(data = dd,
-                    threshold = 0.2,
-                    score_col = "estimate",
-                    GPSrepos = msigH,
-                    greater_than = TRUE)
-res_h <- sigora(GPSrepo = msigH, queryList = dd$UniprotID, level = 4)
+res_h_wrapp <- sigoraWrappR(data = dd,
+                            threshold = 0.2,
+                            score_col = "estimate",
+                            GPSrepos = msigH,
+                            greater_than = TRUE)
+# directly with sigora
+listHuman <- genesFromRandomPathways(seed=12345, msigH, 3, 50)
+res_h <- sigora(GPSrepo = msigH, 
+                queryList = listHuman[["genes"]], 
+                level = 4)
 ```
-
-Still, no result..
 
 \textbf{Question:} sigoraWrappR() uses the estimates, sigora() does not. What does sigora() do without estimates/ fold changes??
 
