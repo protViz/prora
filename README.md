@@ -1,104 +1,75 @@
-# Installing R package fgcz.gsea.ora
-
-Windows:
-run the following in R:
-
-```
-install.packages("remotes")
-remotes::install_github("protViz/fgcz.gsea.ora")
-```
-
-# fgcz.gsea.ora vignettes:
-
-https://rdrr.io/github/protViz/fgcz.gsea.ora/#vignettes
-
-
 # fgcz.gsea.ora
-running ora or gsea on lists of proteinidentifiers
+
+An R package for running enrichment analysis.  
 
 A plethora of R packages exist on CRAN and Bioconductor to perform over-representation 
 analysis (ORA) and gene set enrichment analysis (GSEA). However, consistency in the 
 underlying nomenclature for specific analyses and user friendly implementation is 
-still lacking. `fgczgseaora` aims at unifying ID mapping and enrichment analysis 
+still lacking. `fgcz.gsea.ora` aims at unifying ID mapping and enrichment analysis 
 in a syntactically coherent and intuitive way, while ensuring reproducibility of 
-results. `fgczgseaora` primarily consists of wrapper functions around the 
+results. 
+
+`fgcz.gsea.ora` primarily consists of wrapper functions around the 
 `r CRANpkg("sigora")` and `r CRANpkg("WebGestaltR")` packages from CRAN and 
 `r CRANpkg("rmarkdown")` based reports for visualisation and contextualisation 
-of analysis results.
-Plans for the future include the integration of the R packages `r Biocpkg(topGo)` and of the `r CRANpkg("enrichr")`.
-as well as providing executable R script files which can be run on windows or linux (experimental):
+of analysis results. 
 
-# Webgestalt ORA
+# 1. Future plans
 
-```
-PS >  Rscript <fgczgseaora_path>\run_scripts\lfq_2grp_webgestalt_ora.R --help
+1) Integration of the R packages `r Biocpkg(topGo)` and  `r CRANpkg("enrichr")`
+2) Providing executable R script files, which can be run on windows or linux.
 
-WebGestaltR ORA
+# 2. System requirements
 
-Usage:
-  test.R <grp2file> [--organism=<organism>] [--outdir=<outdir>] [--log2fc=<log2fc>] [--is_greater=<is_greater>] [--nperm=<nperm>] [--ID_col=<ID_col>] [--fc_col=<fc_col>]
-
-Options:
-  -o --organism=<organism> organism [default: hsapiens]
-  -r --outdir=<outdir> output directory [default: results_ora]
-  -t --log2fc=<log2fc> fc threshold [default: 1]
-  -g --is_greater=<is_greater> is greater than log2fc [default: TRUE]
-  -n --nperm=<nperm> number of permutations to calculate enrichment scores [default: 50]
-  -i --ID_col=<ID_col> Column containing the UniprotIDs [default: TopProteinName]
-  -f --fc_col=<fc_col> Column containing the estimates [default: log2FC]
-
-Arguments:
-  grp2file  input file
-PS D:\Dropbox\DataAnalysis\fgczgseaora_Test_SRMService_Integration>
-```
+## 2.1 Currently the software have been tested on the following systems
 
 
-Ora analysis for foldchanges greater and smaller than 1.
+| platform | platform version  | R version  |
+--- | --- | --- |
+| Windows  | 10 x64          | R-3.6.2      |
+
+
+# 3. Installation guide:
+
+# 3.1 Dependancies
+
+Run the following lines in R to make sure all required ackages are installed
 
 ```
-Rscript <fgczgseaora_path>\run_scripts\lfq_2grp_webgestalt_ora.R .\data\2Grp_CF_a_vs_CF_b.txt --log2fc=1 --is_greater=TRUE
-Rscript <fgczgseaora_path>\run_scripts\lfq_2grp_webgestalt_ora.R .\data\2Grp_CF_a_vs_CF_b.txt --log2fc=1 --is_greater=FALSE
- 
+list_of_packages <- c("AnnotationDbi", "BiocStyle", "dplyr", "DT", "ggplot2", "GO.db", "httr", "magritrr", "org.Hs.eg.db", "reactome.db", "readr", "rlang", "S4Vectors", "sigora", "slam", "tibble", "tidyr", "tidyverse", "UpSetR")
+
+new_packages <- list_of_packages[!(list_of_packages %in% installed.packages()[,"Package"])]
+if(length(new_packages)) install.packages(new_packages)
 ```
 
-# WebGestaltR GSEA 
+## 3.2 **Windows:**
+
+Run the following in R:
 
 ```
-PS >  Rscript <fgczgseaora_path>\run_scripts\lfq_2grp_webgestalt_gsea.R --help
-WebGestaltR GSEA
+install.packages("remotes")
+library(remotes)
+remotes::install_github("protViz/fgcz.gsea.ora", build_vignettes = FALSE)
+```
 
-Usage:
-  test.R <grp2file> [--organism=<organism>] [--outdir=<outdir>] [--nperm=<nperm>] [--ID_col=<ID_col>] [--fc_col=<fc_col>]
-
-Options:
-  -o --organism=<organism> organism [default: hsapiens]
-  -r --outdir=<outdir> output directory [default: results_gsea]
-  -n --nperm=<nperm> number of permutations to calculate enrichment scores [default: 50]
-  -i --ID_col=<ID_col> Column containing the UniprotIDs [default: TopProteinName]
-  -f --fc_col=<fc_col> Column containing the estimates [default: log2FC]
-
-Arguments:
-  grp2file  input file
-PS D:\Dropbox\DataAnalysis\fgczgseaora_Test_SRMService_Integration>
+For installing package together with vignettes run:
+```
+remotes::install_github("protViz/fgcz.gsea.ora", build_opts = c("--no-resave-data", "--no-manual"), build_vignettes = TRUE)
 ```
 
 
+# 4. Vignettes
+
+See fgcz.gsea.ora vignette:
 
 ```
-PS > Rscript <fgczgseaora_path>\run_scripts\lfq_2grp_webgestalt_gsea.R .\data\2Grp_CF_a_vs_CF_b.txt
+vignette("fgcz.gsea.ora")
 ```
 
-To simplify executing the scripts you can add `<fgczgseaora_path>\win` to the path variable on windows and than execute:
+Vignette can also be found here:
 
-```
-PS > lfq_2grp_webgestalt_gsea.bat --help
-```
+https://rdrr.io/github/protViz/fgcz.gsea.ora/f/vignettes/vignette.Rmd
 
-or ad `<fgczgseaora_path>\run_scripts` to the path on linux and execute
-
-```
-lfq_2grp_webgestalt_gsea.R --help
-```
 
 
 
