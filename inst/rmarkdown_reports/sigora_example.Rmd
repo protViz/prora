@@ -13,23 +13,28 @@ library(msigdbr)
 ```
 
 
+## How does over-representation analysis (ORA) work?
 
-## How does SIGORA work?
+The input is a user-specified list of genes/proteins which are differentially expressed in two experiments. We test whether this list is significantly associated with a pathway or a set of pathways. This analysis depends on the background which is the set of pathways that we consider for this test. The larger the background, the less pathways can be identified as differentially regulated. All genes on the list are treated as equally important. The list contains the genes with estimates/fold changes larger than a certain threshold.
 
-The difference of SIGORA to ORA is that it analyses enrichment of gene pairs instead of individual genes. Usually, genes belong to multiple pathways. However, there are combinations of two genes which are unique for one pathway. Hence, on the level of gene pairs, the relevant pathways can be better identified. For a sigora analysis, two steps are needed:
+As a test, Fisher's exact test is used, which is based on the hypergeometric distribution. One issue is multiple testing since we test multiple pathways. Corrections such as Bonferroni are used.
+
+See further: Lucas Kook, "Pathway Analysis" slides, p. 4, and http://www.nonlinear.com/progenesis/qi/v2.0/faq/should-i-use-enrichment-or-over-representation-analysis-for-pathways-data.aspx
+
+
+## How does signature over-representation analysis (SIGORA) work?
+
+The difference of SIGORA to ORA is that it looks at gene pairs instead of individual genes for the association of genes with pathways. Usually, genes belong to multiple pathways. The probability is a lot higher to find a combination of two genes that is unique for one pathway. Hence, the relevant pathways can be better identified on the level of gene pairs. For a sigora analysis, two steps are needed:
 
 \begin{enumerate}
-\item Identify the so-called gene pair signatures (unique for one pathway), \emph{i.e.} a pair of genes with a weight.
-\item Perform an ORA on these signatures, \emph{i.e.} determine which pathways are significantly overrepresented (hypergeometric distribution, pay attention to multiple testing).
+\item For pathways of a repository, identify the gene pair signatures, \emph{i.e.} weighted pairs of genes that are unique for the given pathway. We call this the gene pair signature repository (GPS repo).
+\item Perform an ORA on these signatures.
 \end{enumerate}
 
 
 ## Example from the SIGORA package description (step 2)
 
-The package comes with precomputed GPS-repositories for KEGG human and mouse (kegH and kegM), as well as for Reactome human and mouse (reaH and
-reaM).  
-
-- kegH = Pathway GPS data, extracted from KEGG repository (Human)
+The package comes with precomputed GPS repositories for KEGG human and mouse (kegH and kegM) and Reactome human and mouse (reaH and reaM).  
 
 ```{r}
 ## example data
@@ -54,11 +59,11 @@ nrow(oraRes)
 oraRes[1:10,]
 ```
 
-In the SIGORA analysis, only 2 pathways are significant. More precisely, 2 of the 3 randomly selected pathways in the query list.
+In the SIGORA analysis, only 2 pathways are identified as significant. More precisely, 2 of the 3 randomly selected pathways in the query list.
 
-In the ORA analysis, 62 pathways are significant. This is because genes belong to multiple pathways but gene pairs are more unique and identify the relevant pathways better.
+In the ORA analysis, 62 pathways are identified as significant. This is because genes belong to multiple pathways but gene pairs are more unique and identify the relevant pathways better.
 
-\textbf{Question:} How can I make an UpSet plot for the ORA analysis? I would need the set of genes involved in each pathway.
+\textbf{Question:} How can an UpSet plot for the ORA analysis be created? It would need the set of genes involved in each pathway.
 
 
 ## Create the GPS repository (step 1)
@@ -75,9 +80,7 @@ The following functions from package slam are used:
 
 The first creates a sparse matrix and the second is used to compute the cross-product for sparse matrices (faster implementation).
 
-Consider now an example from the SIGORA package description to see how makeGPS() can be used. Note that sigora::idmap is a table with Ensembl IDs, Entrez IDs and Symbols for human and mouse.
-
-- nciTable = National cancer instiute (NCI) human gene-pathway associations
+Consider now an example from the SIGORA package description to see how makeGPS() can be used. Note that sigora::idmap is a table with Ensembl IDs, Entrez IDs and Symbols for human and mouse. The data nciTable gives the National cancer instiute (NCI) human gene-pathway associations.
 
 ```{r}
 ## example data
@@ -93,7 +96,9 @@ ils <- grep("^IL", idmap[, "Symbol"], value = TRUE)
 ilnci <- sigora(GPSrepo = nciH, queryList = ils, level = 3)
 ```
 
-5 pathways significant. It did not take long (around 1 sec).
+5 pathways identified as significant. It did not take long (around 1 sec).
+
+\textbf{Question:} Does it find all of the "^IL" pathways?
 
 
 \newpage
@@ -126,19 +131,18 @@ colnames(yeast) <- c("protein_Id", "estimate")
 dog_uniprot <- fgcz.gsea.ora::get_UniprotID_from_fasta_header(dog)
 head(dog_uniprot)
 nrow(dog) - nrow(dog_uniprot) # is 0 but we have NAs so we lost some?
-# we lost
-sum(is.na(dog_uniprot$UniprotID))
+# we lost (in percent)
+100 / nrow(dog) * sum(is.na(dog_uniprot$UniprotID))
 
 yeast_uniprot <- fgcz.gsea.ora::get_UniprotID_from_fasta_header(yeast)
-head(yeast_uniprot)
 nrow(yeast) - nrow(yeast_uniprot) # is 0 but we have NAs so we lost some?
-# we lost
-sum(is.na(yeast_uniprot$UniprotID))
+# we lost (in percent)
+100 / nrow(yeast) * sum(is.na(yeast_uniprot$UniprotID))
 ```
 
 \textbf{Question:} Why does the fgcz.gsea.ora vignette say that $0$ genes are lost when mapping FASTA header to Uniprot IDs? One can check that there are NAs, so maybe comparing number of rows is not the correct way to identify lost IDs..?
 
-\textbf{Question:} The vignette shows that sigora works with Uniprot IDs. Why is that so? From reading the package description, it looks like it works only for Ensembl IDs, Entrez IDs and Gene Symbols.
+\textbf{Question:} The vignette shows that sigora works with Uniprot IDs. Why? From reading the package description, it looks like it works only for Ensembl IDs, Entrez IDs and Gene Symbols.
 
 Note: Creating a GPS repository from the GO repository using the function makeGPS_wrappR() does not work using the Uniprot IDs for dog and yeast.
 
@@ -152,16 +156,18 @@ Note: The function checkIDmappingEfficiency() does not work for this test data.
 ```{r}
 ## Uniprot --> Entrez
 dog_uniprot_entrez <- map_ids_uniprot(dog_uniprot, ID_col = "UniprotID")
-# we lost
-sum(is.na(dog_uniprot_entrez$P_ENTREZGENEID))
-# of
-nrow(dog_uniprot_entrez)
+# we lost additionally to what we lost before (in percent)
+100 / sum(!is.na(dog_uniprot$UniprotID)) * 
+  (sum(is.na(dog_uniprot_entrez$P_ENTREZGENEID)) - sum(is.na(dog_uniprot_entrez$UniprotID)))
+# one to many mapping?
+nrow(dog_uniprot_entrez) - nrow(dog_uniprot)
 
 yeast_uniprot_entrez <- map_ids_uniprot(yeast_uniprot, ID_col = "UniprotID")
-# we lost
-sum(is.na(yeast_uniprot_entrez$P_ENTREZGENEID))
-# of
-nrow(yeast_uniprot_entrez)
+# we lost additionally to what we lost before (in percent)
+100 / sum(!is.na(yeast_uniprot$UniprotID)) *
+  (sum(is.na(yeast_uniprot_entrez$P_ENTREZGENEID)) - sum(is.na(yeast_uniprot_entrez$UniprotID)))
+# one to many mapping?
+nrow(yeast_uniprot_entrez) - nrow(yeast_uniprot)
 ```
 
 
@@ -172,7 +178,7 @@ nrow(yeast_uniprot_entrez)
 #msigdbr_show_species()
 
 ## example tables
-## from GO category and subcategories BP and MF
+## from category GO and subcategory BP
 msig_dog <- msigdbr(species = "Canis lupus familiaris", 
                     category = "C5", 
                     subcategory = "BP")
@@ -180,7 +186,7 @@ nrow(msig_dog)
 
 msig_yeast <- msigdbr(species = "Saccharomyces cerevisiae", 
                       category = "C5", 
-                      subcategory = "MF")
+                      subcategory = "BP")
 nrow(msig_yeast)
 
 
@@ -198,17 +204,15 @@ yeast_uniprot_entrez$entrez_gene <-
 ## join
 msig_dog <- dplyr::inner_join(dog_uniprot_entrez, msig_dog, 
                               by = "entrez_gene")
-# we lost
-nrow(dog_uniprot_entrez) -
-  sum(is.na(dog_uniprot_entrez$entrez_gene)) -
-  dim(table(msig_dog$entrez_gene))
+# we lost (in percent)
+100 / sum(!is.na(dog_uniprot_entrez$entrez_gene)) * 
+  (sum(!is.na(dog_uniprot_entrez$entrez_gene)) - dim(table(msig_dog$entrez_gene)))
 
 msig_yeast <- dplyr::inner_join(yeast_uniprot_entrez, msig_yeast, 
                                 by = "entrez_gene")
-# we lost
-nrow(yeast_uniprot_entrez) -
-  sum(is.na(yeast_uniprot_entrez$entrez_gene)) -
-  dim(table(msig_yeast$entrez_gene))
+# we lost (in percent)
+100 / sum(!is.na(yeast_uniprot_entrez$entrez_gene)) * 
+  (sum(!is.na(yeast_uniprot_entrez$entrez_gene)) - dim(table(msig_yeast$entrez_gene)))
 ## bring it to the right format for makeGPS()
 msig_dogTable <- msig_dog[, c("gs_id", "gs_name", "entrez_gene")]
 colnames(msig_dogTable) <- c("PathwayID", "PathwayName", "Gene")
@@ -236,10 +240,10 @@ res_y <- sigora(GPSrepo = msigYeast,
                 level = 4)
 ```
 
-The SIGORA analysis returns three enriched pathways for dog and four enriched pathways for yeast.
+The SIGORA analysis identifies three pathways for dog (two of which are among the three randomly selected) and three pathways for yeast (none of the randomly selected, however).
 
 
-### Try the mapping procedure with test data from the package
+### Try the mapping procedure with human test data from the package
 
 ```{r}
 ## example data --> Uniprot --> Entrez
@@ -264,7 +268,7 @@ msigH <- makeGPS(pathwayTable = msig_hTable)
 # trick to use sigoraWrappR
 colnames(dd) <- c("a", "UniprotID", "protein_Id", "estimate")
 res_h_wrapp <- sigoraWrappR(data = dd,
-                            threshold = 0.2,
+                            threshold = 0.6,
                             score_col = "estimate",
                             GPSrepos = msigH,
                             greater_than = TRUE)
@@ -275,15 +279,32 @@ res_h <- sigora(GPSrepo = msigH,
                 level = 4)
 ```
 
-\textbf{Question:} sigoraWrappR() uses the estimates, sigora() does not. What does sigora() do without estimates/ fold changes??
+Note: sigoraWrappR() uses the estimates and a threshold to obtain the gene list whereas sigora() needs a precomputed gene list, here randomly selected.
 
 
-## Only for human and mouse? Only certain repositories?
+## Extensions/ Questions
 
-For repositories, there should be no limitation. At least that is what the package description of SIGORA says.
+### Only certain repositories?
+According to the SIGORA package description, there is no limitation regarding repositories.
 
-Does makeGPS work for dog or pig?
+### Only for human and mouse? 
+The function makeGPS works for dog and yeast using MSigDBr.
 
-Maybe idmap (when it is needed) does only work for human and mouse?
+The SIGORA internal idmap (when it is needed) does only work for human and mouse. In the sigora() function, idmap is used only if the following is TRUE:
 
+- length(intersect(queryList, GPSrepo$origRepo[[2]])) == 0
 
+That means, idmap is used when the queryList and the GPSrepo have no intersection. In the three previous examples for dog, yeast and human using MSigDBr, this if statement is FALSE. 
+
+### What does the level argument in the sigora() function mean?
+Some repositories are hierarchical, \emph{e.g.} Reactome and GO. Hierarchical means that a parent pathway contains all the pathways from its children pathways.
+
+If the repository is hierarchical, children pathways would not have GPSs and would therefore not be detected in a sigora analysis. In this case, SIGORA does the GPS finding procedure in several steps, in other words for several levels: 
+
+- Find GPSs for the whole repo, that is for level 1
+
+- Remove level 1 and find GPSs for level 2
+
+- Iterate until the last available level in the hierarchy
+
+The GPS repository for a hierarchical repository then consists of sublists of GPS repositories for all the levels, \emph{e.g.} L1, L2,\dots, L5. Specifying the argument "levels=4" in the sigora() function then corresponds to sigora analyses with the GPS repositories up to level 4.  
