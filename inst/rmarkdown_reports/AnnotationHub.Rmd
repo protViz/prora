@@ -1,0 +1,99 @@
+---
+title: "AnnotationHub"
+author: "Liepa"
+date: "4/02/2020"
+output: pdf_document
+---
+
+Annotation Hub: R package allowing easy and quick retrieval of data from various databases.
+Annotation Hub can be used to easily map between different IDs (Uniport, ENSEMBL, Entrez, etc.) and to map those IDs to GO and KEGG patways.
+
+Package vignettes and manuals:
+
+https://bioconductor.org/help/package-vignettes/
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+```
+
+```{r, quietly = TRUE}
+
+#BiocManager::install("AnnotationHub")
+#BiocManager::install("rtracklayer")
+
+browseVignettes("AnnotationHub")
+```
+
+```{r}
+library(AnnotationHub)
+```
+
+Create AnnotationHub object
+```{r}
+ah <- AnnotationHub()
+```
+
+
+```{r}
+ah
+```
+
+Data providers:
+```{r}
+unique(ah$dataprovider)
+```
+```{r}
+head(unique(ah$species))
+```
+
+Number of accessible different species:
+```{r}
+length(unique(ah$species))
+```
+
+Supported objects:
+```{r}
+unique(ah$rdataclass)
+
+```
+
+
+```{r}
+ah_Hsapiens <- subset(ah, species == "Homo sapiens")
+ah_Hsapiens
+```
+
+Number of species supported in organism database
+```{r}
+orgdb <- query(ah, c("OrgDb", "maintainer@bioconductor.org"))
+length(unique(orgdb$species))
+```
+
+Acessing mouse data from organism database
+```{r}
+orgdb_mouse <- query(ah, c("OrgDb", "maintainer@bioconductor.org", "Mus musculus"))
+orgdb_mouse
+```
+
+Retrieve mouse data
+```{r}
+mouse <- orgdb_mouse[[1]]
+mouse
+```
+Identifiers contained in the database:
+
+```{r}
+keytypes <- keytypes(mouse)
+keytypes
+```
+
+Mapping Entrez IDs to Uniprot IDs and to corressponding gene sets (GO and KEGG pathways):
+```{r}
+# query of IDs
+egid <- keys(mouse, "ENTREZID")
+# select keys of interest
+ids_paths_GO <- select(mouse, egid, c("SYMBOL", "UNIPROT", "GO", "PATH"), "ENTREZID")
+head(ids_paths_GO, 30)
+```
+
