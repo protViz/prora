@@ -71,5 +71,8 @@ Vignette can also be found here:
 https://rdrr.io/github/protViz/fgcz.gsea.ora/f/vignettes/vignette.Rmd
 
 
+Tools to look at.
 
+[https://agotool.org/]
+[https://www.biorxiv.org/content/10.1101/731596v2]
 
