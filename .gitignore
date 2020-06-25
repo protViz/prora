@@ -6,7 +6,6 @@ doc
 .Ruserdata
 .DS_Store
 *.pdf
-*.html
 output/
 Project*/
 GSEA_output/

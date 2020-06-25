@@ -1,8 +1,21 @@
 #!/usr/bin/Rscript
 
+options(warn = -1)
+suppressMessages(library(WebGestaltR))
+suppressMessages(library(tidyverse))
+suppressMessages(library(org.Hs.eg.db))
+suppressMessages(library(sigora))
+suppressMessages(library(GO.db))
+suppressMessages(library(slam))
+suppressMessages(library(fgcz.gsea.ora))
+suppressMessages(library(readr))
+suppressMessages(library(docopt))
+
+
 print(commandArgs(TRUE))
 options(nwarnings = 10000)
 
+doc <-
 "WebGestaltR GSEA for multigroup reports
 
 Usage:
@@ -19,11 +32,10 @@ Options:
 
 Arguments:
   grp2file  input file
-" -> doc
+"
 
-library(docopt)
 
-if(FALSE){
+if (TRUE) {
   args <- c("-e",
             "pseudo_estimate",
             "D:\\Dropbox\\DataAnalysis\\p2109_PEPTIDE_Analysis\\p2109_Diabetes_plaque\\results_modelling_WHO_noSex\\modelling_results_peptide\\foldchange_estimates.xlsx")
@@ -50,26 +62,19 @@ if(FALSE){
   args <- c("D:\\Dropbox\\DataAnalysis\\p2617\\allData.xlsx",
             "--nperm","500","--score_col","log2FC","--contrast","file")
 
+  args <- c("c:/Users/wewol/Dropbox/DataAnalysis/p3328/results_p3328/modelling_results/foldchange_estimates.xlsx",
+            "--nperm","500",
+            "--score_col","pseudo_estimate",
+            "-o", "rnorvegicus")
   #"D:\\Dropbox\\DataAnalysis\\p2109_PEPTIDE_Analysis\\p2109_Diabetes_plaque\\results_modelling_NICE\\modelling_results_peptide\\foldchange_estimates.xlsx")
   #print(args2grp)
   #args2grp
-  opt <- docopt(doc, args = args)
+  opt <- docopt::docopt(doc, args = args)
 }else{
-  opt <- docopt(doc)
+  opt <- docopt::docopt(doc)
 }
 
-# Hack to override systemArgs
-#opt <- docopt(doc, args = "D:\\Dropbox\\DataAnalysis\\p2109_PEPTIDE_Analysis\\p2109_Diabetes_plaque\\results_modelling_WHO\\modelling_results_peptide\\foldchange_estimates.xlsx")
 
-options(warn = -1)
-suppressMessages(library(WebGestaltR))
-suppressMessages(library(tidyverse))
-suppressMessages(library(org.Hs.eg.db))
-suppressMessages(library(sigora))
-suppressMessages(library(GO.db))
-suppressMessages(library(slam))
-suppressMessages(library(fgcz.gsea.ora))
-suppressMessages(library(readr))
 
 
 # Check command args ------------------------------------------------------
@@ -95,7 +100,7 @@ fc_col <- score_col
 
 organisms <- listOrganism(hostName = "http://www.webgestalt.org/", cache = NULL)
 
-if(! organism %in% organisms){
+if (!organism %in% organisms) {
   cat("ERROR !\n")
   cat("Organism : " , organism , "is not in the list of available organisms!")
   cat("List of available orginisms\n")
@@ -105,11 +110,11 @@ if(! organism %in% organisms){
 
 idtypes <- listIdType(organism = organism, hostName = "http://www.webgestalt.org/", cache = NULL)
 
-if(! idtype %in% idtypes){
+if (!idtype %in% idtypes) {
   cat("ERROR !\n")
   cat("idtype : " , idtype , "is not in the list of available idtypes!\n" )
   cat("list of available idtypes?\n")
-  cat(paste(idtypes, collapse="\n"))
+  cat(paste(idtypes, collapse = "\n"))
   stop("ERROR !\n")
 }
 
@@ -118,7 +123,7 @@ if(! idtype %in% idtypes){
 
 result_dir <- paste0(result_dir,"_",format(Sys.time(), '%d%b%Y_%H%M%S'))
 cat("creating dir ", result_dir,"\n")
-if(dir.exists(result_dir)){
+if (dir.exists(result_dir)) {
   unlink(result_dir, recursive = TRUE)
 }
 dir.create(result_dir)
@@ -151,7 +156,7 @@ names(filtered_dd_list) <- contr_names
 
 res <- list()
 
-for(target in target_GSEA)
+for (target in target_GSEA)
 {
   res_contrast <- list()
   for(name in names(filtered_dd_list))

@@ -30,9 +30,9 @@ map_ids_uniprot <- function(data,
 
   url = "https://www.uniprot.org/uploadlists/"
   params = list(
-    from = "ACC+ID",
-    to = "P_ENTREZGENEID",
-    format = "tab",
+    from = from,
+    to = to,
+    format = format,
     query = paste(ids_to_map, collapse = " ")
   )
 
