@@ -62,10 +62,17 @@ if (TRUE) {
   args <- c("D:\\Dropbox\\DataAnalysis\\p2617\\allData.xlsx",
             "--nperm","500","--score_col","log2FC","--contrast","file")
 
-  args <- c("c:/Users/wewol/Dropbox/DataAnalysis/p3328/results_p3328/modelling_results/foldchange_estimates.xlsx",
+  args <- c("c:/Users/wewol/Dropbox/DataAnalysis/p3328/results_p3328_drop002/fixed_effect_model_2params/foldchange_estimates.xlsx",
             "--nperm","500",
             "--score_col","pseudo_estimate",
-            "-o", "rnorvegicus")
+            "-o", "rnorvegicus",
+            "-r", "fixed_effect_model_2params")
+  args <- c("c:/Users/wewol/Dropbox/DataAnalysis/p3328/results_p3328_drop002/mixed_effect_model_protein/foldchange_estimates.xlsx",
+            "--nperm","500",
+            "--score_col","pseudo_estimate",
+            "-o", "rnorvegicus",
+            "-r", "mixed_effect_model_protein")
+
   #"D:\\Dropbox\\DataAnalysis\\p2109_PEPTIDE_Analysis\\p2109_Diabetes_plaque\\results_modelling_NICE\\modelling_results_peptide\\foldchange_estimates.xlsx")
   #print(args2grp)
   #args2grp
@@ -104,7 +111,7 @@ if (!organism %in% organisms) {
   cat("ERROR !\n")
   cat("Organism : " , organism , "is not in the list of available organisms!")
   cat("List of available orginisms\n")
-  cat( paste(organisms, collapse="\n") )
+  cat( paste(organisms, collapse = "\n") )
   stop("ERROR !\n" )
 }
 
@@ -159,7 +166,7 @@ res <- list()
 for (target in target_GSEA)
 {
   res_contrast <- list()
-  for(name in names(filtered_dd_list))
+  for (name in names(filtered_dd_list))
   {
     filtered_dd <- filtered_dd_list[[name]]
     cat("\n\n PROCESSING TARGET : ",target," FOR CONTRAST : ", name, "\n\n")
@@ -185,8 +192,9 @@ print(summary(warnings()))
 
 saveRDS(res, file.path(result_dir, "GSEA_Results.Rda"))
 copy_gsea_report(result_dir)
+
 rmarkdown::render(file.path(result_dir, "GSEA_Results_Overview.Rmd"),
-                  params=list(GSEA = res),
+                  params = list(GSEA = res),
                   output_file = "index.html",
                   output_dir = result_dir)
 
