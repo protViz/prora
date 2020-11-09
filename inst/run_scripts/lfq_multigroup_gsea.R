@@ -35,7 +35,7 @@ Arguments:
 "
 
 
-if (TRUE) {
+if (FALSE) {
 
   args <- c("-e",
             "pseudo_estimate",
@@ -77,6 +77,12 @@ if (TRUE) {
   args <- c("-e",
             "statistic",
             "D:\\Dropbox\\DataAnalysis\\p3433_o7341_20200917\\modelling_results_model3\\Contrasts_Model_B.xlsx")
+  args <- c("-e",
+            "statistic",
+            "D:\\Dropbox\\DataAnalysis\\p3433_o7341_20200917\\modelling_results_model2\\Contrasts_Model_B.xlsx")
+  args <- c("-e",
+            "statistic",
+            "D:\\Dropbox\\DataAnalysis\\p3433_o7341_20200917\\modelling_results_model1\\Contrasts_Model_B.xlsx")
 
   #"D:\\Dropbox\\DataAnalysis\\p2109_PEPTIDE_Analysis\\p2109_Diabetes_plaque\\results_modelling_NICE\\modelling_results_peptide\\foldchange_estimates.xlsx")
   #print(args2grp)

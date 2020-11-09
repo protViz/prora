@@ -52,11 +52,8 @@ runWebGestaltGSEA <- function(data,
   ranktable <- data %>%
     dplyr::select(!!sym(ID_col), Score = !!sym(score_col))
 
-  rankTable <- file.path(outdir, paste0("Project_", fpath), paste0("rankTable.rnk"))
-  message("storing ranktable to file: ")
-  readr::write_tsv(rankTable, path = rankTable ,col_names = NULL)
 
-  GSEA_res <- WebGestaltR(
+  GSEA_res <- WebGestaltR::WebGestaltR(
       enrichMethod = "GSEA",
       organism = organism,
       enrichDatabase = target,
@@ -67,6 +64,10 @@ runWebGestaltGSEA <- function(data,
       perNum = nperm,
       projectName = fpath
     )
+
+  rankTable <- file.path(outdir, paste0("Project_", fpath), paste0("rankTable.rnk"))
+  message("storing ranktable to file: ")
+  readr::write_tsv(ranktable, file = rankTable, col_names = FALSE)
 
   if(is.null(GSEA_res)){
     warning("!!! no results returned by WebGestaltR !!!", GSEA_res)
