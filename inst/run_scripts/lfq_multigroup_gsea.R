@@ -36,6 +36,7 @@ Arguments:
 
 
 if (TRUE) {
+
   args <- c("-e",
             "pseudo_estimate",
             "D:\\Dropbox\\DataAnalysis\\p2109_PEPTIDE_Analysis\\p2109_Diabetes_plaque\\results_modelling_WHO_noSex\\modelling_results_peptide\\foldchange_estimates.xlsx")
@@ -72,6 +73,10 @@ if (TRUE) {
             "--score_col","pseudo_estimate",
             "-o", "rnorvegicus",
             "-r", "mixed_effect_model_protein")
+
+  args <- c("-e",
+            "statistic",
+            "D:\\Dropbox\\DataAnalysis\\p3433_o7341_20200917\\modelling_results_model3\\Contrasts_Model_B.xlsx")
 
   #"D:\\Dropbox\\DataAnalysis\\p2109_PEPTIDE_Analysis\\p2109_Diabetes_plaque\\results_modelling_NICE\\modelling_results_peptide\\foldchange_estimates.xlsx")
   #print(args2grp)
@@ -144,10 +149,10 @@ print("Selected columns: ")
 print(sample_n(fc_estimates, 10))
 
 filtered_dd <- na.omit(fc_estimates)
-filtered_dd %>% dplyr::filter(!!sym(ID_col) != "NA") -> filtered_dd
+filtered_dd <- filtered_dd %>% dplyr::filter(!!sym(ID_col) != "NA")
 
 print("After ID filtering columns: ")
-print(sample_n(filtered_dd, 10))
+print( sample_n(filtered_dd, 10) )
 
 
 filtered_dd_list <- base::split(filtered_dd, filtered_dd[[contrast]])
