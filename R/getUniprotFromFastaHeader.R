@@ -20,7 +20,7 @@ get_UniprotID_from_fasta_header <- function(df, idcolumn = "protein_Id") {
     tidyr::separate(col = !!sym(idcolumn),
                     sep = "_",
                     into = c("begin", "end"),
-                    remove=FALSE) %>%
+                    remove = FALSE) %>%
     tidyr::separate(
       col = !!sym("begin"),
       sep = "\\|",
