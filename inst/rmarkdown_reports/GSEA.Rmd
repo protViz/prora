@@ -48,6 +48,17 @@ The following analysis compares the enrichment of particular gene/protein set me
 
 * Number of permutations: `r GSEA$nperm`
 
+* [The rankTable.rnk table used.](`r file.path("rankTable.rnk")`){target="_blank"}
+
+
+### `WebGestaltR` Results
+
+```{r results='asis'}
+repfile <- list.files(pattern = "Report_")
+```
+
+Since `WebGestaltR` provides its own summary report, please refer to [WebGestalt result file](`r file.path(repfile)`){target="_blank"}.
+
 
 ### GSEA Results {.tabset .tabset-pills}
 
@@ -121,13 +132,6 @@ if(length(toplot) <= 1) {
 ```
 
 
-### `WebGestaltR` Results
-
-```{r results='asis'}
-repfile <- list.files(pattern = "Report_")
-```
-
-Since `WebGestaltR` provides its own summary report, please refer to [this file](`r file.path(repfile)`){target="_blank"}.
 
 ### References
 
