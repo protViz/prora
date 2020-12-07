@@ -84,6 +84,9 @@ if (FALSE) {
             "statistic",
             "D:\\Dropbox\\DataAnalysis\\p3433_o7341_20200917\\modelling_results_model1\\Contrasts_Model_B.xlsx")
 
+  args <- c("D:\\projects\\p23314\\MQ_2grp_report_Diseased_vs_control_fc1_q005.txt"
+            ,"--ID_col", "TopProteinName","--score_col", "log2FC")
+
   #"D:\\Dropbox\\DataAnalysis\\p2109_PEPTIDE_Analysis\\p2109_Diabetes_plaque\\results_modelling_NICE\\modelling_results_peptide\\foldchange_estimates.xlsx")
   #print(args2grp)
   #args2grp
@@ -93,9 +96,8 @@ if (FALSE) {
 }
 
 
-
-
 # Check command args ------------------------------------------------------
+
 
 cat("\nParameters used:\n\t grp2report:", grp2report <- opt$grp2file, "\n\t",
     "result_dir:", result_dir <- opt[["--outdir"]], "\n\t",
@@ -147,8 +149,15 @@ if (dir.exists(result_dir)) {
 dir.create(result_dir)
 
 
+if (grepl("*.txt",grp2report)) {
+  fc_estimates <- readr::read_tsv(grp2report)
+  fc_estimates$contrast <- "2grp"
+  fc_estimates <- fgcz.gsea.ora::get_UniprotID_from_fasta_header(fc_estimates, idcolumn = ID_col)
+  ID_col = "UniprotID"
+}else if (grepl("*.xlsx", grp2report )){
+  fc_estimates <- readxl::read_xlsx(grp2report)
+}
 
-fc_estimates <- readxl::read_xlsx(grp2report)
 fc_estimates <- fc_estimates %>% select_at(c(ID_col, fc_col, contrast))
 
 print("Selected columns: ")

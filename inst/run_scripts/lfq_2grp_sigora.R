@@ -10,7 +10,9 @@ library(readr)
 
 # Files -------------------------------------------------------------------
 
-grp2report <- "../../data/2Grp_CF_a_vs_CF_b.txt"
+
+grp2report <- "d:/projects/p23314/MQ_2grp_report_Diseased_vs_control_fc1_q005.txt"
+#grp2report <- "../../data/2Grp_CF_a_vs_CF_b.txt"
 result_dir <- "gsea_ora_results"
 
 
@@ -31,9 +33,9 @@ odir <- file.path(result_dir , make.names(fpath_se))
 
 dd <- read_tsv(grp2report)
 dd <- dd %>% select_at(c(ID_col, fc_col))
-
 filtered_dd <- get_UniprotID_from_fasta_header(dd,idcolumn = ID_col) %>%
   filter(!is.na(UniprotID))
+
 
 # Parameters --------------------------------------------------------------
 
@@ -44,7 +46,7 @@ sum(filtered_dd[[fc_col]] > fc_threshold)
 # Run ---------------------------------------------------------------------
 
 if (!dir.exists(odir)) {
-  if (!dir.create(odir)) {
+  if (!dir.create(odir,recursive = TRUE)) {
     stop("\n can't create odir", odir, "\n")
   }
 }
@@ -56,9 +58,9 @@ if (organism == "hsapiens"){
     fgcz.gsea.ora::runSIGORA(
       data = filtered_dd,
       target = target_SIGORA,
-      fc_col = fc_col,
+      score_col = fc_col,
       ID_col = "UniprotID",
-      fc_threshold = fc_threshold,
+      threshold = fc_threshold,
       greater = greater,
       outdir = file.path(odir, "sigORA")
     )
