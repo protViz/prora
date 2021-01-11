@@ -17,6 +17,7 @@ fgsea_rank_contrasts <-
            score = "X2",
            contrast = "contrast"){
     df <- select(df, dplyr::all_of(c(contrast, ids, score)))
+    df <- na.omit(df)
     ldf <-  dplyr::group_by(df, !!sym(contrast)) %>% nest()
 
     allrnk <- vector(mode = "list", length = nrow(ldf))
@@ -63,13 +64,15 @@ fgsea_msigdb_collections <- function(
 #' @param geneset
 run_fgsea_for_allContrasts <- function(allrnk,
                                        geneSet,
-                                       minSize =5, maxSize = 500){
+                                       nperm = 10000,
+                                       minSize = 25,
+                                       maxSize = 500){
   fgseaRes <- vector(mode = "list", length = length(allrnk))
   for (i in 1:length(allrnk)) {
     message( paste( names(allrnk)[i],"\n" ) )
     fgseaRes[[i]] <- fgsea::fgsea(pathways = geneSet,
                                   stats    = allrnk[[i]],
-                                  nperm = 1000,
+                                  nperm = nperm,
                                   minSize  = minSize,
                                   maxSize  = maxSize)
 
@@ -82,3 +85,25 @@ run_fgsea_for_allContrasts <- function(allrnk,
 }
 
 
+run_fgsea_for_allGeneSets <- function(allrnk,
+                                      geneSets,
+                                      nperm = 10000,
+                                      minSize = 25,
+                                      maxSize = 500){
+  fgseaRes <- vector(mode = "list", length = length(geneSets))
+  for (i in 1:length(geneSets)) {
+    message( paste( names(geneSets)[i],"\n" ) )
+    fgseaResult <- fgsea::fgsea(pathways = geneSets[[i]],
+                                stats    = allrnk,
+                                nperm = nperm,
+                                minSize  = minSize,
+                                maxSize  = maxSize)
+    fgseaResult$GS <-  names(geneSets)[i]
+    relevantResult <- fgseaResult %>%
+      dplyr::relocate(nMoreExtreme , pval ,  ES  , leadingEdge, .after = size)
+    fgseaResult <- dplyr::relocate(fgseaResult, GS, .before = pathway)
+    fgseaRes[[i]] <- fgseaResult
+
+  }
+  return(fgseaRes)
+}

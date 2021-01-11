@@ -8,7 +8,7 @@ param:
 ---
 
 ```{r setup, include=FALSE, echo=FALSE}
-library(DT)
+
 knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
 ```
 
@@ -20,49 +20,62 @@ knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
 #geneSet = fgseaGS[[1]],
 #rankList = allrnk[[1]])
 #usethis::use_data(GSEAex1)
-
-library(fgcz.gsea.ora)
 library(DT)
-library(fgsea)
+library(fgcz.gsea.ora)
 
-fgseaResult <- GSEAex1$fgseaRes
-geneSet <- GSEAex1$geneSet
-rankList <- GSEAex1$rankList
-relevantResult <- fgseaResult %>% dplyr::filter(pval < 0.01)
+
+gseaResult <- GSEAResults$fgseaRes
+geneSet <- GSEAResults$geneSet
+rankList <- GSEAResults$rankList
+relevantResult <- GSEAResults$relevantResult
+gsName <- GSEAResults$gsName
+threshold <- GSEAResults$threshold
+mainPathways <- GSEAResults$mainPathways
+map_summaries <- GSEAResults$map_summaries
+score <- GSEAResults$score
+```
+
+- Analysis for gene set category: `r gsName`.
+- The filtering of gene sets used is: `r paste0("padj < ", threshold)`.
+- out of `r map_summaries$nrow_all` were mapped to `r map_summaries$nrow_mapped`.
+- Proteins were ordered using the `r score`.
+
+
+```{r ranklist , fig.cap = "Sorted list of proteins."}
+plot(sort(rankList,decreasing = TRUE), type = "h", ylab = score)
+
 ```
 
 
-```{r pval , fig.cap = "Volcano Plot. Panel A : -log10(p-value) vs normalized enrichment score (NES). Panel B : -log10(FDR) vs normalized enrichment score (NES)."}
+```{r pval , fig.cap = " Panel B : -log10(FDR) vs normalized enrichment score (NES)."}
 par(mfrow = c(1,2))
-plot(fgseaResult$NES, -log10(fgseaResult$pval),
-     ylim = c(0, max(c(-log10(0.05), -log10(fgseaResult$pval)))),
-     ylab = "-log10(pval)", xlab = "NES", pch = 16)
-abline(h = -log10(c(0.05,0.01)), col = c(2,3))
 
-plot(fgseaResult$NES, -log10(fgseaResult$padj),
-     ylim = c(0, max(c(-log10(0.05), -log10(fgseaResult$padj)))),
-     ylab = "-log10(padj)", xlab = "NES", pch = 16)
-abline(h = -log10(c(0.05,0.01)), col = c(2,3))
+
+plot( fgseaResult$NES ,
+     -log10(fgseaResult$padj),
+     ylim = c(0, max(c(-log10(0.05), -log10(fgseaResult$padj)), na.rm = TRUE)),
+     ylab = "-log10(FDR)", xlab = "NES", pch = 16, main = "")
+abline(h = -log10(threshold), col = c(2,3))
 ```
-
-
 
 
 
 ```{r collapsePathway}
-relevantResult <- relevantResult %>%
-  dplyr::relocate(nMoreExtreme , pval ,  ES  , leadingEdge, .after = size) %>%
-  dplyr::relocate(comparison ,.before = pathway)
-DT::datatable(relevantResult, caption = "All Pathways")
+caption <- paste0("All Pathways with padj < ", threshold, ".")
+DT::datatable(relevantResult, caption = caption) %>% 
+  formatSignif('NES',2) %>%
+  formatSignif(c('pval','padj'),2)
 
 ```
 
 
 ```{r showPathways2}
-collapsedPathways <- collapsePathways(relevantResult,
-                                      geneSet, rankList)
-mainPathways <- fgseaResult %>% dplyr::filter(pathway %in% collapsedPathways$mainPathways)
-DT::datatable(mainPathways, caption = "Non redundant pathways created using collapsePathways.")
+caption = paste0("Non redundant pathways with padj < ",  threshold,".")
+DT::datatable(mainPathways, caption = caption) %>%
+  formatSignif('NES',2) %>%
+  formatSignif(c('pval','padj'),2)
+
+
 ```
 
 

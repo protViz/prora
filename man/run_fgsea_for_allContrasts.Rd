@@ -4,7 +4,13 @@
 \alias{run_fgsea_for_allContrasts}
 \title{run for all contrasts}
 \usage{
-run_fgsea_for_allContrasts(allrnk, geneSet, minSize = 5, maxSize = 500)
+run_fgsea_for_allContrasts(
+  allrnk,
+  geneSet,
+  nperm = 10000,
+  minSize = 25,
+  maxSize = 500
+)
 }
 \arguments{
 \item{allrnk}{- list of rank arrays}

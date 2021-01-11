@@ -35,7 +35,7 @@ Arguments:
 "
 
 
-if (FALSE) {
+if (TRUE) {
 
   args <- c("-e",
             "pseudo_estimate",
@@ -87,7 +87,10 @@ if (FALSE) {
   args <- c("D:\\projects\\p23314\\MQ_2grp_report_Diseased_vs_control_fc1_q005.txt"
             ,"--ID_col", "TopProteinName","--score_col", "log2FC")
 
-  #"D:\\Dropbox\\DataAnalysis\\p2109_PEPTIDE_Analysis\\p2109_Diabetes_plaque\\results_modelling_NICE\\modelling_results_peptide\\foldchange_estimates.xlsx")
+  args <- c("D:\\Dropbox\\DataAnalysis\\o23542_GSEA\\allContrasts.txt"
+            ,"--ID_col", "TopProteinName","--score_col", "pseudo.log2FC", "-o","mmusculus")
+
+    #"D:\\Dropbox\\DataAnalysis\\p2109_PEPTIDE_Analysis\\p2109_Diabetes_plaque\\results_modelling_NICE\\modelling_results_peptide\\foldchange_estimates.xlsx")
   #print(args2grp)
   #args2grp
   opt <- docopt::docopt(doc, args = args)

@@ -1,0 +1,110 @@
+---
+title: "Multiple comparisons"
+author: "FGCZ"
+date: "30/11/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
+```
+
+
+```{r loadpackages}
+
+library(msigdbr)
+library(readr)
+library(fgsea)
+library(tidyverse)
+library(fgcz.gsea.ora)
+
+maxNES_threshold <- 1.8
+```
+
+
+```{r}
+#data <- readxl::read_xlsx("d:/Dropbox/DataAnalysis/p3433_o7341_20200917/Contrasts_GLM.xlsx")
+
+data <- readxl::read_xlsx("p3433_results/LinearModelResult_p3433_model_1_noKO/Contrasts_Model_B.xlsx")
+head(data)
+data2 <- data
+#data2 <- fgcz.gsea.ora::get_UniprotID_from_fasta_header(data)
+data3 <- fgcz.gsea.ora::map_ids_uniprot(data2)
+
+ranklist <- fgsea_rank_contrasts(data3, ids = "P_ENTREZGENEID", score = "statistic"  )
+
+```
+
+
+```{r loadPackages}
+msigdbr::msigdbr_show_species()
+species <- "Homo sapiens"
+C5 <- msigdbr_collections() %>% filter(gs_cat == "C5")
+#C5 <- msigdbr_collections() %>% filter(gs_cat == "C2")
+
+```
+
+
+
+```{r makefgseaGensetfrom_msidbr}
+
+fgseaGSlist <- fgsea_msigdb_collections(C5, species = "Homo sapiens")
+names(fgseaGSlist)
+i <- 1
+print(names(fgseaGSlist)[i])
+fgseaGS <- fgseaGSlist[[i]]
+
+```
+
+
+```{r runGSEAAnalysis}
+
+names(ranklist)
+fgseaRes <- run_fgsea_for_allContrasts(ranklist,fgseaGS)
+names(fgseaRes)
+fgseaRes[[1]]
+```
+
+
+```{r integrateData, fig.cap = "Histogram of adjusted p-value." }
+all <- bind_rows(fgseaRes)
+all <- all %>%
+  dplyr::relocate(nMoreExtreme, pval,  ES, leadingEdge, .after = size) %>%
+  dplyr::relocate(comparison ,.before = pathway)
+
+fgseaResultsForAllContrasts <- paste0("Geneset_",names(fgseaGSlist)[i],"allContrasts.xlsx")
+writexl::write_xlsx(all, path = fgseaResultsForAllContrasts)
+
+```
+
+```{r fig.cap="Histogram of normalized enrichment score."}
+hist(all$NES)
+NES <- tidyr::pivot_wider(all, id_cols = "pathway", names_from = "comparison" , values_from  = "NES")
+pval <- tidyr::pivot_wider(all, id_cols = "pathway", names_from = "comparison" , values_from  = "pval")
+```
+
+
+```{r prepheat, fig.cap="Maximum normalized enrichment score for all comparisons."}
+NESm <- NES %>% dplyr::select(-pathway) %>% as.matrix
+rownames(NESm) <- NES$pathway
+pvalm <- pval %>% dplyr::select(-pathway) %>% as.matrix
+rownames(pvalm) <- pval$pathway
+hist(pvalm)
+
+minpval <- apply(pvalm, 1, function(x) {
+  min(x, na.rm = TRUE)
+})
+
+hist(minpval, main = "distribution of NES")
+pval_threshold = 0.01
+NESm <- NESm[minpval < pval_threshold, ]
+minpval <- minpval[minpval < pval_threshold]
+NESm <- NESm[order(minpval),]
+minpval <- minpval[order(minpval)]
+p <- pheatmap::pheatmap(na.omit(NESm), silent = TRUE, cluster_rows = FALSE)
+
+```
+
+```{r makeheatmap, fig.cap = "All comparisons", fig.height=20, fig.width=10}
+print(p)
+```
