@@ -60,8 +60,11 @@ fgsea_msigdb_collections <- function(
 
 #' run for all contrasts
 #' @export
-#' @param allrnk - list of rank arrays
-#' @param geneset
+#' @param allrnk list of rank arrays
+#' @param geneSet single list geneset (e.g. )
+#' @param nperm number permutations
+#' @param minSize minimum geneset size
+#' @param maxSize maximum geneset size
 run_fgsea_for_allContrasts <- function(allrnk,
                                        geneSet,
                                        nperm = 10000,
@@ -84,7 +87,14 @@ run_fgsea_for_allContrasts <- function(allrnk,
   return(fgseaRes)
 }
 
-
+#' used to analyse a single contrast with various genesets
+#' @export
+#' @param allrnk ranklist
+#' @param geneSets list of gene sets
+#' @param nperm number of permutations
+#' @param minSize minimum geneset size
+#' @param maxSize maximum geneset size
+#'
 run_fgsea_for_allGeneSets <- function(allrnk,
                                       geneSets,
                                       nperm = 10000,
