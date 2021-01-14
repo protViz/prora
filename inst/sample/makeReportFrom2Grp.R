@@ -1,4 +1,5 @@
-rm(list = ls())
+#! /usr/lib/Rscript
+
 library(fgsea)
 library(msigdbr)
 library(tidyverse)
@@ -6,53 +7,72 @@ library(fgcz.gsea.ora)
 
 useLog2FC <- TRUE
 inputData <- "2GrpAppOutput/MQ_2grp_report_o6927_iMPC_vs_Ctrl.txt"
-#species <- "Homo sapiens"
-species <- "Mus musculus"
+inputData <- "2GrpAppOutput/MQ_2grp_report_o6927_MyoD_D10_vs_Ctrl.txt"
+inputData <- "2GrpAppOutput/MQ_2grp_report_o6927_MyoD_FRC_D10_vs_Ctrl.txt"
 
+inputData <- "2GrpAppOutput/MQ-report-bfabric-FASPvsUrea_jg_n_EAR.zip.txt"
+
+
+species <- "Homo sapiens"
+#species <- "Mus musculus"
+FDR_threshold <- 0.1 # (0.05, 0.1, 0.25)
+
+
+workUnit <- "WU300000"
+outdir <- "testOutput"
 outname <- gsub("\\.txt","",basename(inputData))
+outdir <- outname
+
+prefix <- "FGSEA_"
 
 
 #####################
-#########################
 
+stopifnot(species %in% msigdbr::msigdbr_species()$species_name)
 
+dir.create(outdir)
 
-padj_threshold <- 0.1
-prefix <- "FGSEA_"
-msigdbr::msigdbr_species()
 
 summaries <- list()
 data <- readr::read_tsv(inputData)
-summaries$nrow_all <- nrow(data)
 # remove reverse sequences and contaminants
 data <- data %>% filter(!(grepl("^REV__", TopProteinName ) | grepl("^zz\\|", TopProteinName)))
+summaries$nrow_all <- nrow(data)
 
 # Extract uniprotIDS
 data2 <- fgcz.gsea.ora::get_UniprotID_from_fasta_header(data,
                                                         idcolumn = "TopProteinName")
-
 # map to entriz id's
 data3 <- fgcz.gsea.ora::map_ids_uniprot(data2)
+mappingtable <- data3 %>% dplyr::select(all_of(c("UniprotID", "P_ENTREZGENEID", "TopProteinName")))
 
+writexl::write_xlsx(mappingtable,
+                    path = file.path(outdir,paste0(prefix, "Mapping_" , outname,".xlsx")))
+
+### prepare ranklist
 ranklist <- data3 %>% dplyr::select(dplyr::all_of(c("P_ENTREZGENEID","pseudo.log2FC", "pseudo.P.Value" )))
-ranklist <- na.omit(ranklist)
-
 if (useLog2FC) {
-  ranklist <- dplyr::select(ranklist, P_ENTREZGENEID, score = pseudo.log2FC)
+  ranklist <- dplyr::select(ranklist, .data$P_ENTREZGENEID, score = .data$pseudo.log2FC)
 } else {
   ranklist$score <- sign(ranklist$pseudo.log2FC) * (1 - ranklist$pseudo.P.Value)
   ranklist <- dplyr::select(ranklist, dplyr::all_of(c("P_ENTREZGENEID","score")))
 }
 
-ranklist <- ranklist %>% group_by(!!sym("P_ENTREZGENEID")) %>% summarize(score = mean(score),.groups = "drop" )
+ranklist <- na.omit(ranklist)
+ranklist <- ranklist %>%
+  dplyr::group_by(.data$P_ENTREZGENEID) %>%
+  dplyr::summarize(score = mean(.data$score),.groups = "drop" )
+
 summaries$nrow_mapped <- nrow(ranklist)
-readr::write_tsv(ranklist, path =  paste0(prefix, outname, ".rnk"), col_names = FALSE)
+
+readr::write_tsv(ranklist,
+                 file =  file.path(outdir, paste0(prefix, outname, ".rnk")),
+                 col_names = FALSE)
 
 rankarray <- ranklist$score
 names(rankarray) <- ranklist$P_ENTREZGENEID
 
 #### Run GSEA analysis
-
 
 C5 <- msigdbr_collections() %>% filter(gs_cat == "C5")
 C5 <- C5[1:3,]
@@ -65,16 +85,19 @@ names(C5)
 
 fgseaRes <- run_fgsea_for_allGeneSets(rankarray, fgseaGSlist, nperm = 10000  )
 allres <- dplyr::bind_rows(fgseaRes)
+writexl::write_xlsx(allres,
+                    path = file.path(outdir, paste0(prefix,"All_results",outname , ".xlsx")))
+
 
 rankList <- rankarray
 
 
 for (iGS in 1:length(fgseaRes)) {
-  iGS <- 1
+
   fgseaResult <- fgseaRes[[iGS]]
   geneSet <- fgseaGSlist[[iGS]]
 
-  relevantResult <- fgseaResult %>% dplyr::filter(padj < padj_threshold)
+  relevantResult <- fgseaResult %>% dplyr::filter(.data$padj < FDR_threshold)
 
 
   collapsedPathways <- collapsePathways(relevantResult,
@@ -85,7 +108,7 @@ for (iGS in 1:length(fgseaRes)) {
     dplyr::select( -ES)
 
   GSEAResults <- list(
-    threshold = padj_threshold,
+    threshold = FDR_threshold,
     gsName = names(fgseaGSlist)[iGS],
     fgseaRes = fgseaResult,
     geneSet = geneSet,
@@ -99,10 +122,15 @@ for (iGS in 1:length(fgseaRes)) {
   outfile = paste0(outname , names(fgseaGSlist)[iGS])
   html_out <- paste0(prefix, outfile, ".html")
   rmarkdown::render("VisualizeSingle.Rmd",
-                    params = list(GSEAResults = GSEAResults),
-                    output_file = html_out)
-  writexl::write_xlsx(mainPathways, path = paste0(prefix,  outfile, "_MainPathways" , ".xlsx"))
-  writexl::write_xlsx(fgseaResult, path = paste0(prefix, outfile, "_AllPathways", ".xlsx" ))
+                    params = list(GSEAResults = GSEAResults))
+  file.copy("VisualizeSingle.html", file.path(outdir, html_out) , overwrite = TRUE)
+
+  writexl::write_xlsx(mainPathways,
+                      path = file.path(outdir,
+                                       paste0(prefix,  outfile, "_MainPathways" , ".xlsx")))
+  writexl::write_xlsx(fgseaResult,
+                      path = file.path(outdir,
+                                       paste0(prefix, outfile, "_AllPathways", ".xlsx" )))
 }
 
 

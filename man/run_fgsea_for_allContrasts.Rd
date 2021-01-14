@@ -13,7 +13,15 @@ run_fgsea_for_allContrasts(
 )
 }
 \arguments{
-\item{allrnk}{- list of rank arrays}
+\item{allrnk}{list of rank arrays}
+
+\item{geneSet}{single list geneset (e.g. )}
+
+\item{nperm}{number permutations}
+
+\item{minSize}{minimum geneset size}
+
+\item{maxSize}{maximum geneset size}
 }
 \description{
 run for all contrasts
