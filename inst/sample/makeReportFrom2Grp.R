@@ -104,7 +104,7 @@ for (iGS in 1:length(fgseaRes)) {
                                         geneSet, rankList)
   relevantResult <- dplyr::select(relevantResult, -ES)
 
-  mainPathways <- fgseaResult %>% dplyr::filter(pathway %in% collapsedPathways$mainPathways) %>%
+  mainPathways <- fgseaResult %>% dplyr::filter(.data$pathway %in% collapsedPathways$mainPathways) %>%
     dplyr::select( -ES)
 
   GSEAResults <- list(
