@@ -108,12 +108,20 @@ run_fgsea_for_allGeneSets <- function(allrnk,
                                 nperm = nperm,
                                 minSize  = minSize,
                                 maxSize  = maxSize)
+    if (nrow(fgseaResult) == 0) {
+      next()
+    }
     fgseaResult$GS <-  names(geneSets)[i]
     relevantResult <- fgseaResult %>%
-      dplyr::relocate(nMoreExtreme , pval ,  ES  , leadingEdge, .after = size)
+      dplyr::relocate(nMoreExtreme ,
+                      pval,
+                      ES,
+                      leadingEdge,
+                      .after = size)
     fgseaResult <- dplyr::relocate(fgseaResult, GS, .before = pathway)
     fgseaRes[[i]] <- fgseaResult
 
   }
+  names(fgseaRes) <- names(geneSets)
   return(fgseaRes)
 }
