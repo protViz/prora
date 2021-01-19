@@ -14,7 +14,7 @@ inputData <- "2GrpAppOutput/MQ-report-bfabric-FASPvsUrea_jg_n_EAR.zip.txt"
 
 
 species <- "Homo sapiens"
-species <- "Mus musculus"
+#species <- "Mus musculus"
 
 FDR_threshold <- 0.1 # (0.05, 0.1, 0.25)
 
@@ -52,6 +52,8 @@ writexl::write_xlsx(mappingtable,
 
 ### prepare ranklist
 ranklist <- data3 %>% dplyr::select(dplyr::all_of(c("P_ENTREZGENEID","pseudo.log2FC", "pseudo.P.Value" )))
+ranklist <- na.omit(ranklist)
+
 if (useLog2FC) {
   ranklist <- dplyr::select(ranklist, .data$P_ENTREZGENEID, score = .data$pseudo.log2FC)
 } else {
@@ -59,10 +61,21 @@ if (useLog2FC) {
   ranklist <- dplyr::select(ranklist, dplyr::all_of(c("P_ENTREZGENEID","score")))
 }
 
-ranklist <- na.omit(ranklist)
 ranklist <- ranklist %>%
   dplyr::group_by(.data$P_ENTREZGENEID) %>%
   dplyr::summarize(score = mean(.data$score),.groups = "drop" )
+
+if (nrow(ranklist) == 0) {
+  ErrorMessage <- "No Id's were mapped."
+  rmarkdown::render("ErrorMessage.Rmd",
+                    params = list(ErrorMessage = ErrorMessage))
+  file.copy("ErrorMessage.html", file.path(outdir, "ErrorMessage.html") , overwrite = TRUE)
+
+  write(ErrorMessage,
+        file = stderr())
+  stop(ErrorMessage)
+}
+
 
 summaries$nrow_mapped <- nrow(ranklist)
 
@@ -80,18 +93,25 @@ C5 <- C5[1:3,]
 fgseaGSlist <- fgsea_msigdb_collections(C5, species = species)
 
 #fgsea(pathways =  fgseaGSlist[[1]], rankarray)
-#debug(run_fgsea_for_allGeneSets)
+undebug(run_fgsea_for_allGeneSets)
 fgseaRes <- run_fgsea_for_allGeneSets(rankarray, fgseaGSlist, nperm = 10000  )
 
 allres <- dplyr::bind_rows(fgseaRes)
+
 if (nrow(allres) == 0) {
-  write(paste0("No results for all GeneSets, please do check identifiers and organizm. \n"))
-  stop("No results for all GeneSets, please do check identifiers and organizm. \n")
+  # write HTML
+  ErrorMessage <- paste("No results for all GeneSets, please do organizm. \n")
+  rmarkdown::render("ErrorMessage.Rmd",
+                    params = list(ErrorMessage = ErrorMessage))
+  file.copy("ErrorMessage.html", file.path(outdir, "ErrorMessage.html") , overwrite = TRUE)
+
+  write(ErrorMessage,
+        file = stderr())
+  stop(ErrorMessage)
 } else{
   writexl::write_xlsx(allres,
                       path = file.path(outdir, paste0(prefix,"All_results",outname , ".xlsx")))
 }
-
 
 
 select_relevant_results <- function(fgseaResult,
@@ -122,7 +142,7 @@ select_relevant_results <- function(fgseaResult,
 
 
 for (iGS in 1:length(fgseaRes)) {
-  iGS <- 1
+  #iGS <- 1
   fgseaResult <- fgseaRes[[iGS]]
   geneSet <- fgseaGSlist[[iGS]]
   gsName = names(fgseaGSlist)[iGS]

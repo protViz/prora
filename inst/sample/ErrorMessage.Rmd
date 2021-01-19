@@ -1,0 +1,14 @@
+---
+title: "Error Message"
+author: "Witold Wolski"
+date: "19/01/2021"
+output: html_document
+params:
+  ErrorMessage : ""
+---
+
+```{r setup, include=FALSE}
+ErrorMessage <- params$ErrorMessage
+```
+
+`r ErrorMessage`
