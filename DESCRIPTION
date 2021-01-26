@@ -1,4 +1,4 @@
-Package: fgcz.gsea.ora
+Package: prora
 Type: Package
 Title: ORA, sigORA and GSEA functionalities for proteomic data
 Version: 0.1.0

@@ -8,9 +8,9 @@ output:
 editor_options:
   chunk_output_type: console
 params:
-  results: !r quote(fgcz.gsea.ora::sigora_example)
+  results: !r quote(prora::sigora_example)
   plot1: "abc"
-  GPStable: !r quote(fgcz.gsea.ora::GPStab)
+  GPStable: !r quote(prora::GPStab)
   direction_greater: TRUE
   contrast: ""
 subtitle: Using the `sigora` package
@@ -37,7 +37,7 @@ direction_greater <- eval(params$direction_greater)
 contrast <- params$contrast
 
 library(tidyverse)
-library(fgcz.gsea.ora)
+library(prora)
 library(knitr)
 ```
 

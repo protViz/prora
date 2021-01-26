@@ -52,8 +52,8 @@ returns a \code{list} used for the generation of an \code{.Rmd} report.
 }
 \examples{
 
-library(fgcz.gsea.ora)
-df <- get_UniprotID_from_fasta_header(fgcz.gsea.ora::exampleContrastData)
+library(prora)
+df <- get_UniprotID_from_fasta_header(prora::exampleContrastData)
 myGPSrepo <- makeGPS_wrappR(ids = df$UniprotID,target = "KEGG")
 res <- sigoraWrappR(df,score_col = "estimate", GPSrepos = myGPSrepo$gps,
                      threshold = 0.5)

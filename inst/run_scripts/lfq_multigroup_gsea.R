@@ -7,7 +7,7 @@ suppressMessages(library(org.Hs.eg.db))
 suppressMessages(library(sigora))
 suppressMessages(library(GO.db))
 suppressMessages(library(slam))
-suppressMessages(library(fgcz.gsea.ora))
+suppressMessages(library(prora))
 suppressMessages(library(readr))
 suppressMessages(library(docopt))
 
@@ -155,7 +155,7 @@ dir.create(result_dir)
 if (grepl("*.txt",grp2report)) {
   fc_estimates <- readr::read_tsv(grp2report)
   fc_estimates$contrast <- "2grp"
-  fc_estimates <- fgcz.gsea.ora::get_UniprotID_from_fasta_header(fc_estimates, idcolumn = ID_col)
+  fc_estimates <- prora::get_UniprotID_from_fasta_header(fc_estimates, idcolumn = ID_col)
   ID_col = "UniprotID"
 }else if (grepl("*.xlsx", grp2report )){
   fc_estimates <- readxl::read_xlsx(grp2report)
@@ -195,7 +195,7 @@ for (target in target_GSEA)
     cat("\n\n PROCESSING TARGET : ",target," FOR CONTRAST : ", name, "\n\n")
 
     res_contrast[[name]] <-
-      fgcz.gsea.ora::runWebGestaltGSEA(
+      prora::runWebGestaltGSEA(
         data = filtered_dd,
         fpath = name,
         ID_col = ID_col,

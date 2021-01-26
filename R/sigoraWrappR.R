@@ -33,8 +33,8 @@
 #'
 #' @examples
 #'
-#' library(fgcz.gsea.ora)
-#' df <- get_UniprotID_from_fasta_header(fgcz.gsea.ora::exampleContrastData)
+#' library(prora)
+#' df <- get_UniprotID_from_fasta_header(prora::exampleContrastData)
 #' myGPSrepo <- makeGPS_wrappR(ids = df$UniprotID,target = "KEGG")
 #' res <- sigoraWrappR(df,score_col = "estimate", GPSrepos = myGPSrepo$gps,
 #'                      threshold = 0.5)
@@ -108,13 +108,13 @@ sigoraWrappR <-
 #' @importFrom rlang .data
 #' @export
 #' @examples
-#' sigora_res <- fgcz.gsea.ora::sigora_example
-#' GPStable <- fgcz.gsea.ora::GPStab
+#' sigora_res <- prora::sigora_example
+#' GPStable <- prora::GPStab
 #'
 #' sigora_upsetR(sigora_res, GPStable)
 #'
 #'
-#' df <- get_UniprotID_from_fasta_header(fgcz.gsea.ora::exampleContrastData)
+#' df <- get_UniprotID_from_fasta_header(prora::exampleContrastData)
 #' myGPSrepo <- makeGPS_wrappR(ids = df$UniprotID)
 #' names(myGPSrepo)
 #' res <- sigoraWrappR(df,score_col = "estimate", GPSrepos = myGPSrepo$gps,

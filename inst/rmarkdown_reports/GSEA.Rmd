@@ -8,7 +8,7 @@ output:
 editor_options:
   chunk_output_type: console
 params:
-  GSEA: !r quote(fgcz.gsea.ora::GSEA)
+  GSEA: !r quote(prora::GSEA)
 subtitle: Using the `WebGestaltR` package
 bibliography: bibliography.bib
 link-citations: yes

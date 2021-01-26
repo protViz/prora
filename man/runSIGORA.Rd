@@ -36,15 +36,15 @@ workflow for sigORA
 }
 \examples{
 
-library(fgcz.gsea.ora)
-fc_estimates <- fgcz.gsea.ora::exampleContrastData
+library(prora)
+fc_estimates <- prora::exampleContrastData
 filtered_dd <- get_UniprotID_from_fasta_header(fc_estimates, idcolumn = "protein_Id")
 myGPSrepo <- makeGPS_wrappR(filtered_dd$UniprotID, target = "GO")
 
 #usethis::use_data(myGPSrepo,overwrite = TRUE)
 undebug(runSIGORA)
 undebug(sigoraWrappR)
-res <- runSIGORA(filtered_dd, myGPSrepo = fgcz.gsea.ora::myGPSrepo, DEBUG=TRUE)
+res <- runSIGORA(filtered_dd, myGPSrepo = prora::myGPSrepo, DEBUG=TRUE)
 #rmarkdown::render(res$rmarkdownPath,bookdown::html_document2(number_sections = FALSE),params = res$sigoraData,clean = TRUE)
 
 }

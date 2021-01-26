@@ -1,5 +1,5 @@
 ---
-title: "fgcz.gsea.ora: Unifying methods on gene set enrichment"
+title: "prora: Unifying methods on gene set enrichment"
 author:
 - name: Lucas Heinrich Kook
   affiliation: University of Zurich
@@ -10,7 +10,7 @@ output:
   BiocStyle::pdf_document
 bibliography: bibliography.bib
 vignette: >
-  %\VignetteIndexEntry{fgcz.gsea.ora: Unifying methods on gene set enrichment}
+  %\VignetteIndexEntry{prora: Unifying methods on gene set enrichment}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -20,7 +20,7 @@ vignette: >
 ```{r setup, include=FALSE}
 library(BiocStyle)
 library(tidyverse)
-library(fgcz.gsea.ora)
+library(prora)
 knitr::opts_chunk$set(
   echo = TRUE,
   warning = FALSE,

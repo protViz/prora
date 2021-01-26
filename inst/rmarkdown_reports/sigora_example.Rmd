@@ -6,7 +6,7 @@ output: pdf_document
 
 ```{r setup, include=FALSE}
 library(sigora)
-library(fgcz.gsea.ora)
+library(prora)
 library(readxl)
 library(UpSetR)
 library(msigdbr)
@@ -128,19 +128,19 @@ colnames(yeast) <- c("protein_Id", "estimate")
 
 ## FASTA header --> Uniprot
 
-dog_uniprot <- fgcz.gsea.ora::get_UniprotID_from_fasta_header(dog)
+dog_uniprot <- prora::get_UniprotID_from_fasta_header(dog)
 head(dog_uniprot)
 nrow(dog) - nrow(dog_uniprot) # is 0 but we have NAs so we lost some?
 # we lost (in percent)
 100 / nrow(dog) * sum(is.na(dog_uniprot$UniprotID))
 
-yeast_uniprot <- fgcz.gsea.ora::get_UniprotID_from_fasta_header(yeast)
+yeast_uniprot <- prora::get_UniprotID_from_fasta_header(yeast)
 nrow(yeast) - nrow(yeast_uniprot) # is 0 but we have NAs so we lost some?
 # we lost (in percent)
 100 / nrow(yeast) * sum(is.na(yeast_uniprot$UniprotID))
 ```
 
-\textbf{Question:} Why does the fgcz.gsea.ora vignette say that $0$ genes are lost when mapping FASTA header to Uniprot IDs? One can check that there are NAs, so maybe comparing number of rows is not the correct way to identify lost IDs..?
+\textbf{Question:} Why does the prora vignette say that $0$ genes are lost when mapping FASTA header to Uniprot IDs? One can check that there are NAs, so maybe comparing number of rows is not the correct way to identify lost IDs..?
 
 \textbf{Question:} The vignette shows that sigora works with Uniprot IDs. Why? From reading the package description, it looks like it works only for Ensembl IDs, Entrez IDs and Gene Symbols.
 
@@ -248,7 +248,7 @@ The SIGORA analysis identifies three pathways for dog (two of which are among th
 ```{r}
 ## example data --> Uniprot --> Entrez
 data("exampleContrastData")
-dd <- fgcz.gsea.ora::get_UniprotID_from_fasta_header(exampleContrastData)
+dd <- prora::get_UniprotID_from_fasta_header(exampleContrastData)
 dd <- map_ids_uniprot(dd, ID_col = "UniprotID")
 colnames(dd) <- c("UniprotID", "entrez_gene", "protein_Id", "estimate")
 dd$entrez_gene <- as.integer(dd$entrez_gene)

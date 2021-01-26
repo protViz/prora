@@ -1,19 +1,19 @@
-# Installing R package fgcz.gsea.ora
+# Installing R package prora
 
 Windows:
 run the following in R:
 
 ```
 install.packages("remotes")
-remotes::install_github("protViz/fgcz.gsea.ora")
+remotes::install_github("protViz/prora")
 ```
 
-# fgcz.gsea.ora vignettes:
+# prora vignettes:
 
-https://rdrr.io/github/protViz/fgcz.gsea.ora/#vignettes
+https://rdrr.io/github/protViz/prora/#vignettes
 
 
-# fgcz.gsea.ora
+# prora
 running ora or gsea on lists of proteinidentifiers
 
 A plethora of R packages exist on CRAN and Bioconductor to perform over-representation 

@@ -23,7 +23,7 @@ Function for generating background GPS repository for sigora and ora
 }
 \examples{
 
-data("exampleUniprotIDs", package = "fgcz.gsea.ora")
+data("exampleUniprotIDs", package = "prora")
 myGPSrepo <- makeGPS_wrappR(ids = exampleUniprotIDs)
 myGPSrepo <- makeGPS_wrappR(ids = exampleUniprotIDs, target = "GO")
 myGPSrepo <- makeGPS_wrappR(ids = exampleUniprotIDs, target = "react")

@@ -1,4 +1,4 @@
-.scriptCopyHelperVec <- function(runscripts, workdir = getwd(), packagename = "fgcz.gsea.ora" ){
+.scriptCopyHelperVec <- function(runscripts, workdir = getwd(), packagename = "prora" ){
   res <- NULL
   for(scripts in runscripts){
     src_script <- file.path( find.package(packagename) , scripts )
@@ -44,5 +44,10 @@ copy_ora_report <- function(workdir = getwd()){
                   "fgcz_formatting/fgcz_banner.png",
                   "rmarkdown_reports/ORA_Results_Overview.Rmd")
 
+  .scriptCopyHelperVec(runscripts, workdir = workdir)
+}
+
+copy_bfabric_2grp <- function(workdir = getwd()){
+  runscripts <- c("analyseSingle2Grp/VisualizeSingle.Rmd")
   .scriptCopyHelperVec(runscripts, workdir = workdir)
 }

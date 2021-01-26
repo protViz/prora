@@ -48,7 +48,7 @@ paths <- paths %>% dplyr::arrange(contrast)
 if (ncol(paths) == 0) {
   cat("NO enrichments:", dim(paths))
 } else {
-  myfl <- flextable(paths) %>% set_caption("Gene Set Enrichment Analysis results (GSEA) using fgcz.gsea.ora and WebgestaltR. (vs - versus, gv - given) ")
+  myfl <- flextable(paths) %>% set_caption("Gene Set Enrichment Analysis results (GSEA) using prora and WebgestaltR. (vs - versus, gv - given) ")
   myfl <- myfl %>% compose( j = "file_path",
                             value = as_paragraph( hyperlink_text(x = "enrichment result",
                                                                  url = file_path ) ) )

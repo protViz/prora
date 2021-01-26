@@ -6,9 +6,9 @@ library(org.Hs.eg.db)
 library(sigora)
 library(GO.db)
 library(slam)
-library(fgcz.gsea.ora)
+library(prora)
 
-dd <- fgcz.gsea.ora::exampleContrastData
+dd <- prora::exampleContrastData
 dfiles <- "example_data.txt"
 
 # Parameters --------------------------------------------------------------
@@ -40,7 +40,7 @@ dd <- get_UniprotID_from_fasta_header(dd) %>%
   filter(!is.na(UniprotID))
 
 sapply(target_GSEA, function(x) {
-  fgcz.gsea.ora::runWebGestaltORA(
+  prora::runWebGestaltORA(
     data = dd,
     fpath = "",
     organism = organism,

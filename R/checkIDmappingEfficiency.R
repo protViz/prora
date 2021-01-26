@@ -12,7 +12,7 @@
 #' @export checkIDmappingEfficiency
 #'
 #' @examples
-#' data("exampleContrastData", package = "fgcz.gsea.ora")
+#' data("exampleContrastData", package = "prora")
 #' df <- get_UniprotID_from_fasta_header(exampleContrastData)
 #' checkIDmappingEfficiency(df$UniprotID, keytype = "UNIPROT")
 #'

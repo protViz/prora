@@ -53,7 +53,7 @@ paths <- paths %>%  mutate(filter = paste0(dplyr::case_when(greater ~ "log2 FC >
 paths <- paths %>% dplyr::filter( merged_data == TRUE) %>% dplyr::select(contrast, contrast_name, filter, target,  file_path)
 #install.packages("flextable")
 paths <- paths %>% dplyr::arrange(contrast, filter)
-myfl <- flextable(paths) %>% set_caption("Over Representation Analysis (ORA) results using fgcz.gsea.ora and WebgestaltR. (vs - versus, gv - given).")
+myfl <- flextable(paths) %>% set_caption("Over Representation Analysis (ORA) results using prora and WebgestaltR. (vs - versus, gv - given).")
 myfl <- myfl %>% compose( j = "file_path",
                           value = as_paragraph( hyperlink_text(x = "ora result",
                                                                url = file_path ) ) )

@@ -122,14 +122,14 @@ runWebGestaltGSEA <- function(data,
 
 
   file.copy(
-    file.path(find.package("fgcz.gsea.ora"), "rmarkdown_reports/GSEA.Rmd"),
+    file.path(find.package("prora"), "rmarkdown_reports/GSEA.Rmd"),
     rmarkdownPath,
     overwrite = TRUE
   )
 
   file.copy(
     file.path(
-      find.package("fgcz.gsea.ora"),
+      find.package("prora"),
       "rmarkdown_reports/bibliography.bib"
     ),
     bibpath,

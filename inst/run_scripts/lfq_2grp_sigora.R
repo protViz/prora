@@ -5,7 +5,7 @@ library(org.Hs.eg.db)
 library(sigora)
 library(GO.db)
 library(slam)
-library(fgcz.gsea.ora)
+library(prora)
 library(readr)
 
 # Files -------------------------------------------------------------------
@@ -55,7 +55,7 @@ if (!dir.exists(odir)) {
 if (organism == "hsapiens"){
   res <- lapply(target_SIGORA, function(target_SIGORA) {
     message(target_SIGORA)
-    fgcz.gsea.ora::runSIGORA(
+    prora::runSIGORA(
       data = filtered_dd,
       target = target_SIGORA,
       score_col = fc_col,
