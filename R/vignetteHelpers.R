@@ -5,8 +5,8 @@
     dest_script <- file.path(workdir ,basename(scripts))
     message("copy ", src_script, " to ", dest_script)
 
-    if(!file.copy(src_script , dest_script, overwrite = TRUE)){
-      warning(paste("could not copy script file.", dest_script, sep=" "))
+    if (!file.copy(src_script , dest_script, overwrite = TRUE)) {
+      warning(paste("could not copy script file.", dest_script, sep = " "))
     }else{
       res <- c(res, dest_script )
     }
@@ -46,8 +46,14 @@ copy_ora_report <- function(workdir = getwd()){
 
   .scriptCopyHelperVec(runscripts, workdir = workdir)
 }
-
+#' copy all files needed to generate a bfabric report
+#'
+#' @param workdir directory where to copy file - default is current working directory.
+#' @export
+#'
 copy_bfabric_2grp <- function(workdir = getwd()){
-  runscripts <- c("analyseSingle2Grp/VisualizeSingle.Rmd")
+
+  runscripts <- c("analyseSingle2Grp/VisualizeSingle.Rmd",
+                  "analyseSingle2Grp/ErrorMessage.Rmd")
   .scriptCopyHelperVec(runscripts, workdir = workdir)
 }

@@ -157,7 +157,7 @@ select_relevant_results <- function(fgseaResult,
   return(GSEAResults)
 }
 
-
+prora::copy
 for (iGS in 1:length(fgseaRes)) {
   #iGS <- 1
   fgseaResult <- fgseaRes[[iGS]]
