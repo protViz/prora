@@ -16,7 +16,7 @@ library(msigdbr)
 library(readr)
 library(fgsea)
 library(tidyverse)
-library(fgcz.gsea.ora)
+library(prora)
 
 maxNES_threshold <- 1.8
 ```
@@ -28,8 +28,8 @@ maxNES_threshold <- 1.8
 data <- readxl::read_xlsx("p3433_results/LinearModelResult_p3433_model_1_noKO/Contrasts_Model_B.xlsx")
 head(data)
 data2 <- data
-#data2 <- fgcz.gsea.ora::get_UniprotID_from_fasta_header(data)
-data3 <- fgcz.gsea.ora::map_ids_uniprot(data2)
+#data2 <- prora::get_UniprotID_from_fasta_header(data)
+data3 <- prora::map_ids_uniprot(data2)
 
 ranklist <- fgsea_rank_contrasts(data3, ids = "P_ENTREZGENEID", score = "statistic"  )
 

@@ -2,16 +2,16 @@ rm(list = ls())
 library(fgsea)
 library(msigdbr)
 library(tidyverse)
-library(fgcz.gsea.ora)
+library(prora)
 
 #data <- readxl::read_xlsx("d:/Dropbox/DataAnalysis/p3433_o7341_20200917/Contrasts_GLM.xlsx")
 if (TRUE) {
 
   data <- readxl::read_xlsx("p3433_results/ImputationResults_p3433_model_1_All/contrastsWithImputation_all.xlsx")
   unique(data$contrast)
-  data2 <- fgcz.gsea.ora::get_UniprotID_from_fasta_header(data)
+  data2 <- prora::get_UniprotID_from_fasta_header(data)
   prefix <- "Imputation_"
-  data3 <- fgcz.gsea.ora::map_ids_uniprot(data2)
+  data3 <- prora::map_ids_uniprot(data2)
   ranklist <- fgsea_rank_contrasts(data3, ids = "P_ENTREZGENEID", score = "estimate_median"  )
 
 }else{
@@ -19,7 +19,7 @@ if (TRUE) {
   data <- readxl::read_xlsx("p3433_results/LinearModelResult_p3433_model_1_noKO/Contrasts_Model_B.xlsx")
   data2 <- data
   prefix <- "LinearModel_"
-  data3 <- fgcz.gsea.ora::map_ids_uniprot(data2)
+  data3 <- prora::map_ids_uniprot(data2)
   ranklist <- fgsea_rank_contrasts(data3, ids = "P_ENTREZGENEID", score = "statistic"  )
 }
 
