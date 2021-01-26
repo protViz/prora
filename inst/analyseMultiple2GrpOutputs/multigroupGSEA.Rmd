@@ -1,0 +1,85 @@
+---
+title: "Multiple comparisons"
+author: "FGCZ"
+date: "30/11/2020"
+output: html_document
+params:
+  all : NULL
+  threshold : NULL
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
+
+library(msigdbr)
+library(readr)
+library(fgsea)
+library(tidyverse)
+library(prora)
+
+all <- eval(params$all)
+threshold <- eval(params$threshold)
+NESfilter <- FALSE
+```
+
+
+
+Filtering genesets for `r if(NESfilter){"NES > "} else {"padj < "}` `r threshold`. In the Heatmap only geneset passing the threshold in any of the contrasts are shown.
+
+(ref:histogramOFscore) Histogram of `r if(NESfilter){"NES"} else {"padj"}`
+
+```{r histogramOFscore, fig.cap="(ref:histogramOFscore)"}
+if (NESfilter) {
+  hist(all$NES)
+} else {
+  hist(all$padj)
+}
+
+xxNES <- tidyr::pivot_wider(all, id_cols = "pathway", names_from = "comparison" , values_from  = "NES")
+xxpadj <- tidyr::pivot_wider(all, id_cols = "pathway", names_from = "comparison" , values_from  = "padj")
+
+```
+
+
+```{r prepheat, fig.cap="Maximum normalized enrichment score for all comparisons."}
+xmNES <- xxNES %>% dplyr::select( -pathway ) %>% as.matrix
+xmpadj <- xxpadj %>% dplyr::select( -pathway ) %>% as.matrix
+
+rownames(xmNES) <- xxNES$pathway
+rownames(xmpadj) <- xxpadj$pathway
+
+if (NESfilter) {
+
+  maxNES <- apply(xmNES, 1, function(x) {
+    max(abs(x), na.rm = TRUE)
+  })
+
+  hist(maxNES, main = "distribution of NES")
+  xmNES <- xmNES[maxNES > threshold, ]
+  maxNES <- maxNES[maxNES > threshold]
+  xmNES <- xmNES[order(maxNES),]
+
+  maxNES <- maxNES[order(maxNES)]
+  p <- pheatmap::pheatmap(na.omit(xmNES), silent = TRUE, cluster_rows = FALSE)
+
+} else{
+  minpadj <- apply(xmpadj, 1, function(x) {
+    min(x, na.rm = TRUE)
+  })
+
+  hist(minpadj, main = "distribution of min padj")
+  xmNES <- xmNES[minpadj < threshold, ]
+  minpadj <- minpadj[minpadj < threshold]
+  xmNES <- xmNES[order(minpadj),]
+
+  minpadj <- minpadj[order(minpadj)]
+  p <- pheatmap::pheatmap(na.omit(xmNES), silent = TRUE, cluster_rows = FALSE)
+
+}
+
+```
+
+```{r makeheatmap, fig.cap = "Heatmap showing the NES of the selected gene sets. Columns : contrasts; Rows : gene sets", fig.height=20, fig.width=10}
+print(p)
+```
+
