@@ -7,6 +7,7 @@ library(prora)
 library(yaml)
 
 YAML = TRUE
+useLog2FC <- FALSE
 
 if (YAML) {
   args = commandArgs(trailingOnly = TRUE)
@@ -23,7 +24,7 @@ if (YAML) {
   outname <- gsub("\\.txt","",basename(inputData))
 
 } else {
-  useLog2FC <- TRUE
+
   inputData <- "2GrpAppOutput/MQ_2grp_report_o6927_iMPC_vs_Ctrl.txt"
   inputData <- "2GrpAppOutput/MQ_2grp_report_o6927_MyoD_D10_vs_Ctrl.txt"
   inputData <- "2GrpAppOutput/MQ_2grp_report_o6927_MyoD_FRC_D10_vs_Ctrl.txt"
@@ -39,9 +40,12 @@ if (YAML) {
 
 outdir <- "out_dir"
 
+prora::copy_bfabric_2grp()
+
 #if (dir.exists(outdir)) {
 #  unlink(outdir,recursive = TRUE)
 #}
+
 prefix <- "FGSEA_"
 
 #####################
@@ -104,12 +108,15 @@ names(rankarray) <- ranklist$P_ENTREZGENEID
 
 #### Run GSEA analysis
 
-C5 <- msigdbr::msigdbr_collections() %>% filter(gs_cat == "C5")
-C5 <- C5[1:3,]
+C5 <- msigdbr::msigdbr_collections() %>%
+  filter(gs_cat == "C5" | gs_cat == "H")
+
+C5 <- C5[c(1:3,5), ]
+
 fgseaGSlist <- fgsea_msigdb_collections(C5, species = species)
 
 #fgsea(pathways =  fgseaGSlist[[1]], rankarray)
-undebug(run_fgsea_for_allGeneSets)
+#undebug(run_fgsea_for_allGeneSets)
 fgseaRes <- run_fgsea_for_allGeneSets(rankarray, fgseaGSlist, nperm = 10000  )
 
 allres <- dplyr::bind_rows(fgseaRes)
@@ -157,7 +164,7 @@ select_relevant_results <- function(fgseaResult,
   return(GSEAResults)
 }
 
-prora::copy
+
 for (iGS in 1:length(fgseaRes)) {
   #iGS <- 1
   fgseaResult <- fgseaRes[[iGS]]
@@ -165,7 +172,7 @@ for (iGS in 1:length(fgseaRes)) {
   gsName = names(fgseaGSlist)[iGS]
 
   if (!is.null(fgseaResult)) {
-    undebug(select_relevant_results)
+    #undebug(select_relevant_results)
     GSEAResults <- select_relevant_results(fgseaResult,
                                            geneSet,
                                            gsName,

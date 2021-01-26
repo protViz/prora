@@ -1,6 +1,6 @@
 ---
 title: "Error Message"
-author: "Witold Wolski"
+author: "FGCZ protinf@fgcz.uzh.ch"
 date: "19/01/2021"
 output: html_document
 params:
@@ -12,3 +12,4 @@ ErrorMessage <- params$ErrorMessage
 ```
 
 `r ErrorMessage`
+

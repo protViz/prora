@@ -1,1 +1,4 @@
 2GrpAppOutput/
+*.html
+out_dir/
+*.txt

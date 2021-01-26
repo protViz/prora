@@ -1,6 +1,6 @@
 ---
 title: "Visualize single GSEA result"
-author: "Witold Wolski"
+author: "FGCZ"
 date: "03/12/2020"
 output: html_document
 param:
@@ -86,3 +86,5 @@ plotGseaTable(mainGeneSets, rankList , mainPathways,
               gseaParam = 0.5)
 
 ```
+
+Please contact `wew@fgcz.ethz.ch`
