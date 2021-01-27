@@ -6,8 +6,6 @@ author:
 - name: Witold Wolski
   affiliation: University of Zurich
 date: "`r format(Sys.time(), '%d %B %Y')`"
-output:
-  BiocStyle::pdf_document
 bibliography: bibliography.bib
 vignette: >
   %\VignetteIndexEntry{prora: Unifying methods on gene set enrichment}
