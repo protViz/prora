@@ -44,7 +44,7 @@ sapply(target_GSEA, function(x) {
     data = dd,
     fpath = "",
     ID_col = ID_col,
-    fc_col = fc_col,
+    score_col = fc_col,
     organism = organism,
     target = x,
     nperm = nperm,
