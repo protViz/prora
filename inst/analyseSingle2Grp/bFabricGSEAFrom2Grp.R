@@ -5,6 +5,7 @@ library(msigdbr)
 library(tidyverse)
 library(prora)
 library(yaml)
+library(writexl)
 
 YAML = TRUE
 useLog2FC <- FALSE
