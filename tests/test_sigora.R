@@ -38,8 +38,8 @@ sapply(target_SIGORA, function(x) {
   prora::runSIGORA(
     data = dd,
     target = x,
-    fc_col = fc_col,
-    fc_threshold = fc_threshold,
+    score_col = fc_col,
+    threshold = fc_threshold,
     greater = greater,
     outdir = file.path(odir, "sigORA")
   )
