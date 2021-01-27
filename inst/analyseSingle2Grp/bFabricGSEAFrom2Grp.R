@@ -18,7 +18,7 @@ if (YAML) {
     stop("script needs one argument the bfabripy.yaml file.")
     yamlfile <- "WU256211.yaml"
   }
-  params <- yaml::read_yaml("WU256211.yaml")
+  params <- yaml::read_yaml(yamlfile)
 
   inputData <- basename(params$application$input$`MaxQuant - Two Group Analysis Report`)
   FDR_threshold <- as.numeric(params$application$parameters$FDRthreshold)
