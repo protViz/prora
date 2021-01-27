@@ -15,6 +15,7 @@ if (YAML) {
   if (length(args) > 0) {
     yamlfile <- args[1]
   }else{
+    stop("script needs one argument the bfabripy.yaml file.")
     yamlfile <- "WU256211.yaml"
   }
   params <- yaml::read_yaml("WU256211.yaml")
