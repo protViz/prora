@@ -37,6 +37,7 @@ Imports: AnnotationDbi,
     tibble,
     tidyr,
     tidyverse,
+    writexl,
     UpSetR
 RoxygenNote: 7.1.1
 VignetteBuilder: knitr
