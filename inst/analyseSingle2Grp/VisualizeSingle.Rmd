@@ -1,6 +1,6 @@
 ---
 title: "Visualize single GSEA result"
-author: "FGCZ"
+author: "FGCZ protinf@fgcz.uzh.ch"
 date: "03/12/2020"
 output: html_document
 param:
@@ -14,12 +14,6 @@ knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
 
 
 ```{r setupData}
-#GSEAex1 <- list(
-#msigDBGS = ,
-#fgseaResult = fgseaRes[[1]],
-#geneSet = fgseaGS[[1]],
-#rankList = allrnk[[1]])
-#usethis::use_data(GSEAex1)
 library(DT)
 library(prora)
 
@@ -37,7 +31,7 @@ score <- GSEAResults$score
 
 - Analysis for gene set category: `r gsName`.
 - The filtering of gene sets used is: `r paste0("padj < ", threshold)`.
-- out of `r map_summaries$nrow_all` were mapped to `r map_summaries$nrow_mapped`.
+- out of `r map_summaries$nrow_all` Proteins,  `r map_summaries$nrow_mapped` were mapped to Entrez Gene identifiers.
 - Proteins were ordered using the `r score`.
 
 

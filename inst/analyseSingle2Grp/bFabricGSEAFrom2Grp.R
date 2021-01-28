@@ -8,7 +8,7 @@ library(yaml)
 library(writexl)
 
 YAML = TRUE
-useLog2FC <- FALSE
+useLog2FC <- TRUE
 
 if (YAML) {
   args = commandArgs(trailingOnly = TRUE)
