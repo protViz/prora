@@ -7,3 +7,6 @@ genData.R
 inst/rmarkdown_reports/*.html
 inst/rmarkdown_reports/*.pdf
 
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
