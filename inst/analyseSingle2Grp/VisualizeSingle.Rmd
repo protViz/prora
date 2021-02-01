@@ -90,4 +90,8 @@ if (nrow(mainPathways) > 0) {
 }
 ```
 
-Please contact `wew@fgcz.ethz.ch`
+
+
+Do you have further questions, please contact `protinf@fgcz.uzh.ch`.
+
+
