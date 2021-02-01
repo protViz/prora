@@ -13,7 +13,12 @@ ErrorMessage <- params$ErrorMessage
 protIDs <- params$protIDs
 ```
 
-`r ErrorMessage`
+The following Error occured:
+
+__`r ErrorMessage`__
+
+
+
 
 We support only swiss-prot identifiers for species HUMAN and MOUSE, e.g. `sp|Q9Y6V0|PCLO_HUMAN` or `sp|Q9QYX7|PCLO_MOUSE`.
 
