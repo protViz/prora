@@ -59,7 +59,7 @@ abline(h = -log10(threshold), col = c(2,3))
 ```
 
 
-`r if(nrow(relevantResult) ==0){ paste0("There are NO relevant results. with padj < ", threshold)} `
+`r if(nrow(relevantResult) ==0){ paste0("There are NO relevant results with padj < ", threshold, ".")} `
 
 ```{r collapsePathway}
 if (nrow(relevantResult) > 0) {
