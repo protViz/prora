@@ -16,13 +16,13 @@ if (YAML) {
     yamlfile <- args[1]
   }else{
     stop("script needs one argument the bfabripy.yaml file.")
-    yamlfile <- "WU256211.yaml"
+    yamlfile <- "WU256806.yaml"
   }
-  params <- yaml::read_yaml(yamlfile)
+  parameters <- yaml::read_yaml(yamlfile)
 
-  inputData <- basename(params$application$input$`MaxQuant - Two Group Analysis Report`)
-  FDR_threshold <- as.numeric(params$application$parameters$FDRthreshold)
-  species <- params$application$parameters$Species
+  inputData <- basename(parameters$application$input$`MaxQuant - Two Group Analysis Report`)
+  FDR_threshold <- as.numeric(parameters$application$parameters$FDRthreshold)
+  species <- parameters$application$parameters$Species
   outname <- gsub("\\.txt","",basename(inputData))
 
 } else {
@@ -91,7 +91,8 @@ ranklist <- ranklist %>%
 if (nrow(ranklist) == 0) {
   ErrorMessage <- "No Id's were mapped."
   rmarkdown::render("ErrorMessage.Rmd",
-                    params = list(ErrorMessage = ErrorMessage))
+                    params = list(ErrorMessage = ErrorMessage,
+                                  protIDs = sample(data$TopProteinName, size = 10)))
   file.copy("ErrorMessage.html", file.path(outdir, "ErrorMessage.html") , overwrite = TRUE)
 
   write(ErrorMessage,
@@ -128,7 +129,10 @@ if (nrow(allres) == 0) {
   ErrorMessage <- paste0("No results for all GeneSets, please do check if species ",
                          species, " is correct.\n")
   rmarkdown::render("ErrorMessage.Rmd",
-                    params = list(ErrorMessage = ErrorMessage))
+                    params = list(ErrorMessage = ErrorMessage,
+                                  protIDs = sample(data$TopProteinName, size = 10)))
+
+
   file.copy("ErrorMessage.html", file.path(outdir, "ErrorMessage.html") , overwrite = TRUE)
 
   write(ErrorMessage,
