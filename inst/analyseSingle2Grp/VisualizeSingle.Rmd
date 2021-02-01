@@ -47,7 +47,7 @@ plot(sort(rankList,decreasing = TRUE), type = "h", ylab = score)
 ```
 
 
-```{r pval , fig.cap = " Panel B : -log10(FDR) vs normalized enrichment score (NES)."}
+```{r pval , fig.cap = " Volcano Plot:  -log10(FDR) (Y axis)  vs normalized enrichment score (NES) (X axis)."}
 par(mfrow = c(1,2))
 
 
@@ -59,32 +59,35 @@ abline(h = -log10(threshold), col = c(2,3))
 ```
 
 
+`r if(nrow(relevantResult) ==0){ paste0("There are NO relevant results. with padj < ", threshold)} `
 
 ```{r collapsePathway}
-caption <- paste0("All Pathways with padj < ", threshold, ".")
-DT::datatable(relevantResult, caption = caption) %>% 
-  formatSignif('NES',2) %>%
-  formatSignif(c('pval','padj'),2)
-
+if (nrow(relevantResult) > 0) {
+  caption <- paste0("All Pathways with padj < ", threshold, ".")
+  DT::datatable(relevantResult, caption = caption) %>% 
+    formatSignif('NES',2) %>%
+    formatSignif(c('pval','padj'), 2)
+}
 ```
 
 
 ```{r showPathways2}
-caption = paste0("Non redundant pathways with padj < ",  threshold,".")
-DT::datatable(mainPathways, caption = caption) %>%
-  formatSignif('NES',2) %>%
-  formatSignif(c('pval','padj'),2)
-
+if (nrow(mainPathways) > 0) {
+  caption = paste0("Non redundant pathways with padj < ",  threshold,".")
+  DT::datatable(mainPathways, caption = caption) %>%
+    formatSignif('NES',2) %>%
+    formatSignif(c('pval','padj'),2)
+}
 
 ```
 
 
 ```{r plotGenesets, fig.width=20, fig.height=40, fig.cap="Protein positions in ranked list for non-redundant Pathways"}
-
-mainGeneSets <- geneSet[mainPathways$pathway]
-plotGseaTable(mainGeneSets, rankList , mainPathways,
-              gseaParam = 0.5)
-
+if (nrow(mainPathways) > 0) {
+  mainGeneSets <- geneSet[mainPathways$pathway]
+  plotGseaTable(mainGeneSets, rankList , mainPathways,
+                gseaParam = 0.5)
+}
 ```
 
 Please contact `wew@fgcz.ethz.ch`
