@@ -14,12 +14,6 @@ knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
 
 
 ```{r setupData}
-#GSEAex1 <- list(
-#msigDBGS = ,
-#fgseaResult = fgseaRes[[1]],
-#geneSet = fgseaGS[[1]],
-#rankList = allrnk[[1]])
-#usethis::use_data(GSEAex1)
 library(DT)
 library(prora)
 
@@ -33,16 +27,24 @@ threshold <- GSEAResults$threshold
 mainPathways <- GSEAResults$mainPathways
 map_summaries <- GSEAResults$map_summaries
 score <- GSEAResults$score
+
 ```
 
+# Summary
+
+Gene Set Enrichment Analysis (GSEA) examines the distribution of a gene-set within a ranked list of proteins. The null hypothesis is that the proteins in the gene set are randomly distributed over the ranked list. The alternative is that most of the proteins are concentrated in one of the ranked list tails. To estimate the p-value an enrichment score (ES) and a normalized enrichment score (NES) for a gene set are computed and compared with the null distribution of the NES. Since we examine dozens of gene-sets and perform multiple tests, the obtained p-values need to be adjusted for multiple testing resulting in a false discovery rate (FDR).
+
+
+To rank the proteins we used `r score`. 
+
 - Analysis for gene set category: `r gsName`.
-- The filtering of gene sets used is: `r paste0("padj < ", threshold)`.
-- out of `r map_summaries$nrow_all` were mapped to `r map_summaries$nrow_mapped`.
-- Proteins were ordered using the `r score`.
+- We filtered the gene sets with : `r paste0("FDR < ", threshold)`, where FDR is the false discovery rate.
+- We were able to map `r map_summaries$nrow_all` identifiers to `r map_summaries$nrow_mapped` Entrez identifiers.
+- Proteins are ranked using the `r score`.
 
 
 ```{r ranklist , fig.cap = "Sorted list of proteins."}
-plot(sort(rankList,decreasing = TRUE), type = "h", ylab = score)
+plot(sort(rankList, decreasing = TRUE), type = "h", ylab = score)
 
 ```
 
@@ -89,7 +91,6 @@ if (nrow(mainPathways) > 0) {
                 gseaParam = 0.5)
 }
 ```
-
 
 
 Do you have further questions, please contact `protinf@fgcz.uzh.ch`.
