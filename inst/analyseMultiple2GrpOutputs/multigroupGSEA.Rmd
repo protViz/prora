@@ -24,7 +24,7 @@ NESfilter <- FALSE
 
 
 
-Filtering genesets for `r if(NESfilter){"NES > "} else {"padj < "}` `r threshold`. In the Heatmap only gene-sets passing the threshold in any of the contrasts are shown.
+Filtering gene-sets for `r if(NESfilter){"NES > "} else {"padj < "}` `r threshold`. In the Heat-map only gene-sets passing the threshold in any of the contrasts are shown.
 
 (ref:histogramOFscore) Histogram of `r if(NESfilter){"NES"} else {"padj"}`
 
