@@ -30,10 +30,11 @@ score <- GSEAResults$score
 
 ```
 
+# Introduction
+
+Gene Set Enrichment Analysis (GSEA) examines the distribution of a gene-set within a ranked list of proteins. The null hypothesis is that the gene set genes are randomly distributed over the ranked list of proteins. The alternative is that most of the proteins are concentrated in one of the ranked list tails. To estimate the probability of falsely rejecting the null hypothesis (p-value) a normalized enrichment score (NES) for a gene set is computed and compared with the null distribution of the NES. Since we examine dozens of gene-sets and perform multiple tests, the obtained p-values need to be adjusted for multiple testing, resulting in a false discovery rate (FDR).
+
 # Summary
-
-Gene Set Enrichment Analysis (GSEA) examines the distribution of a gene-set within a ranked list of proteins. The null hypothesis is that the proteins in the gene set are randomly distributed over the ranked list. The alternative is that most of the proteins are concentrated in one of the ranked list tails. To estimate the p-value an enrichment score (ES) and a normalized enrichment score (NES) for a gene set are computed and compared with the null distribution of the NES. Since we examine dozens of gene-sets and perform multiple tests, the obtained p-values need to be adjusted for multiple testing resulting in a false discovery rate (FDR).
-
 
 To rank the proteins we used `r score`. 
 
@@ -93,6 +94,6 @@ if (nrow(mainPathways) > 0) {
 ```
 
 
-Do you have further questions, please contact `protinf@fgcz.uzh.ch`.
+Do you have further questions, please contact `wew@fgcz.ethz.ch` or `protinf@fgcz.uzh.ch`.
 
 
