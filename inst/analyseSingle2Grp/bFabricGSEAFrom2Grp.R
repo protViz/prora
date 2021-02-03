@@ -76,15 +76,19 @@ data2 <- prora::get_UniprotID_from_fasta_header(data,
 
 data3 <- tryCatch(prora::map_ids_uniprot(data2), error = .ehandler)
 if (is.character(data3)) {
-  data3 <- "Madness"
-  rmarkdown::render("ErrorMessage.Rmd",
-                    params = list(ErrorMessage = data3,
-                                  protIDs = sample(data$TopProteinName, size = 10)))
-  file.copy("ErrorMessage.html", file.path(outdir, "ErrorMessage.html") , overwrite = TRUE)
+  print("prora::map_ids_uniprot Errored, exitin with nonzero status.")
+  q(save = "no", status = 23)
 
-  write(data3,
-        file = stderr())
-  stop(data3)
+  if (FALSE) { # Disable error reporting.
+    rmarkdown::render("ErrorMessage.Rmd",
+                      params = list(ErrorMessage = data3,
+                                    protIDs = sample(data$TopProteinName, size = 10)))
+    file.copy("ErrorMessage.html", file.path(outdir, "ErrorMessage.html") , overwrite = TRUE)
+
+    write(data3,
+          file = stderr())
+    stop(data3)
+  }
 
 }
 
