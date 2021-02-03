@@ -76,7 +76,9 @@ data2 <- prora::get_UniprotID_from_fasta_header(data,
 
 data3 <- tryCatch(prora::map_ids_uniprot(data2), error = .ehandler)
 if (is.character(data3)) {
+
   print("prora::map_ids_uniprot Errored, exitin with nonzero status.")
+  print(paste0("The error is : ", data3, "\n\n"))
   q(save = "no", status = 23)
 
   if (FALSE) { # Disable error reporting.

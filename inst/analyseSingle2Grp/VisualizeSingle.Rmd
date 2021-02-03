@@ -94,6 +94,11 @@ if (nrow(mainPathways) > 0) {
 ```
 
 
+# References
+
+Gene-sets defined in the Molecular Signature Database [MSigDB](http://www.gsea-msigdb.org/) were used (http://www.gsea-msigdb.org/).
+To generate the analysis the following R packages have been used `r BiocStyle::Biocpkg("msigdbr")`, `r BiocStyle::Biocpkg("fgsea")` and `r BiocStyle::Githubpkg("protviz", "prora")`
+
 Do you have further questions, please contact `wew@fgcz.ethz.ch` or `protinf@fgcz.uzh.ch`.
 
 
