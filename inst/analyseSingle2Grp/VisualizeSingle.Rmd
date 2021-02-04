@@ -55,37 +55,51 @@ par(mfrow = c(1,2))
 
 
 plot( fgseaResult$NES ,
-     -log10(fgseaResult$padj),
-     ylim = c(0, max(c(-log10(0.05), -log10(fgseaResult$padj)), na.rm = TRUE)),
+     -log10(fgseaResult$FDR),
+     ylim = c(0, max(c(-log10(0.05), -log10(fgseaResult$FDR)), na.rm = TRUE)),
      ylab = "-log10(FDR)", xlab = "NES", pch = 16, main = "")
 abline(h = -log10(threshold), col = c(2,3))
 ```
 
 
-`r if(nrow(relevantResult) ==0){ paste0("There are NO relevant results with padj < ", threshold, ".")} `
+`r if(nrow(relevantResult) ==0){ paste0("There are NO relevant results with FDR < ", threshold, ".")} `
 
-```{r collapsePathway}
+```{r relevantResults}
 if (nrow(relevantResult) > 0) {
-  caption <- paste0("All Pathways with padj < ", threshold, ".")
+  caption <- paste0("All Pathways with FDR < ", threshold, ".")
   DT::datatable(relevantResult, caption = caption) %>% 
     formatSignif('NES',2) %>%
-    formatSignif(c('pval','padj'), 2)
+    formatSignif(c('pval','FDR'), 2)
+}
+```
+
+```{r tableColumnDesicripion}
+if (nrow(relevantResult) > 0) {
+tableLegend <- c("GS" = "Geneset Collection : for more details see msigdb.org",
+"FDR" = "False rate",
+"nMoreExtreme" =  "a number of times a random gene set had a more extreme enrichment score value",
+"leadingEdge" = "vector with Entrez Id's of leading edge genes that drive the enrichment.",
+"size" = "size of the pathway after removing genes not present in in the protein list")
+
+knitr::kable(data.frame("Name" = names(tableLegend), "Description" = tableLegend))
 }
 ```
 
 
 ```{r showPathways2}
 if (nrow(mainPathways) > 0) {
-  caption = paste0("Non redundant pathways with padj < ",  threshold,".")
+  caption = paste0("Non redundant pathways with FDR < ",  threshold,".")
   DT::datatable(mainPathways, caption = caption) %>%
     formatSignif('NES',2) %>%
-    formatSignif(c('pval','padj'),2)
+    formatSignif(c('pval','FDR'),2)
+  
 }
+height.fig = max(2,2*nrow(mainPathways))
 
 ```
 
 
-```{r plotGenesets, fig.width=20, fig.height=40, fig.cap="Protein positions in ranked list for non-redundant Pathways"}
+```{r plotGenesets, fig.width=20, fig.height=height.fig, fig.cap="Protein positions in ranked list for non-redundant Pathways"}
 if (nrow(mainPathways) > 0) {
   mainGeneSets <- geneSet[mainPathways$pathway]
   plotGseaTable(mainGeneSets, rankList , mainPathways,
