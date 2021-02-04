@@ -119,6 +119,7 @@ run_fgsea_for_allGeneSets <- function(allrnk,
                       leadingEdge,
                       .after = size)
     fgseaResult <- dplyr::relocate(fgseaResult, GS, .before = pathway)
+    fgseaResult <- dplyr::rename(fgseaResult, FDR = padj)
     fgseaRes[[i]] <- fgseaResult
 
   }
