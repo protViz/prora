@@ -15,8 +15,8 @@ if (YAML) {
   if (length(args) > 0) {
     yamlfile <- args[1]
   }else{
-    stop("script needs one argument the bfabripy.yaml file.")
-    yamlfile <- "WU256852.yaml"
+    #stop("script needs one argument the bfabripy.yaml file.")
+    yamlfile <- "WU256211.yaml"
   }
   parameters <- yaml::read_yaml(yamlfile)
 
@@ -154,16 +154,16 @@ if (nrow(allres) == 0) {
   # write HTML
   ErrorMessage <- paste0("No results for all GeneSets, please do check if species ",
                          species, " is correct.\n")
+
+
   rmarkdown::render("ErrorMessage.Rmd",
                     params = list(ErrorMessage = ErrorMessage,
                                   protIDs = sample(data$TopProteinName, size = 10)))
 
-
   file.copy("ErrorMessage.html", file.path(outdir, "ErrorMessage.html") , overwrite = TRUE)
-
   write(ErrorMessage,
         file = stderr())
-  stop(ErrorMessage)
+  stop(ErrorMessage) # ends script and sets exit status to 1.
 } else{
   writexl::write_xlsx(allres,
                       path = file.path(outdir, paste0(prefix,"All_results",outname , ".xlsx")))
@@ -175,7 +175,7 @@ select_relevant_results <- function(fgseaResult,
                                     gsName,
                                     rankList,
                                     FDR_threshold){
-  relevantResult <- fgseaResult %>% dplyr::filter(.data$padj < FDR_threshold)
+  relevantResult <- fgseaResult %>% dplyr::filter(.data$FDR < FDR_threshold)
   collapsedPathways <- fgsea::collapsePathways(relevantResult,
                                                geneSet, rankList)
   relevantResult <- dplyr::select(relevantResult, -ES)
@@ -204,7 +204,6 @@ for (iGS in 1:length(fgseaRes)) {
   gsName = names(fgseaGSlist)[iGS]
 
   if (!is.null(fgseaResult)) {
-    #undebug(select_relevant_results)
     GSEAResults <- select_relevant_results(fgseaResult,
                                            geneSet,
                                            gsName,
