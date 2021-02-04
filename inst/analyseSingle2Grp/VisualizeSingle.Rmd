@@ -75,7 +75,7 @@ if (nrow(relevantResult) > 0) {
 
 ```{r tableColumnDesicripion}
 if (nrow(relevantResult) > 0) {
-tableLegend <- c("GS" = "Geneset Collection : for more details see msigdb.org",
+tableLegend <- c("GS" = "Gene-set Collection : for more details see msigdb.org",
 "FDR" = "False rate",
 "nMoreExtreme" =  "a number of times a random gene set had a more extreme enrichment score value",
 "leadingEdge" = "vector with Entrez Id's of leading edge genes that drive the enrichment.",
