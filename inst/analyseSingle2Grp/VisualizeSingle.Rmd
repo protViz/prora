@@ -94,24 +94,25 @@ if (nrow(mainPathways) > 0) {
     formatSignif(c('pval','FDR'),2)
   
 }
-height.fig = max(2,2*nrow(mainPathways))
+height.fig = max(3 + 2 * nrow(mainPathways))
 
 ```
 
 
-```{r plotGenesets, fig.width=20, fig.height=height.fig, fig.cap="Protein positions in ranked list for non-redundant Pathways"}
+```{r plotGenesets, fig.width=10, fig.height=height.fig, fig.cap="Protein positions in ranked list for non-redundant Pathways"}
 if (nrow(mainPathways) > 0) {
   mainGeneSets <- geneSet[mainPathways$pathway]
   plotGseaTable(mainGeneSets, rankList , mainPathways,
                 gseaParam = 0.5)
 }
-```
 
+```
 
 # References
 
 Gene-sets defined in the Molecular Signature Database [MSigDB](http://www.gsea-msigdb.org/) are used.
-To generate the analysis the following R packages are used `r BiocStyle::Biocpkg("msigdbr")`, `r BiocStyle::Biocpkg("fgsea")` and `r BiocStyle::Githubpkg("protviz/prora", "prora")`
+To generate the analysis the following R packages are used `r BiocStyle::Biocpkg("msigdbr")`,
+`r BiocStyle::Biocpkg("fgsea")` and `r BiocStyle::Githubpkg("protviz/prora", "prora")`
 
 Do you have further questions, please contact `wew@fgcz.ethz.ch` or `protinf@fgcz.uzh.ch`.
 
