@@ -1,23 +1,12 @@
-# Installing R package prora
-
-
-For the `prora` package documentation visit `https://protviz.github.io/prora/`.
-
-
-To install the package in R run the following code:
-
-```
-install.packages("remotes")
-remotes::install_github("protViz/prora")
-```
-
-
 # prora
 
 prora an R package for proteomics over representation analysis (ORA) and gene set enrichment analysis (GSEA)
 
 ![prora](man/figures/proraHex.png)
 
+For the `prora` package documentation visit `https://protviz.github.io/prora/`.
+
+# Introduction
 
 A plethora of R packages exist on CRAN and Bioconductor to perform over-representation 
 analysis (ORA) and gene set enrichment analysis (GSEA). However, consistency in the 
@@ -27,6 +16,16 @@ in a syntactically coherent and intuitive way, while ensuring reproducibility of
 results. `prora` primarily consists of wrapper functions around the 
 `r BiocStyle::CRANpkg("sigora")`, `r BiocStyle::CRANpkg("WebGestaltR")` and `r BiocStyle::Biocpkg("fgsea")`  packages from CRAN and Bioconductor and `r BiocStyle::CRANpkg("rmarkdown")` based reports for visualisation and contextualisation 
 of analysis results.
+
+# Installing R package prora
+
+To install the package in R run the following code:
+
+```
+install.packages("remotes")
+remotes::install_github("protViz/prora")
+```
+
 
 # Webgestalt ORA
 
