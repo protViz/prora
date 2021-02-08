@@ -4,7 +4,7 @@ prora an R package for proteomics over representation analysis (ORA) and gene se
 
 ![prora](man/figures/proraHex.png)
 
-For the `prora` package documentation visit `https://protviz.github.io/prora/`.
+For the `prora` package documentation visit https://protviz.github.io/prora/.
 
 # Introduction
 
