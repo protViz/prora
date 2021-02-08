@@ -221,10 +221,13 @@ for (iGS in 1:length(fgseaRes)) {
                       params = list(GSEAResults = GSEAResults))
     file.copy("VisualizeSingle.html", file.path(outdir, html_out) , overwrite = TRUE)
 
-    mP <- fgsea_leading_edge_too_char(GSEAResults)
-    writexl::write_xlsx(mP,
-                        path = file.path(outdir,
-                                         paste0(prefix,  outfile, "_MainPathways" , ".xlsx")))
+
+    mP <- fgsea_leading_edge_too_char(GSEAResults$mainPathways)
+    if (nrow(mP) > 0) {
+      writexl::write_xlsx(mP,
+                          path = file.path(outdir,
+                                           paste0(prefix,  outfile, "_MainPathways" , ".xlsx")))
+    }
     fgseaResult <- fgsea_leading_edge_too_char(fgseaResult)
     writexl::write_xlsx(fgseaResult,
                         path = file.path(outdir,

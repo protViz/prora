@@ -60,10 +60,11 @@ fgsea_msigdb_collections <- function(
 #' convert leading edge column to char for writing to file
 #' @export
 fgsea_leading_edge_too_char <- function(xdata, column = "leadingEdge"){
-  xdata <- xdata %>% mutate(column :=
+  xdata <- xdata %>% mutate(!! column :=
                               lapply(!!sym(column) ,
                                      function(x){paste(x , collapse = ",")} ))
   class(xdata[[column]]) <- "character"
+  return(xdata)
 }
 
 #' run for all contrasts
