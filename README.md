@@ -1,6 +1,5 @@
 # Installing R package prora
 
-![prolfqua](man/figures/proraHex.png)
 
 For the `prora` package documentation visit `https://protviz.github.io/prora/`.
 
@@ -14,19 +13,20 @@ remotes::install_github("protViz/prora")
 
 
 # prora
-running _ora_ or _gsea_ on lists of proteinidentifiers.
+
+prora an R package for proteomics over representation analysis (ORA) and gene set enrichment analysis (GSEA)
+
+![prora](man/figures/proraHex.png)
+
 
 A plethora of R packages exist on CRAN and Bioconductor to perform over-representation 
 analysis (ORA) and gene set enrichment analysis (GSEA). However, consistency in the 
 underlying nomenclature for specific analyses and user friendly implementation is 
-still lacking. `fgczgseaora` aims at unifying ID mapping and enrichment analysis 
+still lacking. `prora` aims at unifying ID mapping and enrichment analysis 
 in a syntactically coherent and intuitive way, while ensuring reproducibility of 
-results. `fgczgseaora` primarily consists of wrapper functions around the 
-`r BiocStyle::CRANpkg("sigora")`, `r BiocStyle::CRANpkg("WebGestaltR")` and `r BiocStyle::Biocpkg("fgsea")`  packages from CRAN and 
-`r BiocStyle::CRANpkg("rmarkdown")` based reports for visualisation and contextualisation 
+results. `prora` primarily consists of wrapper functions around the 
+`r BiocStyle::CRANpkg("sigora")`, `r BiocStyle::CRANpkg("WebGestaltR")` and `r BiocStyle::Biocpkg("fgsea")`  packages from CRAN and Bioconductor and `r BiocStyle::CRANpkg("rmarkdown")` based reports for visualisation and contextualisation 
 of analysis results.
-Plans for the future include the integration of the R packages `r Biocpkg(topGo)` and of the `r CRANpkg("enrichr")`.
-as well as providing executable R script files which can be run on windows or linux (experimental):
 
 # Webgestalt ORA
 
