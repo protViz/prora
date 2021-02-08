@@ -57,6 +57,14 @@ fgsea_msigdb_collections <- function(
   return(fgseaGSlist)
 }
 
+#' convert leading edge column to char for writing to file
+#' @export
+fgsea_leading_edge_too_char <- function(xdata, column = "leadingEdge"){
+  xdata <- xdata %>% mutate(column :=
+                              lapply(!!sym(column) ,
+                                     function(x){paste(x , collapse = ",")} ))
+  class(xdata[[column]]) <- "character"
+}
 
 #' run for all contrasts
 #' @export
@@ -126,3 +134,4 @@ run_fgsea_for_allGeneSets <- function(allrnk,
   names(fgseaRes) <- names(geneSets)
   return(fgseaRes)
 }
+

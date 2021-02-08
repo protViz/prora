@@ -15,8 +15,8 @@ if (YAML) {
   if (length(args) > 0) {
     yamlfile <- args[1]
   }else{
-    stop("script needs one argument the bfabripy.yaml file.")
-    #yamlfile <- "WU256211.yaml"
+    #stop("script needs one argument the bfabripy.yaml file.")
+    yamlfile <- "WU256211.yaml"
     #yamlfile <- "WU256806.yaml"
     #yamlfile <- "WU256841.yaml"
 
@@ -147,8 +147,6 @@ C5 <- C5[c(1:3,5), ]
 
 fgseaGSlist <- fgsea_msigdb_collections(C5, species = species)
 
-#fgsea(pathways =  fgseaGSlist[[1]], rankarray)
-#undebug(run_fgsea_for_allGeneSets)
 fgseaRes <- run_fgsea_for_allGeneSets(rankarray, fgseaGSlist, nperm = 10000  )
 
 allres <- dplyr::bind_rows(fgseaRes)
@@ -168,8 +166,9 @@ if (nrow(allres) == 0) {
         file = stderr())
   stop(ErrorMessage) # ends script and sets exit status to 1.
 } else{
-  writexl::write_xlsx(allres,
-                      path = file.path(outdir, paste0(prefix,"All_results",outname , ".xlsx")))
+  allresW <- fgsea_leading_edge_too_char(allres)
+  writexl::write_xlsx(allresW,
+                      path = file.path(outdir, paste0(prefix, "All_results", outname , ".xlsx")))
 }
 
 
@@ -222,9 +221,11 @@ for (iGS in 1:length(fgseaRes)) {
                       params = list(GSEAResults = GSEAResults))
     file.copy("VisualizeSingle.html", file.path(outdir, html_out) , overwrite = TRUE)
 
-    writexl::write_xlsx(GSEAResults$mainPathways,
+    mP <- fgsea_leading_edge_too_char(GSEAResults)
+    writexl::write_xlsx(mP,
                         path = file.path(outdir,
                                          paste0(prefix,  outfile, "_MainPathways" , ".xlsx")))
+    fgseaResult <- fgsea_leading_edge_too_char(fgseaResult)
     writexl::write_xlsx(fgseaResult,
                         path = file.path(outdir,
                                          paste0(prefix, outfile, "_AllPathways", ".xlsx" )))
