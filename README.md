@@ -1,5 +1,7 @@
 # Installing R package prora
 
+![prolfqua](man/figures/cutProra.png)
+
 For the `prora` package documentation visit `https://protviz.github.io/prora/`.
 
 
