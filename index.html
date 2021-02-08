@@ -74,23 +74,24 @@
       </header><div class="row">
   <div class="contents col-md-9">
 
-<div id="installing-r-package-prora" class="section level1">
+<div id="prora" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
-<a href="#installing-r-package-prora" class="anchor"></a>Installing R package prora</h1></div>
-<p>Windows: run the following in R:</p>
+<a href="#prora" class="anchor"></a>prora</h1></div>
+<p>prora an R package for proteomics over representation analysis (ORA) and gene set enrichment analysis (GSEA)</p>
+<p><img src="reference/figures/proraHex.png" alt="prora"></p>
+<p>For the <code>prora</code> package documentation visit <a href="https://protviz.github.io/prora/" class="uri">https://protviz.github.io/prora/</a>.</p>
+</div>
+<div id="introduction" class="section level1">
+<h1 class="hasAnchor">
+<a href="#introduction" class="anchor"></a>Introduction</h1>
+<p>A plethora of R packages exist on CRAN and Bioconductor to perform over-representation analysis (ORA) and gene set enrichment analysis (GSEA). However, consistency in the underlying nomenclature for specific analyses and user friendly implementation is still lacking. <code>prora</code> aims at unifying ID mapping and enrichment analysis in a syntactically coherent and intuitive way, while ensuring reproducibility of results. <code>prora</code> primarily consists of wrapper functions around the <code>r BiocStyle::CRANpkg("sigora")</code>, <code>r BiocStyle::CRANpkg("WebGestaltR")</code> and <code>r BiocStyle::Biocpkg("fgsea")</code> packages from CRAN and Bioconductor and <code>r BiocStyle::CRANpkg("rmarkdown")</code> based reports for visualisation and contextualisation of analysis results.</p>
+</div>
+<div id="installing-r-package-prora" class="section level1">
+<h1 class="hasAnchor">
+<a href="#installing-r-package-prora" class="anchor"></a>Installing R package prora</h1>
+<p>To install the package in R run the following code:</p>
 <pre><code><a href="https://rdrr.io/r/utils/install.packages.html">install.packages("remotes")
 remotes::install_github("protViz/prora")</a></code></pre>
-</div>
-<div id="prora-vignettes" class="section level1">
-<h1 class="hasAnchor">
-<a href="#prora-vignettes" class="anchor"></a>prora vignettes:</h1>
-<p><a href="https://rdrr.io/github/protViz/prora/#vignettes" class="uri">https://rdrr.io/github/protViz/prora/#vignettes</a></p>
-</div>
-<div id="prora" class="section level1">
-<h1 class="hasAnchor">
-<a href="#prora" class="anchor"></a>prora</h1>
-<p>running ora or gsea on lists of proteinidentifiers</p>
-<p>A plethora of R packages exist on CRAN and Bioconductor to perform over-representation analysis (ORA) and gene set enrichment analysis (GSEA). However, consistency in the underlying nomenclature for specific analyses and user friendly implementation is still lacking. <code>fgczgseaora</code> aims at unifying ID mapping and enrichment analysis in a syntactically coherent and intuitive way, while ensuring reproducibility of results. <code>fgczgseaora</code> primarily consists of wrapper functions around the <code>r CRANpkg("sigora")</code> and <code>r CRANpkg("WebGestaltR")</code> packages from CRAN and <code>r CRANpkg("rmarkdown")</code> based reports for visualisation and contextualisation of analysis results. Plans for the future include the integration of the R packages <code>r Biocpkg(topGo)</code> and of the <code>r CRANpkg("enrichr")</code>. as well as providing executable R script files which can be run on windows or linux (experimental):</p>
 </div>
 <div id="webgestalt-ora" class="section level1">
 <h1 class="hasAnchor">

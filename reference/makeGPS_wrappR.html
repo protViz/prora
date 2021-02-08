@@ -159,18 +159,18 @@ Function for generating background GPS repository for sigora and ora</p>
     <pre class="examples"><div class='input'>
 <span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='st'>"exampleUniprotIDs"</span>, package <span class='op'>=</span> <span class='st'>"prora"</span><span class='op'>)</span>
 <span class='va'>myGPSrepo</span> <span class='op'>&lt;-</span> <span class='fu'>makeGPS_wrappR</span><span class='op'>(</span>ids <span class='op'>=</span> <span class='va'>exampleUniprotIDs</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>'select()' returned 1:many mapping between keys and columns</span></div><div class='output co'>#&gt; <span class='message'>Joining, by = "pathwayID"</span></div><div class='output co'>#&gt; Time difference of 0.9270658 secs
-#&gt; Time difference of 1.219278 secs</div><div class='input'><span class='va'>myGPSrepo</span> <span class='op'>&lt;-</span> <span class='fu'>makeGPS_wrappR</span><span class='op'>(</span>ids <span class='op'>=</span> <span class='va'>exampleUniprotIDs</span>, target <span class='op'>=</span> <span class='st'>"GO"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>'select()' returned 1:many mapping between keys and columns</span></div><div class='output co'>#&gt; <span class='message'>'select()' returned 1:1 mapping between keys and columns</span></div><div class='output co'>#&gt; <span class='message'>Joining, by = "pathwayID"</span></div><div class='output co'>#&gt; Time difference of 1.294567 mins
-#&gt; Time difference of 1.300857 mins
-#&gt; Time difference of 1.305446 mins
-#&gt; Time difference of 1.310165 mins
-#&gt; Time difference of 1.315031 mins</div><div class='input'><span class='va'>myGPSrepo</span> <span class='op'>&lt;-</span> <span class='fu'>makeGPS_wrappR</span><span class='op'>(</span>ids <span class='op'>=</span> <span class='va'>exampleUniprotIDs</span>, target <span class='op'>=</span> <span class='st'>"react"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>'select()' returned 1:many mapping between keys and columns</span></div><div class='output co'>#&gt; <span class='message'>'select()' returned 1:many mapping between keys and columns</span></div><div class='output co'>#&gt; <span class='message'>'select()' returned 1:1 mapping between keys and columns</span></div><div class='output co'>#&gt; <span class='message'>Joining, by = "pathwayID"</span></div><div class='output co'>#&gt; Time difference of 11.98881 secs
-#&gt; Time difference of 17.56484 secs
-#&gt; Time difference of 19.12479 secs
-#&gt; Time difference of 19.94416 secs
-#&gt; Time difference of 20.36817 secs</div></pre>
+</div><div class='output co'>#&gt; <span class='message'>'select()' returned 1:many mapping between keys and columns</span></div><div class='output co'>#&gt; <span class='message'>Joining, by = "pathwayID"</span></div><div class='output co'>#&gt; Time difference of 0.543952 secs
+#&gt; Time difference of 0.8159599 secs</div><div class='input'><span class='va'>myGPSrepo</span> <span class='op'>&lt;-</span> <span class='fu'>makeGPS_wrappR</span><span class='op'>(</span>ids <span class='op'>=</span> <span class='va'>exampleUniprotIDs</span>, target <span class='op'>=</span> <span class='st'>"GO"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>'select()' returned 1:many mapping between keys and columns</span></div><div class='output co'>#&gt; <span class='message'>'select()' returned 1:1 mapping between keys and columns</span></div><div class='output co'>#&gt; <span class='message'>Joining, by = "pathwayID"</span></div><div class='output co'>#&gt; Time difference of 1.295235 mins
+#&gt; Time difference of 1.301668 mins
+#&gt; Time difference of 1.306501 mins
+#&gt; Time difference of 1.311268 mins
+#&gt; Time difference of 1.316001 mins</div><div class='input'><span class='va'>myGPSrepo</span> <span class='op'>&lt;-</span> <span class='fu'>makeGPS_wrappR</span><span class='op'>(</span>ids <span class='op'>=</span> <span class='va'>exampleUniprotIDs</span>, target <span class='op'>=</span> <span class='st'>"react"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>'select()' returned 1:many mapping between keys and columns</span></div><div class='output co'>#&gt; <span class='message'>'select()' returned 1:many mapping between keys and columns</span></div><div class='output co'>#&gt; <span class='message'>'select()' returned 1:1 mapping between keys and columns</span></div><div class='output co'>#&gt; <span class='message'>Joining, by = "pathwayID"</span></div><div class='output co'>#&gt; Time difference of 12.39804 secs
+#&gt; Time difference of 18.1632 secs
+#&gt; Time difference of 19.67518 secs
+#&gt; Time difference of 20.5092 secs
+#&gt; Time difference of 20.90715 secs</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

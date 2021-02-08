@@ -192,8 +192,8 @@ greater_than (default is <code>TRUE</code>) or strictly less than (<code>FALSE</
 <span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'>prora</span><span class='op'>)</span>
 <span class='va'>df</span> <span class='op'>&lt;-</span> <span class='fu'><a href='get_UniprotID_from_fasta_header.html'>get_UniprotID_from_fasta_header</a></span><span class='op'>(</span><span class='fu'>prora</span><span class='fu'>::</span><span class='va'><a href='exampleContrastData.html'>exampleContrastData</a></span><span class='op'>)</span>
 <span class='va'>myGPSrepo</span> <span class='op'>&lt;-</span> <span class='fu'><a href='makeGPS_wrappR.html'>makeGPS_wrappR</a></span><span class='op'>(</span>ids <span class='op'>=</span> <span class='va'>df</span><span class='op'>$</span><span class='va'>UniprotID</span>,target <span class='op'>=</span> <span class='st'>"KEGG"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>'select()' returned 1:many mapping between keys and columns</span></div><div class='output co'>#&gt; <span class='message'>Joining, by = "pathwayID"</span></div><div class='output co'>#&gt; Time difference of 0.4819939 secs
-#&gt; Time difference of 0.825994 secs</div><div class='input'><span class='va'>res</span> <span class='op'>&lt;-</span> <span class='fu'>sigoraWrappR</span><span class='op'>(</span><span class='va'>df</span>,score_col <span class='op'>=</span> <span class='st'>"estimate"</span>, GPSrepos <span class='op'>=</span> <span class='va'>myGPSrepo</span><span class='op'>$</span><span class='va'>gps</span>,
+</div><div class='output co'>#&gt; <span class='message'>'select()' returned 1:many mapping between keys and columns</span></div><div class='output co'>#&gt; <span class='message'>Joining, by = "pathwayID"</span></div><div class='output co'>#&gt; Time difference of 0.5044429 secs
+#&gt; Time difference of 0.833091 secs</div><div class='input'><span class='va'>res</span> <span class='op'>&lt;-</span> <span class='fu'>sigoraWrappR</span><span class='op'>(</span><span class='va'>df</span>,score_col <span class='op'>=</span> <span class='st'>"estimate"</span>, GPSrepos <span class='op'>=</span> <span class='va'>myGPSrepo</span><span class='op'>$</span><span class='va'>gps</span>,
                      threshold <span class='op'>=</span> <span class='fl'>0.5</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;   pathwy.id                                 description    pvalues Bonferroni
 #&gt; 1     03010                                    Ribosome 1.143e-221 1.532e-219
@@ -216,11 +216,11 @@ greater_than (default is <code>TRUE</code>) or strictly less than (<code>FALSE</
 #&gt; 8     30.88      122.42 27971.51     3192.29
 #&gt; 9     27.62      104.61 27971.51     3192.29</div><div class='input'>
 <span class='va'>myGPSrepoGO</span> <span class='op'>&lt;-</span> <span class='fu'><a href='makeGPS_wrappR.html'>makeGPS_wrappR</a></span><span class='op'>(</span><span class='va'>df</span><span class='op'>$</span><span class='va'>UniprotID</span>, target <span class='op'>=</span> <span class='st'>"GO"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>'select()' returned 1:many mapping between keys and columns</span></div><div class='output co'>#&gt; <span class='message'>'select()' returned 1:1 mapping between keys and columns</span></div><div class='output co'>#&gt; <span class='message'>Joining, by = "pathwayID"</span></div><div class='output co'>#&gt; Time difference of 1.23683 mins
-#&gt; Time difference of 1.242813 mins
-#&gt; Time difference of 1.248297 mins
-#&gt; Time difference of 1.25308 mins
-#&gt; Time difference of 1.257897 mins</div><div class='input'><span class='va'>res</span> <span class='op'>&lt;-</span> <span class='fu'>sigoraWrappR</span><span class='op'>(</span><span class='va'>df</span>,score_col <span class='op'>=</span> <span class='st'>"estimate"</span>, GPSrepos <span class='op'>=</span> <span class='va'>myGPSrepoGO</span><span class='op'>$</span><span class='va'>gps</span>,
+</div><div class='output co'>#&gt; <span class='message'>'select()' returned 1:many mapping between keys and columns</span></div><div class='output co'>#&gt; <span class='message'>'select()' returned 1:1 mapping between keys and columns</span></div><div class='output co'>#&gt; <span class='message'>Joining, by = "pathwayID"</span></div><div class='output co'>#&gt; Time difference of 1.222445 mins
+#&gt; Time difference of 1.228012 mins
+#&gt; Time difference of 1.233479 mins
+#&gt; Time difference of 1.23858 mins
+#&gt; Time difference of 1.24373 mins</div><div class='input'><span class='va'>res</span> <span class='op'>&lt;-</span> <span class='fu'>sigoraWrappR</span><span class='op'>(</span><span class='va'>df</span>,score_col <span class='op'>=</span> <span class='st'>"estimate"</span>, GPSrepos <span class='op'>=</span> <span class='va'>myGPSrepoGO</span><span class='op'>$</span><span class='va'>gps</span>,
                      threshold <span class='op'>=</span> <span class='fl'>0.5</span><span class='op'>)</span>
 </div><div class='output co'>#&gt;     pathwy.id                                   description    pvalues
 #&gt; 1  GO:0016021                integral component of membrane 2.503e-144

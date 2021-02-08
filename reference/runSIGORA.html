@@ -176,11 +176,11 @@
 <span class='va'>fc_estimates</span> <span class='op'>&lt;-</span> <span class='fu'>prora</span><span class='fu'>::</span><span class='va'><a href='exampleContrastData.html'>exampleContrastData</a></span>
 <span class='va'>filtered_dd</span> <span class='op'>&lt;-</span> <span class='fu'><a href='get_UniprotID_from_fasta_header.html'>get_UniprotID_from_fasta_header</a></span><span class='op'>(</span><span class='va'>fc_estimates</span>, idcolumn <span class='op'>=</span> <span class='st'>"protein_Id"</span><span class='op'>)</span>
 <span class='va'>myGPSrepo</span> <span class='op'>&lt;-</span> <span class='fu'><a href='makeGPS_wrappR.html'>makeGPS_wrappR</a></span><span class='op'>(</span><span class='va'>filtered_dd</span><span class='op'>$</span><span class='va'>UniprotID</span>, target <span class='op'>=</span> <span class='st'>"GO"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>'select()' returned 1:many mapping between keys and columns</span></div><div class='output co'>#&gt; <span class='message'>'select()' returned 1:1 mapping between keys and columns</span></div><div class='output co'>#&gt; <span class='message'>Joining, by = "pathwayID"</span></div><div class='output co'>#&gt; Time difference of 1.276493 mins
-#&gt; Time difference of 1.283376 mins
-#&gt; Time difference of 1.288026 mins
-#&gt; Time difference of 1.29261 mins
-#&gt; Time difference of 1.297826 mins</div><div class='input'>
+</div><div class='output co'>#&gt; <span class='message'>'select()' returned 1:many mapping between keys and columns</span></div><div class='output co'>#&gt; <span class='message'>'select()' returned 1:1 mapping between keys and columns</span></div><div class='output co'>#&gt; <span class='message'>Joining, by = "pathwayID"</span></div><div class='output co'>#&gt; Time difference of 1.281599 mins
+#&gt; Time difference of 1.288068 mins
+#&gt; Time difference of 1.292894 mins
+#&gt; Time difference of 1.297561 mins
+#&gt; Time difference of 1.302463 mins</div><div class='input'>
 <span class='co'>#usethis::use_data(myGPSrepo,overwrite = TRUE)</span>
 <span class='fu'><a href='https://rdrr.io/r/base/debug.html'>undebug</a></span><span class='op'>(</span><span class='va'>runSIGORA</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='warning'>Warning: argument is not being debugged</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/debug.html'>undebug</a></span><span class='op'>(</span><span class='va'>sigoraWrappR</span><span class='op'>)</span>
