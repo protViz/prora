@@ -15,10 +15,11 @@ if (YAML) {
   if (length(args) > 0) {
     yamlfile <- args[1]
   }else{
-    stop("script needs one argument the bfabripy.yaml file.")
+    #stop("script needs one argument the bfabripy.yaml file.")
     yamlfile <- "WU256211.yaml"
     yamlfile <- "WU256806.yaml"
     yamlfile <- "WU256841.yaml"
+    #yamlfile <- "WU259361.yaml"
 
   }
   parameters <- yaml::read_yaml(yamlfile)
@@ -77,13 +78,15 @@ data2 <- prora::get_UniprotID_from_fasta_header(data,
   as.character(e)
 }
 
+
 data3 <- tryCatch(prora::map_ids_uniprot(data2), error = .ehandler)
+
 if (is.character(data3)) {
 
   print("prora::map_ids_uniprot Errored, exitin with nonzero status.")
   print(paste0("The error is : ", data3, "\n\n"))
-  q(save = "no", status = 23)
-
+  #q(save = "no", status = 23)
+  stop(paste0("The error is : ", data3, "\n\n"))
   if (FALSE) { # Disable error reporting.
     rmarkdown::render("ErrorMessage.Rmd",
                       params = list(ErrorMessage = data3,

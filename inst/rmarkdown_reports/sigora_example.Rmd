@@ -40,7 +40,7 @@ The package comes with precomputed GPS repositories for KEGG human and mouse (ke
 ## example data
 data(kegH)
 ## select 50 genes from 3 human KEGG pathways
-a <- genesFromRandomPathways(seed=12345, kegH, 3, 50)
+a <- genesFromRandomPathways(seed = 12345, kegH, 3, 50)
 ## the genes are
 a[["genes"]]
 

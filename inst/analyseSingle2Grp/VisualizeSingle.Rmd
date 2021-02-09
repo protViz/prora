@@ -95,8 +95,8 @@ if (nrow(relevantResult) > 0) {
 
 ```{r showPathways2}
 if (nrow(mainPathways) > 0) {
+  mainGeneSets <- geneSet[mainPathways$pathway]
   caption = paste0("Non redundant pathways with FDR < ",  threshold,".")
-  
   mainPathways$pathway <-
     DT_makeURLfor(mainPathways$pathway, path = "https://www.gsea-msigdb.org/gsea/msigdb/cards/")
   
@@ -115,7 +115,7 @@ height.fig = max(3 + 2 * nrow(mainPathways))
 
 ```{r plotGenesets, fig.width=10, fig.height=height.fig, fig.cap="Protein positions in ranked list for non-redundant Pathways"}
 if (nrow(mainPathways) > 0) {
-  mainGeneSets <- geneSet[mainPathways$pathway]
+  
   plotGseaTable(mainGeneSets, rankList , mainPathways,
                 gseaParam = 0.5)
 }

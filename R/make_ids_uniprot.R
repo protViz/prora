@@ -16,7 +16,7 @@
 #' fc_estimates <- prora::exampleContrastData
 #'
 #' filtered_dd <- get_UniprotID_from_fasta_header(fc_estimates, idcolumn = "protein_Id")
-#'
+#' debug(map_ids_uniprot)
 #' map_ids_uniprot( filtered_dd )
 #'
 #'
@@ -37,9 +37,29 @@ map_ids_uniprot <- function(data,
   )
 
   r <- httr::POST(url, body = params, encode = "form")
-  mapping <- readr::read_tsv(httr::content(r))
+  bb <- httr::content(r)
+  class(bb)
+  mapping <- readr::read_tsv(bb)
   mapping <- mapping %>% dplyr::rename( !!ID_col := "From", !!to := "To" )
   res <- dplyr::right_join(mapping, data, by = ID_col)
 
-  return(res)
+  return( res )
 }
+
+
+.map_ids_AnnotationHub <- function(data ,
+                                  ID_col = "UniprotID",
+                                  species = "Homo Sapiens"){
+  # remotes::install_bioc("AnnotationHub")
+  # library(AnnotationHub)
+  ah <- AnnotationHub::AnnotationHub()
+  orgdb <- AnnotationHub::query(ah, c("OrgDb", "maintainer@bioconductor.org"))
+
+
+  specODB <- orgdb[[grep("Homo",orgdb$species)]]
+  egid <- AnnotationDbi::keys(specODB, "ENTREZID")
+  select(specODB, egid, c("SYMBOL", "GENENAME", "UNIPROT"), "ENTREZID") %>% dim()
+
+}
+
+
