@@ -79,9 +79,11 @@ knitr::kable(data.frame("Name" = names(tableLegend), "Description" = tableLegend
 ```{r relevantResults}
 if (nrow(relevantResult) > 0) {
   caption <- paste0("All Pathways with FDR < ", threshold, ".")
+  relevantResult$pathway <-
+    DT_makeURLfor(relevantResult$pathway, path = "https://www.gsea-msigdb.org/gsea/msigdb/cards/")
   
-  url <- paste0("https://www.gsea-msigdb.org/gsea/msigdb/cards/" , relevantResult$pathway)
-  relevantResult$pathway <- paste0("<a href='",url,"' target='_blank'>", relevantResult$pathway  ,"</a>")
+  relevantResult$leadingEdge <-
+    lapply( relevantResult$leadingEdge, DT_makeURLfor, path = ="https://www.ncbi.nlm.nih.gov/gene/")
   
   DT::datatable(relevantResult, caption = caption, escape = FALSE) %>% 
     formatSignif('NES',2) %>%
@@ -95,8 +97,11 @@ if (nrow(relevantResult) > 0) {
 if (nrow(mainPathways) > 0) {
   caption = paste0("Non redundant pathways with FDR < ",  threshold,".")
   
-  url <- paste0("https://www.gsea-msigdb.org/gsea/msigdb/cards/" , mainPathways$pathway)
-  mainPathways$pathway <- paste0("<a href='",url,"' target='_blank'>", mainPathways$pathway  ,"</a>")
+  mainPathways$pathway <-
+    DT_makeURLfor(mainPathways$pathway, path = "https://www.gsea-msigdb.org/gsea/msigdb/cards/")
+  
+  mainPathways$leadingEdge <-
+    lapply( mainPathways$leadingEdge, DT_makeURLfor, path = ="https://www.ncbi.nlm.nih.gov/gene/")
   
   DT::datatable(mainPathways, caption = caption, escape = FALSE) %>%
     formatSignif('NES',2) %>%
