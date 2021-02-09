@@ -214,7 +214,6 @@ for (iGS in 1:length(fgseaRes)) {
 
 
 
-
     outfile = paste0(outname ,gsName)
     html_out <- paste0(prefix, outfile, ".html")
     rmarkdown::render("VisualizeSingle.Rmd",

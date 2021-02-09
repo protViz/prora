@@ -61,18 +61,6 @@ plot( fgseaResult$NES ,
 abline(h = -log10(threshold), col = c(2,3))
 ```
 
-
-`r if(nrow(relevantResult) ==0){ paste0("There are NO relevant results with FDR < ", threshold, ".")} `
-
-```{r relevantResults}
-if (nrow(relevantResult) > 0) {
-  caption <- paste0("All Pathways with FDR < ", threshold, ".")
-  DT::datatable(relevantResult, caption = caption) %>% 
-    formatSignif('NES',2) %>%
-    formatSignif(c('pval','FDR'), 2)
-}
-```
-
 ```{r tableColumnDesicripion}
 if (nrow(relevantResult) > 0) {
 tableLegend <- c("GS" = "Gene-set Collection : for more details see msigdb.org",
@@ -81,15 +69,36 @@ tableLegend <- c("GS" = "Gene-set Collection : for more details see msigdb.org",
 "leadingEdge" = "vector with Entrez Id's of leading edge genes that drive the enrichment.",
 "size" = "size of the pathway after removing genes not present in in the protein list")
 
-knitr::kable(data.frame("Name" = names(tableLegend), "Description" = tableLegend))
+knitr::kable(data.frame("Name" = names(tableLegend), "Description" = tableLegend), caption = "Column Descriptions.")
 }
 ```
+
+
+`r if(nrow(relevantResult) ==0){ paste0("There are NO relevant results with FDR < ", threshold, ".")} `
+
+```{r relevantResults}
+if (nrow(relevantResult) > 0) {
+  caption <- paste0("All Pathways with FDR < ", threshold, ".")
+  
+  url <- paste0("https://www.gsea-msigdb.org/gsea/msigdb/cards/" , relevantResult$pathway)
+  relevantResult$pathway <- paste0("<a href='",url,"' target='_blank'>", relevantResult$pathway  ,"</a>")
+  
+  DT::datatable(relevantResult, caption = caption, escape = FALSE) %>% 
+    formatSignif('NES',2) %>%
+    formatSignif(c('pval','FDR'), 2)
+}
+```
+
 
 
 ```{r showPathways2}
 if (nrow(mainPathways) > 0) {
   caption = paste0("Non redundant pathways with FDR < ",  threshold,".")
-  DT::datatable(mainPathways, caption = caption) %>%
+  
+  url <- paste0("https://www.gsea-msigdb.org/gsea/msigdb/cards/" , mainPathways$pathway)
+  mainPathways$pathway <- paste0("<a href='",url,"' target='_blank'>", mainPathways$pathway  ,"</a>")
+  
+  DT::datatable(mainPathways, caption = caption, escape = FALSE) %>%
     formatSignif('NES',2) %>%
     formatSignif(c('pval','FDR'),2)
   
