@@ -53,6 +53,7 @@ plot(sort(rankList, decreasing = TRUE), type = "h", ylab = score)
 ```{r pval , fig.cap = " Volcano Plot:  -log10(FDR) (Y axis)  vs normalized enrichment score (NES) (X axis)."}
 par(mfrow = c(1,2))
 
+fgseaResult <- fgseaResult  %>% dplyr::rename(FDR = padj)
 
 plot( fgseaResult$NES ,
      -log10(fgseaResult$FDR),
@@ -79,6 +80,7 @@ knitr::kable(data.frame("Name" = names(tableLegend), "Description" = tableLegend
 ```{r relevantResults}
 if (nrow(relevantResult) > 0) {
   caption <- paste0("All Pathways with FDR < ", threshold, ".")
+  relevantResult <- dplyr::rename(relevantResult, FDR = padj)
   relevantResult$pathway <-
     DT_makeURLfor(relevantResult$pathway, path = "https://www.gsea-msigdb.org/gsea/msigdb/cards/")
   
@@ -98,6 +100,7 @@ if (nrow(mainPathways) > 0) {
   mainGeneSets <- geneSet[mainPathways$pathway]
   
   mainPathways2 <- mainPathways
+  mainPathways2 <- dplyr::rename(mainPathways2, FDR = padj)
   caption = paste0("Non redundant pathways with FDR < ",  threshold,".")
   mainPathways2$pathway <-
     DT_makeURLfor(mainPathways2$pathway, path = "https://www.gsea-msigdb.org/gsea/msigdb/cards/")

@@ -176,7 +176,7 @@ select_relevant_results <- function(fgseaResult,
                                     gsName,
                                     rankList,
                                     FDR_threshold){
-  relevantResult <- fgseaResult %>% dplyr::filter(.data$FDR < FDR_threshold)
+  relevantResult <- fgseaResult %>% dplyr::filter(.data$padj < FDR_threshold)
   collapsedPathways <- fgsea::collapsePathways(relevantResult,
                                                geneSet, rankList)
   relevantResult <- dplyr::select(relevantResult, -ES)
