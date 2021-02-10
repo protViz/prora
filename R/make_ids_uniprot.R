@@ -46,20 +46,40 @@ map_ids_uniprot <- function(data,
   return( res )
 }
 
+.get_species_mapping_AnnotationHub <- function(species = c("Homo sapiens", "Mus musculus")) {
+  species <- match.arg(species)
 
-.map_ids_AnnotationHub <- function(data ,
-                                  ID_col = "UniprotID",
-                                  species = "Homo Sapiens"){
-  # remotes::install_bioc("AnnotationHub")
-  # library(AnnotationHub)
   ah <- AnnotationHub::AnnotationHub()
   orgdb <- AnnotationHub::query(ah, c("OrgDb", "maintainer@bioconductor.org"))
-
-
-  specODB <- orgdb[[grep("Homo",orgdb$species)]]
+  if ( !species %in% orgdb$species) {
+    stop(paste0("species not found : ", species, "\n"))
+  }
+  specODB <- orgdb[[which(species == orgdb$species)]]
   egid <- AnnotationDbi::keys(specODB, "ENTREZID")
-  select(specODB, egid, c("SYMBOL", "GENENAME", "UNIPROT"), "ENTREZID") %>% dim()
+  res <- AnnotationDbi::select(specODB, egid, c("SYMBOL", "GENENAME", "UNIPROT"), "ENTREZID")
+  return(res)
 
 }
 
-
+#' map id Annotation Hub
+#'
+#' @export
+#' @examples
+#'
+#' library(tidyverse)
+#' fc_estimates <- prora::exampleContrastData
+#' #fc_estimates %>% filter(!(grepl("^REV_", protein_Id) | grepl("^zz", protein_Id) | grepl("^CON__", protein_Id)))
+#' fc_estimates <- fc_estimates %>% filter(!(grepl("^REV_|^zz|^CON__", protein_Id)))
+#' filtered_dd <- get_UniprotID_from_fasta_header(fc_estimates, idcolumn = "protein_Id")
+#' dim(filtered_dd)
+#' tmp <- map_ids_annotationHub(filtered_dd, species = "Homo sapiens")
+#' sum(is.na(tmp$P_ENTREZGENEID ))
+#'
+map_ids_annotationHub <- function(x, ID_col = "UniprotID", species =  c("Homo sapiens", "Mus musculus")){
+  species <- match.arg(species)
+  res <- .get_species_mapping_AnnotationHub(species)
+  res <- res %>% dplyr::select(!!ID_col := UNIPROT, P_ENTREZGENEID = ENTREZID  )
+  res <- na.omit(res)
+  res <- right_join(res,  x,  by = ID_col)
+  return(res)
+}

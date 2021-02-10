@@ -96,14 +96,16 @@ if (nrow(relevantResult) > 0) {
 ```{r showPathways2}
 if (nrow(mainPathways) > 0) {
   mainGeneSets <- geneSet[mainPathways$pathway]
+  
+  mainPathways2 <- mainPathways
   caption = paste0("Non redundant pathways with FDR < ",  threshold,".")
-  mainPathways$pathway <-
-    DT_makeURLfor(mainPathways$pathway, path = "https://www.gsea-msigdb.org/gsea/msigdb/cards/")
+  mainPathways2$pathway <-
+    DT_makeURLfor(mainPathways2$pathway, path = "https://www.gsea-msigdb.org/gsea/msigdb/cards/")
   
-  mainPathways$leadingEdge <-
-    lapply( mainPathways$leadingEdge, DT_makeURLfor, path ="https://www.ncbi.nlm.nih.gov/gene/")
+  mainPathways2$leadingEdge <-
+    lapply( mainPathways2$leadingEdge, DT_makeURLfor, path ="https://www.ncbi.nlm.nih.gov/gene/")
   
-  DT::datatable(mainPathways, caption = caption, escape = FALSE) %>%
+  DT::datatable(mainPathways2, caption = caption, escape = FALSE) %>%
     formatSignif('NES',2) %>%
     formatSignif(c('pval','FDR'),2)
   

@@ -19,7 +19,7 @@ if (YAML) {
     yamlfile <- "WU256211.yaml"
     yamlfile <- "WU256806.yaml"
     yamlfile <- "WU256841.yaml"
-    #yamlfile <- "WU259361.yaml"
+    yamlfile <- "WU259361.yaml"
 
   }
   parameters <- yaml::read_yaml(yamlfile)
@@ -64,7 +64,7 @@ summaries <- list()
 data <- readr::read_tsv(inputData)
 
 # remove reverse sequences and contaminants
-data <- data %>% filter(!(grepl("^REV__", TopProteinName ) | grepl("^zz\\|", TopProteinName)))
+data <- data %>% filter(!(grepl("^REV__|^zz\\||^CON__", TopProteinName )))
 summaries$nrow_all <- nrow(data)
 
 # Extract uniprotIDS
@@ -78,26 +78,22 @@ data2 <- prora::get_UniprotID_from_fasta_header(data,
   as.character(e)
 }
 
+undebug(prora::map_ids_annotationHub)
 
 data3 <- tryCatch(prora::map_ids_uniprot(data2), error = .ehandler)
+if (is.character(data3)) {
+  data3 <- tryCatch(prora::map_ids_annotationHub(data2, species = species), error = .ehandler)
+}
 
 if (is.character(data3)) {
-
-  print("prora::map_ids_uniprot Errored, exitin with nonzero status.")
-  print(paste0("The error is : ", data3, "\n\n"))
-  #q(save = "no", status = 23)
-  stop(paste0("The error is : ", data3, "\n\n"))
-  if (FALSE) { # Disable error reporting.
+  errMessage <- paste0("prora::map_ids_uniprot Errored, exiting with nonzero status.",
+                       "The error is : ", data3, "\n\n")
+  write(errMessage, file = stderr())
     rmarkdown::render("ErrorMessage.Rmd",
                       params = list(ErrorMessage = data3,
                                     protIDs = sample(data$TopProteinName, size = 10)))
     file.copy("ErrorMessage.html", file.path(outdir, "ErrorMessage.html") , overwrite = TRUE)
-
-    write(data3,
-          file = stderr())
-    stop(data3)
-  }
-
+    stop(errMessage)
 }
 
 mappingtable <- data3 %>% dplyr::select(all_of(c("UniprotID", "P_ENTREZGENEID", "TopProteinName")))

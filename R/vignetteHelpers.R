@@ -57,3 +57,15 @@ copy_bfabric_2grp <- function(workdir = getwd()){
                   "analyseSingle2Grp/ErrorMessage.Rmd")
   .scriptCopyHelperVec(runscripts, workdir = workdir)
 }
+
+
+#' copy multigroup analysis
+#'
+#' @param workdir directory where to copy file - default is current working directory.
+#' @export
+#'
+copy_multigroup_GSEA <- function(workdir = getwd()){
+  runscripts <- c("analyseMultiple2GrpOutputs/multigroupGSEA.Rmd",
+                  "analyseMultiple2GrpOutputs/prepare.R")
+  .scriptCopyHelperVec(runscripts, workdir = workdir)
+}
