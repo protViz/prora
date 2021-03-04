@@ -20,12 +20,14 @@ if (YAML) {
     yamlfile <- "WU256806.yaml"
     yamlfile <- "WU256841.yaml"
     yamlfile <- "WU259361.yaml"
-
+    yamlfile <- "WU260478.yaml"
   }
   parameters <- yaml::read_yaml(yamlfile)
 
   inputData <- basename(parameters$application$input$`MaxQuant - Two Group Analysis Report`)
   FDR_threshold <- as.numeric(parameters$application$parameters$FDRthreshold)
+  useLog2FC <- if (parameters$application$parameters$RankByScore == "log2FC") {TRUE} else {FALSE}
+
   species <- parameters$application$parameters$Species
   outname <- gsub("\\.txt","",basename(inputData))
 
@@ -34,7 +36,6 @@ if (YAML) {
   inputData <- "2GrpAppOutput/MQ_2grp_report_o6927_iMPC_vs_Ctrl.txt"
   inputData <- "2GrpAppOutput/MQ_2grp_report_o6927_MyoD_D10_vs_Ctrl.txt"
   inputData <- "2GrpAppOutput/MQ_2grp_report_o6927_MyoD_FRC_D10_vs_Ctrl.txt"
-  #inputData <- "2GrpAppOutput/MQ-report-bfabric-FASPvsUrea_jg_n_EAR.zip.txt"
 
   species <- "Homo sapiens"
   #species <- "Mus musculus"
