@@ -82,7 +82,7 @@ data2 <- prora::get_UniprotID_from_fasta_header(data,
   as.character(e)
 }
 
-undebug(prora::map_ids_annotationHub)
+#undebug(prora::map_ids_annotationHub)
 
 data3 <- tryCatch(prora::map_ids_uniprot(data2), error = .ehandler)
 if (is.character(data3)) {
