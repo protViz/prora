@@ -21,10 +21,13 @@ if (YAML) {
     yamlfile <- "WU256841.yaml"
     yamlfile <- "WU259361.yaml"
     yamlfile <- "WU260478.yaml"
+    yamlfile <- "WU260605.yaml"
+
   }
   parameters <- yaml::read_yaml(yamlfile)
+  basename(parameters$application$input$`MaxQuant - Two Group Analysis Report`)
 
-  inputData <- basename(parameters$application$input$`MaxQuant - Two Group Analysis Report`)
+  inputData <- basename(parameters$application$input$`MaxQuant - Two Group Analysis Report`)[1]
   FDR_threshold <- as.numeric(parameters$application$parameters$FDRthreshold)
   useLog2FC <- if (parameters$application$parameters$RankByScore == "log2FC") {TRUE} else {FALSE}
 
