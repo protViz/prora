@@ -22,7 +22,7 @@ if (YAML) {
     yamlfile <- "WU259361.yaml"
     yamlfile <- "WU260478.yaml"
     yamlfile <- "WU260605.yaml"
-
+    yamlfile <- "WU260784.yaml"
   }
   parameters <- yaml::read_yaml(yamlfile)
   basename(parameters$application$input$`MaxQuant - Two Group Analysis Report`)
