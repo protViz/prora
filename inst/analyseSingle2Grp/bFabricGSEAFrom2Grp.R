@@ -220,7 +220,7 @@ for (iGS in 1:length(fgseaRes)) {
     outfile = paste0(outname ,gsName)
     html_out <- paste0(prefix, outfile, ".html")
     rmarkdown::render("VisualizeSingle.Rmd",
-                      params = list(GSEAResults = GSEAResults))
+                      params = list(GSEAResults = GSEAResults), envir = new.env())
     file.copy("VisualizeSingle.html", file.path(outdir, html_out) , overwrite = TRUE)
 
 
