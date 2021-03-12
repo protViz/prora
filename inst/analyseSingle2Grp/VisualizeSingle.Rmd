@@ -113,7 +113,7 @@ if (nrow(mainPathways) > 0) {
     formatSignif(c('pval','FDR'),2)
   
 }
-height.fig = max(3 + 2 * nrow(mainPathways))
+height.fig = min(30,max(3 + 2 * nrow(mainPathways)))
 
 ```
 
