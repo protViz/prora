@@ -41,6 +41,7 @@ map_ids_uniprot <- function(data,
   class(bb)
   mapping <- readr::read_tsv(bb)
   mapping <- mapping %>% dplyr::rename( !!ID_col := "From", !!to := "To" )
+  mapping[[to]] <- as.character(mapping[[to]])
   res <- dplyr::right_join(mapping, data, by = ID_col)
 
   return( res )
