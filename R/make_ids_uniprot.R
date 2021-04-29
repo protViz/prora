@@ -84,3 +84,6 @@ map_ids_annotationHub <- function(x, ID_col = "UniprotID", species =  c("Homo sa
   res <- right_join(res,  x,  by = ID_col)
   return(res)
 }
+
+
+

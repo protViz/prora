@@ -1,0 +1,88 @@
+---
+title: "Order 22513"
+author: "Witold Wolski"
+date: "12/02/2021"
+output: html_document
+params:
+  resultsxx : NULL
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE )
+resultsV2 <- params$resultsxx
+
+```
+
+
+# Data QC
+
+```{r}
+prot <- resultsV2$prot
+pl <- prot$get_Plotter()
+pl$intensity_distribution_density()
+pNa <- pl$NA_heatmap()
+p <- pl$heatmap()
+pc <- pl$heatmap_cor()
+```
+
+```{r fig.width=10, fig.height=10, fig.cap="Heatamp based on presence and absence (black) of protein measurments"}
+print(pNa)
+```
+
+
+```{r fig.width=10, fig.height=10, fig.cap = "Heatmap with color coded protein intensities"}
+print(p)
+```
+
+```{r fig.cap="PCA plot"}
+pl$pca()
+
+```
+
+# Cluster proteins
+
+
+Compute distances with jackknife
+
+
+
+```{r compareClusters}
+plot(resultsV2$dendrogram,leaflab = "none" )
+```
+
+## GO Biological Process
+
+
+```{r compareClustersBP, fig.height=5, fig.width=10}
+P <- resultsV2$resGOEnrich$BP
+if (!is.null(P$clustProf)) {
+  dotplot(P$clustProf,title = P$mt)
+  DT::datatable(as.data.frame(P$clustProf),caption = mt)
+}
+```
+
+## GO Molecular Function
+
+```{r compareClustersMF,  fig.height=5, fig.width=10}
+P <- resultsV2$resGOEnrich$MF
+if (!is.null(P$clustProf)) {
+  dotplot(P$clustProf,title = P$mt)
+  DT::datatable(as.data.frame(P$clustProf),caption = mt)
+}
+```
+
+# GO Cellular Component
+
+```{r compareClustersCC,  fig.height=5, fig.width=10}
+P <- resultsV2$resGOEnrich$CC
+if (!is.null(P$clustProf)) {
+  dotplot(P$clustProf,title = P$mt)
+  DT::datatable(as.data.frame(P$clustProf),caption = mt)
+}
+
+```
+
+
