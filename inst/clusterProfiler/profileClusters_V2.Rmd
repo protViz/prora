@@ -59,7 +59,7 @@ plot(resultsV2$dendrogram,leaflab = "none" )
 ```{r compareClustersBP, fig.height=5, fig.width=10}
 P <- resultsV2$resGOEnrich$BP
 if (!is.null(P$clustProf)) {
-  dotplot(P$clustProf,title = P$mt)
+  print(dotplot(P$clustProf,title = P$mt))
   DT::datatable(as.data.frame(P$clustProf),caption = mt)
 }
 ```
@@ -69,7 +69,9 @@ if (!is.null(P$clustProf)) {
 ```{r compareClustersMF,  fig.height=5, fig.width=10}
 P <- resultsV2$resGOEnrich$MF
 if (!is.null(P$clustProf)) {
-  dotplot(P$clustProf,title = P$mt)
+  print(dotplot(P$clustProf,title = P$mt))
+  
+  
   DT::datatable(as.data.frame(P$clustProf),caption = mt)
 }
 ```
@@ -79,7 +81,7 @@ if (!is.null(P$clustProf)) {
 ```{r compareClustersCC,  fig.height=5, fig.width=10}
 P <- resultsV2$resGOEnrich$CC
 if (!is.null(P$clustProf)) {
-  dotplot(P$clustProf,title = P$mt)
+  print(dotplot(P$clustProf,title = P$mt))
   DT::datatable(as.data.frame(P$clustProf),caption = mt)
 }
 

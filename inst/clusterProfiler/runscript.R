@@ -154,8 +154,7 @@ resGOEnrich$BP <- list(mt = mt,
                          pvalueCutoff = 1,
                          qvalueCutoff = 0.2,
                          pAdjustMethod = "BH"))
-head(as.data.frame(resGOEnrich$BP$clustProf))
-dotplot(resGOEnrich$BP$clustProf)
+
 mt <- "GO Molecular Function"
 resGOEnrich$MF <- list(mt = mt, clustProf = clusterProfiler::compareCluster(
   clusterProfilerinput,
