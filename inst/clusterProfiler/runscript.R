@@ -6,10 +6,45 @@ library(ggplot2)
 library(clusterProfiler)
 library(prora)
 
+args = commandArgs(trailingOnly = TRUE)
+
+# input zip organizm outpath
+
+# output :
+# zipfilename_clusteringname.txt
+## 1 row per zip
+# Zipfile,
+# name of the clustering algorithm
+# nr. proteins,
+# nr. of samples,
+# nr. of protein clusters,
+# NR of GS with padj < 0.25
+# NR of GS with padj < 0.1
+# median CV coefficient of variation for raw data
+# median SD after normalizations
+
+# GS_zipfilename_clusteringname.txt
+# zipfile
+# clusteringname
+# GS > 1 Rows
+# ClusterID
+# GO ID
+# Description
+# Gene Ratio
+
+
+# Protein_zipfilename_clusteringname.txt
+# 300 - 5000 rows
+#
+# zipfile
+# clusterinng
+# Protein IDS
+# cluster assignments
+# Protein intensities sample_Id
+
+
+
 datadir <- file.path(find.package("prolfquaData") , "quantdata")
-
-
-
 # parameters
 parameter <- list()
 parameter$inputMQfile <-  file.path(datadir, "MAXQuant_ComboCourse_p2691_March_2018_WU183012.zip")
@@ -31,7 +66,7 @@ parameter$nrCluster <- 10
 
 # resutls will be saved as rds file
 results <- list()
-dir.create(parameter$outpath)
+#dir.create(parameter$outpath)
 
 if (parameter$organism == "yeast") {
   orgDB <- "org.Sc.sgd.db"
@@ -58,16 +93,17 @@ if (parameter$peptide) {
   config <- AnalysisConfiguration$new(atable, anaparam)
 }
 
-
+tmp$AllSamples <- "AllSamples"
 tmp$file <- tmp$raw.file
+config$table$factors[["all"]] = "AllSamples"
 config$table$factors[["file"]] = "file"
 
 sdata <- setup_analysis(tmp, config)
 lfqd <- LFQData$new(sdata, config)
 lfqd$filter_proteins_by_peptide_count()
 
-lfqd$hierarchy_counts()
 lfqd$remove_small_intensities()
+lfqd$hierarchy_counts()
 
 # different ways to normalize data
 if (parameter$peptide & parameter$transform == "log2") {
@@ -109,22 +145,26 @@ dim(mdata)
 # dendrogram
 clusterHClustEuclideanDist <- function(mdata, nrCluster ){
 
-  distJK <- prora::dist_JK(scaledM)
+  distJK <- prora::dist_JK(mdata)
   bb <- hclust(distJK,method = )
   k <- cutree(bb, k = nrCluster)
   dend <- as.dendrogram(bb)
   k2 <- cutree(dend, k = parameter$nrCluster)
   all.equal(k, k2)
 
-  clusterAssignment <- data.frame(protein_Id = rownames(scaledM), clusterID =  k)
+  clusterAssignment <- data.frame(protein_Id = rownames(mdata), clusterID =  k)
   return(list(dendrogram = dend, clusterAssignment = clusterAssignment))
 }
 
-na <- apply(mdata, 1, function(x){sum(is.na(x))})
-nc <- ncol(mdata)
-mdata <- mdata[na < floor(0.6 * nc),]
-scaledM <- t(scale(t(mdata),center = parameter$row_center, scale = parameter$row_scale))
+filterforNA <- function(mdata){
+  na <- apply(mdata, 1, function(x){sum(is.na(x))})
+  nc <- ncol(mdata)
+  mdata <- mdata[na < floor(0.6 * nc),]
+  return(mdata)
+}
 
+mdata <- filterforNA(mdata)
+scaledM <- t(scale(t(mdata),center = parameter$row_center, scale = parameter$row_scale))
 resClust <- clusterHClustEuclideanDist(scaledM,nrCluster = parameter$nrCluster)
 
 clusterAssignment <- prora::get_UniprotID_from_fasta_header(resClust$clusterAssignment, idcolumn = "protein_Id")
@@ -187,3 +227,8 @@ saveRDS(results, file = file.path(parameter$outpath, paste0(outfile,".Rds")))
 
 rmarkdown::render("profileClusters_V2.Rmd", params = list(resultsxx = results))
 
+## create summary.
+
+results$prot$hierarchy_counts()
+ss <- results$prot$get_Stats()
+ss$stats_quantiles()
