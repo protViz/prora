@@ -4,8 +4,11 @@ author: "FGCZ"
 date: "30/11/2020"
 output: html_document
 params:
-  all : NULL
-  threshold : NULL
+  allpvalues : NULL
+  minpvalue : NULL
+  xmNES : NULL
+  xxNES : NULL
+  gsName : ""
 ---
 
 ```{r setup, include=FALSE}
@@ -17,69 +20,49 @@ library(fgsea)
 library(tidyverse)
 library(prora)
 
-all <- eval(params$all)
-threshold <- eval(params$threshold)
-NESfilter <- FALSE
+allpvalues <- eval(params$allpvalues)
+minpvalue <- eval(params$minpvalue)
+xmNES <- eval(params$xmNES)
+xxNES <- eval(params$xxNES)
+gsName <- eval(params$gsName)
 ```
 
 
+Analysis for `r gsName`.
 
-Filtering gene-sets for `r if(NESfilter){"NES > "} else {"padj < "}` `r threshold`. In the Heat-map only gene-sets passing the threshold in any of the contrasts are shown.
+Filtering gene-sets for $p_{adj}$ < `r threshold`. In the Heat-map only gene-sets passing the threshold in any of the contrasts are shown.
 
-(ref:histogramOFscore) Histogram of `r if(NESfilter){"NES"} else {"padj"}`
+
+(ref:histogramOFscore) Histogram of $p_{adj}$ for all Genesets and all comparisons.
 
 ```{r histogramOFscore, fig.cap="(ref:histogramOFscore)"}
-if (NESfilter) {
-  hist(all$NES)
-} else {
-  hist(all$padj)
-}
-
-xxNES <- tidyr::pivot_wider(all, id_cols = "pathway", names_from = "comparison" , values_from  = "NES")
-xxpadj <- tidyr::pivot_wider(all, id_cols = "pathway", names_from = "comparison" , values_from  = "padj")
-
+hist(all$padj)
 ```
 
 
-```{r prepheat, fig.cap="Histogram of minimum adjusted pvalue for all comparisons."}
-xmNES <- xxNES %>% dplyr::select( -pathway ) %>% as.matrix
-xmpadj <- xxpadj %>% dplyr::select( -pathway ) %>% as.matrix
-
-rownames(xmNES) <- xxNES$pathway
-rownames(xmpadj) <- xxpadj$pathway
-
-if (NESfilter) {
-  
-  maxNES <- apply(xmNES, 1, function(x) {
-    max(abs(x), na.rm = TRUE)
-  })
-  
-  hist(maxNES, main = "distribution of NES")
-  xmNES <- xmNES[maxNES > threshold, ]
-  maxNES <- maxNES[maxNES > threshold]
-  xmNES <- xmNES[order(maxNES),]
-  
-  maxNES <- maxNES[order(maxNES)]
-  p <- pheatmap::pheatmap(na.omit(xmNES), silent = TRUE, cluster_rows = FALSE)
-  
-} else{
-  minpadj <- apply(xmpadj, 1, function(x) {
-    min(x, na.rm = TRUE)
-  })
-  
-  hist(minpadj, main = "distribution of min padj")
-  xmNES <- xmNES[minpadj < threshold, ]
-  minpadj <- minpadj[minpadj < threshold]
-  xmNES <- xmNES[order(minpadj),]
-  
-  minpadj <- minpadj[order(minpadj)]
-  p <- pheatmap::pheatmap(na.omit(xmNES), silent = TRUE, cluster_rows = FALSE)
-  
-}
-
+```{r histogramMin, fig.cap="Histogram of minimum of adjusted pvalues for all comparisons per gene-set."}
+hist(minpadj$minpadj)
 ```
 
-```{r makeheatmap, fig.cap = "Heatmap showing the NES of the selected gene sets. Columns : contrasts; Rows : gene sets", fig.height=20, fig.width=10}
+
+
+```{preprocessHeatmap}
+nr <- nrow(na.omit(xmNES))
+nc <- ncol(na.omit(xmNES))
+p <- pheatmap::pheatmap(na.omit(xmNES), silent = TRUE, cluster_rows = FALSE)
+
+heatmapheight <- 4 + nr*0.2
+heatmapwidth <- 10 + nc*0.2
+```
+
+
+```{r makeheatmap, fig.cap = "Heatmap showing the NES of the selected gene sets. Columns : contrasts; Rows : gene sets", fig.height=heatmapheight, fig.width=heatmapwidth}
 print(p)
+```
+
+```{r}
+# Show values in DT table.
+DT::datatable(xxNES, caption = "NES for all GS with a padj < threshold for one of the comparisons.")
+
 ```
 
