@@ -42,6 +42,20 @@ pl$pca()
 
 ```
 
+
+
+# Cluster proteins
+
+
+Compute distances with jackknife
+
+
+
+```{r compareClusters}
+plot(resultsV2$dendrogram,leaflab = "none" )
+```
+
+
 ```{r fig.cap="Cluster Profiles.", fig.width=10, fig.height=10}
 scaledM <- resultsV2$scaledM
 
@@ -56,17 +70,6 @@ ggplot(toplot, aes(x=sampleName,y=transformedIntensity,group=protein_Id)) +
   facet_wrap(~Cluster)
 ```
 
-
-# Cluster proteins
-
-
-Compute distances with jackknife
-
-
-
-```{r compareClusters}
-plot(resultsV2$dendrogram,leaflab = "none" )
-```
 
 ## GO Biological Process
 
