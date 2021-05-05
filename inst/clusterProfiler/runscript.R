@@ -1,6 +1,6 @@
 library(tidyverse)
 library(prolfqua)
-library(dendextend)
+#library(dendextend)
 library(tidyverse)
 library(ggplot2)
 library(clusterProfiler)
@@ -8,49 +8,25 @@ library(prora)
 
 args = commandArgs(trailingOnly = TRUE)
 
-# input zip organizm outpath
-
-# output :
-# zipfilename_clusteringname.txt
-## 1 row per zip
-# Zipfile,
-# name of the clustering algorithm
-# nr. proteins,
-# nr. of samples,
-# nr. of protein clusters,
-# NR of GS with padj < 0.25
-# NR of GS with padj < 0.1
-# median CV coefficient of variation for raw data
-# median SD after normalizations
-
-# GS_zipfilename_clusteringname.txt
-# zipfile
-# clusteringname
-# GS > 1 Rows
-# ClusterID
-# GO ID
-# Description
-# Gene Ratio
-
-
-# Protein_zipfilename_clusteringname.txt
-# 300 - 5000 rows
-#
-# zipfile
-# clusterinng
-# Protein IDS
-# cluster assignments
-# Protein intensities sample_Id
-
-
-
-datadir <- file.path(find.package("prolfquaData") , "quantdata")
-# parameters
 parameter <- list()
-parameter$inputMQfile <-  file.path(datadir, "MAXQuant_ComboCourse_p2691_March_2018_WU183012.zip")
-parameter$organism <- "yeast" # "human", "mouse"
-parameter$outpath = "."
 
+if ( length(args) == 0 ) {
+  # parameters
+  datadir <- file.path(find.package("prolfquaData") , "quantdata")
+  parameter$inputMQfile <-  file.path(datadir, "MAXQuant_ComboCourse_p2691_March_2018_WU183012.zip")
+  parameter$organism <- "yeast" # "human", "mouse"
+  parameter$outpath = "dummy"
+} else {
+  parameter$inputMQfile <- args[1]
+  parameter$organism <- args[2]
+  parameter$outpath <- args[3]
+}
+
+
+
+
+
+parameter$clustering <- "hclust"
 
 # related to data preprocessing
 parameter$peptide  = FALSE
@@ -61,12 +37,14 @@ parameter$row_scale <- TRUE
 
 # related to clustering
 parameter$nrCluster <- 10
+parameter$pthreshold <- 0.2
 
 
-
-# resutls will be saved as rds file
+# results will be saved as rds file
 results <- list()
-#dir.create(parameter$outpath)
+if (!dir.exists(parameter$outpath)) {
+  dir.create(parameter$outpath)
+}
 
 if (parameter$organism == "yeast") {
   orgDB <- "org.Sc.sgd.db"
@@ -114,6 +92,10 @@ if (parameter$peptide & parameter$transform == "log2") {
   ag <- transformed$get_Aggregator()
   ag$medpolish()
   prot <- ag$lfq_agg
+
+  tmp <- prot$get_Stats()$stats()
+  results$SD.50 <- median(tmp$sd, na.rm = TRUE)
+
 } else if (parameter$peptide & parameter$transform == "log2scaled") {
   tr <- lfqd$get_Transformer()
   transformed <- tr$log2_robscale()
@@ -123,14 +105,33 @@ if (parameter$peptide & parameter$transform == "log2") {
   tr <- prot$get_Transformer()
   tr$intensity_matrix(.func = prolfqua::robust_scale)
   prot <- tr$lfq
+
+  tmp <- prot$get_Stats()$stats()
+  results$SD.50 <- median(tmp$sd, na.rm = TRUE)
+
 } else if (!parameter$peptide & parameter$transform == "log2") {
+  st <- lfqd$get_Stats()
+  tmp <- st$stats()
+  results$CV.50 <- median(tmp$CV, na.rm = TRUE)
+
+
   tr <- lfqd$get_Transformer()
   tr$intensity_array(log2)
   prot <- tr$lfq
+  tmp <- prot$get_Stats()$stats()
+
+  results$SD.50 <- median(tmp$sd, na.rm = TRUE)
 
 } else if (!parameter$peptide & parameter$transform == "log2scaled") {
+  st <- lfqd$get_Stats()
+  tmp <- st$stats()
+  results$CV.50 <- median(tmp$CV, na.rm = TRUE)
+
   tr <- lfqd$get_Transformer()
   prot <- tr$log2_robscale()
+  tmp <- prot$get_Stats()$stats()
+
+  results$SD.50 <- median(tmp$sd, na.rm = TRUE)
 }
 
 
@@ -143,19 +144,16 @@ dim(mdata)
 ### Cluster ----
 # what are possible input/outputs?
 # dendrogram
-clusterHClustEuclideanDist <- function(mdata, nrCluster ){
-
-  distJK <- prora::dist_JK(mdata)
-  bb <- hclust(distJK,method = )
+clusterHClustEuclideanDist <- function(x, nrCluster , method = "complete"){
+  distJK <- prora::dist_JK(x)
+  bb <- hclust(distJK,method = method)
   k <- cutree(bb, k = nrCluster)
   dend <- as.dendrogram(bb)
-  k2 <- cutree(dend, k = parameter$nrCluster)
-  all.equal(k, k2)
-
-  clusterAssignment <- data.frame(protein_Id = rownames(mdata), clusterID =  k)
+  clusterAssignment <- data.frame(protein_Id = rownames(x), clusterID =  k)
   return(list(dendrogram = dend, clusterAssignment = clusterAssignment))
 }
 
+# remove porteins with more NA's than in 60% of samples
 filterforNA <- function(mdata){
   na <- apply(mdata, 1, function(x){sum(is.na(x))})
   nc <- ncol(mdata)
@@ -163,24 +161,47 @@ filterforNA <- function(mdata){
   return(mdata)
 }
 
-mdata <- filterforNA(mdata)
-scaledM <- t(scale(t(mdata),center = parameter$row_center, scale = parameter$row_scale))
-resClust <- clusterHClustEuclideanDist(scaledM,nrCluster = parameter$nrCluster)
+results$dataDims <- c(nrPort = nrow(mdata))
+mdataf <- filterforNA(mdata)
+results$dataDims <- c(results$dataDims, nrPortNoNas = nrow(mdataf))
+# scale matrix rows
+scaledM <- t(scale(t(mdataf),center = parameter$row_center, scale = parameter$row_scale))
+# ' some alternatives
 
-clusterAssignment <- prora::get_UniprotID_from_fasta_header(resClust$clusterAssignment, idcolumn = "protein_Id")
-clusterAssignment <- prora::map_ids_uniprot(clusterAssignment)
+if (parameter$clustering == "hclust") {
+  resClust <- clusterHClustEuclideanDist(scaledM,nrCluster = parameter$nrCluster)
+}else{
+  resClust <- clusterHClustEuclideanDist(scaledM,nrCluster = parameter$nrCluster)
+}
 
-clusterAssignment %>% filter(is.na(P_ENTREZGENEID))
 
-results$clusterAssignment <- clusterAssignment
+results$scaledM <- scaledM
 results$dendrogram <- resClust$dendrogram
 
+
+
+head(resClust$clusterAssignment)
+clusterAssignment <- prora::get_UniprotID_from_fasta_header(resClust$clusterAssignment, idcolumn = "protein_Id")
+head(clusterAssignment)
+sum(!is.na(clusterAssignment$UniprotID))
+results$dataDims <- c(results$dataDims,  UniprotExtract = sum(!is.na(clusterAssignment$UniprotID)))
+head(clusterAssignment)
+clusterAssignment <- prora::map_ids_uniprot(clusterAssignment)
+head(clusterAssignment)
+
+
+results$dataDims <- c(results$dataDims,  ENTREZGENEID= sum(!is.na(clusterAssignment$P_ENTREZGENEID)))
+
+
 # clusterProfiler ----
-clusterB <- na.omit(clusterAssignment)
+#clusterAssignmentF
+results$clusterAssignment <- clusterAssignment
+clusterB <- clusterAssignment %>% filter(!is.na(P_ENTREZGENEID))
 # check mapping efficiency.
 
 clusterB$clusterID <- paste0("Cluster", clusterB$clusterID)
 clusterProfilerinput <- split(clusterB$P_ENTREZGENEID, clusterB$clusterID)
+length(clusterProfilerinput)
 
 resGOEnrich <- list()
 mt <- "GO Biological Process"
@@ -225,10 +246,73 @@ outfile <- tools::file_path_sans_ext(basename(parameter$inputMQfile))
 saveRDS(results, file = file.path(parameter$outpath, paste0(outfile,".Rds")))
 
 
+
 rmarkdown::render("profileClusters_V2.Rmd", params = list(resultsxx = results))
+file.copy("profileClusters_V2.html", file.path(parameter$outpath, paste0(outfile, ".html")),overwrite = TRUE)
 
 ## create summary.
 
-results$prot$hierarchy_counts()
-ss <- results$prot$get_Stats()
-ss$stats_quantiles()
+
+# input zip organizm outpath
+
+# zipfilename_clusteringname.txt
+## 1 row per zip
+# Zipfile,
+# name of the clustering algorithm
+# nr. proteins,
+# nr. of samples,
+# nr. of protein clusters,
+# NR of GS with padj < 0.25
+# NR of GS with padj < 0.1
+# median CV coefficient of variation for raw data
+# median SD after normalizations
+
+
+output2 <- lapply(results$resGOEnrich, function(x){as.data.frame(x$clustProf)})
+output2 <- bind_rows(output2)
+output2 <- tibble::add_column(output2,zipfile = basename(parameter$inputMQfile),
+                              clustering  = parameter$clustering, .before = 1 )
+
+output2 <- output2 %>% filter(p.adjust < parameter$pthreshold)
+colnames(output2)
+nr.of.GS.025 <- output2 %>% filter(p.adjust < 0.25) %>% nrow
+nr.of.GS.01 <- output2 %>% filter(p.adjust < 0.1) %>% nrow
+
+
+
+# output :
+output1 <- data.frame(
+  zipfile = basename(parameter$inputMQfile),
+  clustering  = parameter$clustering,
+  nr.proteins = results$dataDims["nrPort"],
+  nr.proteins.NA.filtered = results$dataDims["nrPortNoNas"],
+  nr.UniprotIDs = results$dataDims["UniprotExtract"],
+  nr.ENTREZIDS = results$dataDims["ENTREZGENEID"],
+  nr.samples = nrow(results$prot$factors()),
+  nr.of.clusters = parameter$nrCluster,
+  nr.of.GS.025 = nr.of.GS.025,
+  nr.of.GS.01 = nr.of.GS.01,
+  median.CV = results$CV.50,
+  median.sd = results$SD.50
+)
+write_tsv(output1, file = file.path(parameter$outpath, paste0(outfile, "_", parameter$clustering, '.tsv')))
+
+# GS_zipfilename_clusteringname.txt
+
+gsfilename <- paste0("GS_" , outfile, "_", parameter$clustering, '.tsv')
+readr::write_tsv(output2 , file = file.path(parameter$outpath, gsfilename))
+
+# Protein_zipfilename_clusteringname.txt
+# 300 - 5000 rows
+# zipfile
+# clusterinng
+# Protein IDS
+# cluster assignments
+# Protein intensities sample_Id
+
+protfilename <- paste0("Protein_" , outfile, "_", parameter$clustering, '.tsv')
+output3 <- results$clusterAssignment
+tmp <- results$prot$to_wide()$data
+output3 <- right_join(output3, tmp, by = "protein_Id")
+readr::write_tsv(output3, file = file.path(parameter$outpath, protfilename))
+

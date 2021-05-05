@@ -42,6 +42,21 @@ pl$pca()
 
 ```
 
+```{r fig.cap="Cluster Profiles.", fig.width=10, fig.height=10}
+scaledM <- resultsV2$scaledM
+
+bb <- as_tibble(scaledM,rownames = "protein_Id")
+bb <- bb %>% pivot_longer(-"protein_Id",names_to="sampleName", values_to = "transformedIntensity")
+toplot <- inner_join(resultsV2$clusterAssignment, bb)
+neword <- labels(as.dendrogram(hclust(dist(t(scaledM)))))
+toplot$sampleName <- fct_relevel(toplot$sampleName, neword)
+ggplot(toplot, aes(x=sampleName,y=transformedIntensity,group=protein_Id)) +
+  geom_line(color="lightgrey") + theme_bw() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+  facet_wrap(~clusterID)
+```
+
+
 # Cluster proteins
 
 
