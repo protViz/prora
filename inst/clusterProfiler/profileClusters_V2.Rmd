@@ -53,7 +53,7 @@ toplot$sampleName <- fct_relevel(toplot$sampleName, neword)
 ggplot(toplot, aes(x=sampleName,y=transformedIntensity,group=protein_Id)) +
   geom_line(color="lightgrey") + theme_bw() +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
-  facet_wrap(~clusterID)
+  facet_wrap(~Cluster)
 ```
 
 

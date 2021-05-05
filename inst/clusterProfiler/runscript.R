@@ -16,13 +16,14 @@ if ( length(args) == 0 ) {
   parameter$inputMQfile <-  file.path(datadir, "MAXQuant_ComboCourse_p2691_March_2018_WU183012.zip")
   parameter$organism <- "yeast" # "human", "mouse"
   parameter$outpath = "dummy"
+} else if ( length(args) == 1) {
+  # read yaml and extract
 } else {
   parameter$inputMQfile <- args[1]
   parameter$organism <- args[2]
   parameter$outpath <- args[3]
+  parameter$clustering <- args[4]
 }
-
-
 
 
 
@@ -149,7 +150,7 @@ clusterHClustEuclideanDist <- function(x, nrCluster , method = "complete"){
   bb <- hclust(distJK,method = method)
   k <- cutree(bb, k = nrCluster)
   dend <- as.dendrogram(bb)
-  clusterAssignment <- data.frame(protein_Id = rownames(x), clusterID =  k)
+  clusterAssignment <- data.frame(protein_Id = rownames(x), Cluster =  k)
   return(list(dendrogram = dend, clusterAssignment = clusterAssignment))
 }
 
@@ -199,8 +200,8 @@ results$clusterAssignment <- clusterAssignment
 clusterB <- clusterAssignment %>% filter(!is.na(P_ENTREZGENEID))
 # check mapping efficiency.
 
-clusterB$clusterID <- paste0("Cluster", clusterB$clusterID)
-clusterProfilerinput <- split(clusterB$P_ENTREZGENEID, clusterB$clusterID)
+#clusterB$clusterID <- paste0("Cluster", clusterB$clusterID)
+clusterProfilerinput <- split(clusterB$P_ENTREZGENEID, clusterB$Cluster)
 length(clusterProfilerinput)
 
 resGOEnrich <- list()
@@ -267,9 +268,13 @@ file.copy("profileClusters_V2.html", file.path(parameter$outpath, paste0(outfile
 # median CV coefficient of variation for raw data
 # median SD after normalizations
 
+# TODO in output 2 and 3.
+#ClusterId use integers.
 
-output2 <- lapply(results$resGOEnrich, function(x){as.data.frame(x$clustProf)})
+output2 <- lapply(results$resGOEnrich,
+                  function(x){res <- as.data.frame(x$clustProf); res$GS <- x$mt; res})
 output2 <- bind_rows(output2)
+
 output2 <- tibble::add_column(output2,zipfile = basename(parameter$inputMQfile),
                               clustering  = parameter$clustering, .before = 1 )
 
