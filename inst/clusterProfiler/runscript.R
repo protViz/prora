@@ -16,6 +16,7 @@ if ( length(args) == 0 ) {
   parameter$inputMQfile <-  file.path(datadir, "MAXQuant_ComboCourse_p2691_March_2018_WU183012.zip")
   parameter$organism <- "yeast" # "human", "mouse"
   parameter$outpath = "dummy"
+  parameter$clustering <- "hclustdeepsplit"
 } else if ( length(args) == 1) {
   # read yaml and extract
 } else {
@@ -27,7 +28,6 @@ if ( length(args) == 0 ) {
 
 
 
-parameter$clustering <- "hclust"
 
 # related to data preprocessing
 parameter$peptide  = FALSE
@@ -151,7 +151,23 @@ clusterHClustEuclideanDist <- function(x, nrCluster , method = "complete"){
   k <- cutree(bb, k = nrCluster)
   dend <- as.dendrogram(bb)
   clusterAssignment <- data.frame(protein_Id = rownames(x), Cluster =  k)
-  return(list(dendrogram = dend, clusterAssignment = clusterAssignment))
+  return(list(dendrogram = dend, clusterAssignment = clusterAssignment, nrCluster = nrCluster))
+}
+
+
+clusterHClustEuclideanDistDeepslit <- function(x,  method = "complete"){
+  distJK <- prora::dist_JK(x)
+  bb <- hclust(distJK,method = method)
+  k <- dynamicTreeCut::cutreeDynamic(
+    bb,
+    method = "hybrid",
+    deepSplit = FALSE,
+    distM = as.matrix(distJK),
+    minClusterSize = min(50, nrow(x)/10))
+
+  dend <- as.dendrogram(bb)
+  clusterAssignment <- data.frame(protein_Id = rownames(x), Cluster =  k)
+  return(list(dendrogram = dend, clusterAssignment = clusterAssignment, nrCluster = max(k)))
 }
 
 # remove porteins with more NA's than in 60% of samples
@@ -169,16 +185,22 @@ results$dataDims <- c(results$dataDims, nrPortNoNas = nrow(mdataf))
 scaledM <- t(scale(t(mdataf),center = parameter$row_center, scale = parameter$row_scale))
 # ' some alternatives
 
+
+
+
+bb <- clusterHClustEuclideanDistDeepslit(scaledM)
+bb$nrCluster
+
 if (parameter$clustering == "hclust") {
   resClust <- clusterHClustEuclideanDist(scaledM,nrCluster = parameter$nrCluster)
-}else{
-  resClust <- clusterHClustEuclideanDist(scaledM,nrCluster = parameter$nrCluster)
+} else if (parameter$clustering == "hclustdeepsplit") {
+  resClust <- clusterHClustEuclideanDistDeepslit(scaledM)
 }
 
 
 results$scaledM <- scaledM
 results$dendrogram <- resClust$dendrogram
-
+results$nrCluster <- resClust$nrCluster
 
 
 head(resClust$clusterAssignment)
@@ -294,7 +316,7 @@ output1 <- data.frame(
   nr.UniprotIDs = results$dataDims["UniprotExtract"],
   nr.ENTREZIDS = results$dataDims["ENTREZGENEID"],
   nr.samples = nrow(results$prot$factors()),
-  nr.of.clusters = parameter$nrCluster,
+  nr.of.clusters = results$nrCluster,
   nr.of.GS.025 = nr.of.GS.025,
   nr.of.GS.01 = nr.of.GS.01,
   median.CV = results$CV.50,
