@@ -19,10 +19,12 @@ if ( length(args) == 0 ) {
 } else if ( length(args) == 1) {
   # read yaml and extract
 } else {
+  print("::::USING COMMAND LINE ARGS:::")
   parameter$inputMQfile <- args[1]
   parameter$organism <- args[2]
   parameter$outpath <- args[3]
   parameter$clustering <- args[4]
+  print(parameter)
 }
 
 
@@ -49,12 +51,18 @@ if (!dir.exists(parameter$outpath)) {
 
 if (parameter$organism == "yeast") {
   orgDB <- "org.Sc.sgd.db"
+  parameter$species <- "Saccharomyces cerevisiae"
 } else if (parameter$organism == "human") {
   orgDB <- "org.Hs.eg.db"
+  parameter$species <-  "Homo sapiens"
 } else if (parameter$organism == "mouse") {
   orgDB <- "org.Mm.eg.db"
+  parameter$species <- "Mus musculus"
+
+
 }
 
+stopifnot(parameter$species %in% msigdbr::msigdbr_species()$species_name)
 
 # Read peptides or proteins
 if (parameter$peptide) {
@@ -158,7 +166,7 @@ clusterHClustEuclideanDist <- function(x, nrCluster , method = "complete"){
 filterforNA <- function(mdata){
   na <- apply(mdata, 1, function(x){sum(is.na(x))})
   nc <- ncol(mdata)
-  mdata <- mdata[na < floor(0.6 * nc),]
+  mdata <- mdata[na < floor(0.5 * nc),]
   return(mdata)
 }
 
@@ -168,6 +176,8 @@ results$dataDims <- c(results$dataDims, nrPortNoNas = nrow(mdataf))
 # scale matrix rows
 scaledM <- t(scale(t(mdataf),center = parameter$row_center, scale = parameter$row_scale))
 # ' some alternatives
+
+
 
 if (parameter$clustering == "hclust") {
   resClust <- clusterHClustEuclideanDist(scaledM,nrCluster = parameter$nrCluster)
@@ -181,14 +191,23 @@ results$dendrogram <- resClust$dendrogram
 
 
 
-head(resClust$clusterAssignment)
 clusterAssignment <- prora::get_UniprotID_from_fasta_header(resClust$clusterAssignment, idcolumn = "protein_Id")
-head(clusterAssignment)
-sum(!is.na(clusterAssignment$UniprotID))
 results$dataDims <- c(results$dataDims,  UniprotExtract = sum(!is.na(clusterAssignment$UniprotID)))
-head(clusterAssignment)
-clusterAssignment <- prora::map_ids_uniprot(clusterAssignment)
-head(clusterAssignment)
+
+# map to entriz id's
+.ehandler = function(e){
+  warning("WARN :", e)
+  # return string here
+  as.character(e)
+}
+
+#undebug(prora::map_ids_annotationHub)
+
+clusterAssignment <- tryCatch(prora::map_ids_uniprot(clusterAssignment), error = .ehandler)
+if (is.character(data3)) {
+  clusterAssignment <- tryCatch(prora::map_ids_annotationHub(clusterAssignment, species = parameter$species), error = .ehandler)
+}
+
 
 
 results$dataDims <- c(results$dataDims,  ENTREZGENEID= sum(!is.na(clusterAssignment$P_ENTREZGENEID)))
