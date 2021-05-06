@@ -204,7 +204,7 @@ results$dataDims <- c(results$dataDims,  UniprotExtract = sum(!is.na(clusterAssi
 #undebug(prora::map_ids_annotationHub)
 
 clusterAssignment <- tryCatch(prora::map_ids_uniprot(clusterAssignment), error = .ehandler)
-if (is.character(data3)) {
+if (is.character(clusterAssignment)) {
   clusterAssignment <- tryCatch(prora::map_ids_annotationHub(clusterAssignment, species = parameter$species), error = .ehandler)
 }
 
