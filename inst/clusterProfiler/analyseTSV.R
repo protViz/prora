@@ -8,19 +8,26 @@ summary(human$n_inputs)
 hist(human$n_inputs)
 windowpaths <- gsub("/srv/www/htdocs","y:",human$path_to_zip)
 
-for (path in windowpaths[4:length(windowpaths)]) {
+for (path in windowpaths[7:length(windowpaths)]) {
   if (!file.exists(path)) {
     print(path)
-  }else if(TRUE){
+  } else if (TRUE) {
     arguments <- c("runscript.R", path, "human","blubA" ,"hclust")
     res <- system2("c:/Program Files/R/R-4.0.3/bin/Rscript.exe", args = arguments)
     stopifnot(res == 0)
-    if (FALSE) {
+    if (TRUE) {
       commandArgs <- function(...){return(arguments[-1])}
       commandArgs()
       source("runscript.R")
     }
   }
 }
+
+path <- windowpaths[7]
+arguments <- c("runscript.R", path, "human","blubA" ,"hclust")
+
+commandArgs <- function(...){return(arguments[-1])}
+commandArgs()
+source("runscript.R")
 
 
