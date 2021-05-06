@@ -210,7 +210,7 @@ if (is.character(clusterAssignment)) {
 
 
 
-results$dataDims <- c(results$dataDims,  ENTREZGENEID= sum(!is.na(clusterAssignment$P_ENTREZGENEID)))
+results$dataDims <- c(results$dataDims,  ENTREZGENEID = sum(!is.na(clusterAssignment$P_ENTREZGENEID)))
 
 
 # clusterProfiler ----
@@ -223,41 +223,41 @@ clusterB <- clusterAssignment %>% filter(!is.na(P_ENTREZGENEID))
 clusterProfilerinput <- split(clusterB$P_ENTREZGENEID, clusterB$Cluster)
 length(clusterProfilerinput)
 
+
+compClust <- function(clusterProfilerinput,
+                      orgDB,
+                      universe, ont="BP" ){
+  clustProf = tryCatch(clusterProfiler::compareCluster(
+    clusterProfilerinput,
+    fun = "enrichGO",
+    OrgDb =  orgDB,
+    ont = ont,
+    universe = universe,
+    pvalueCutoff = 1,
+    qvalueCutoff = 0.2,
+    pAdjustMethod = "BH"), error = .ehandler)
+  return(clustProf)
+
+}
+
 resGOEnrich <- list()
 mt <- "GO Biological Process"
-resGOEnrich$BP <- list(mt = mt,
-                       clustProf = clusterProfiler::compareCluster(
-                         clusterProfilerinput,
-                         fun = "enrichGO",
-                         OrgDb =  orgDB,
-                         ont = "BP",
-                         universe = clusterB$P_ENTREZGENEID,
-                         pvalueCutoff = 1,
-                         qvalueCutoff = 0.2,
-                         pAdjustMethod = "BH"))
+clustProf <- compClust(clusterProfilerinput,orgDB,clusterB$P_ENTREZGENEID,ont = "BP")
+if (!is.character(clustProf)) {
+  resGOEnrich$BP <- list(mt = mt,clustProf = clustProf)
+}
 
 mt <- "GO Molecular Function"
-resGOEnrich$MF <- list(mt = mt, clustProf = clusterProfiler::compareCluster(
-  clusterProfilerinput,
-  fun = "enrichGO",
-  OrgDb =  orgDB,
-  ont = "MF",
-  universe = clusterB$P_ENTREZGENEID,
-  pvalueCutoff = 1,
-  qvalueCutoff = 0.2,
-  pAdjustMethod = "BH"))
-
+clustProf <- compClust(clusterProfilerinput, orgDB, clusterB$P_ENTREZGENEID,ont = "MF")
+if (!is.character(clustProf)) {
+  resGOEnrich$MF <- list(mt = mt, clustProf = clustProf)
+}
 
 mt <- "GO Cellular Component"
-resGOEnrich$CC <- list(mt = mt, clustProf = clusterProfiler::compareCluster(
-  clusterProfilerinput,
-  fun = "enrichGO",
-  OrgDb =  orgDB,
-  ont = "CC",
-  universe = clusterB$P_ENTREZGENEID,
-  pvalueCutoff = 1,
-  qvalueCutoff = 0.2,
-  pAdjustMethod = "BH"))
+clustProf <- compClust(clusterProfilerinput, orgDB, clusterB$P_ENTREZGENEID,ont = "CC")
+if (!is.character(clustProf)) {
+resGOEnrich$CC <- list(mt = mt, clustProf = clustProf)
+}
 
 results$resGOEnrich <- resGOEnrich
 
