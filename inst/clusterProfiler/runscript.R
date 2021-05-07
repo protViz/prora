@@ -204,8 +204,10 @@ results$dataDims <- c(results$dataDims,  UniprotExtract = sum(!is.na(clusterAssi
 #undebug(prora::map_ids_annotationHub)
 
 clusterAssignment <- tryCatch(prora::map_ids_uniprot(clusterAssignment), error = .ehandler)
+results$id.mapping.service <- "UniProt"
 if (is.character(clusterAssignment)) {
   clusterAssignment <- tryCatch(prora::map_ids_annotationHub(clusterAssignment, species = parameter$species), error = .ehandler)
+  results$id.mapping.service <- "AnnotationHub"
 }
 
 
@@ -263,12 +265,15 @@ results$resGOEnrich <- resGOEnrich
 
 
 outfile <- tools::file_path_sans_ext(basename(parameter$inputMQfile))
-saveRDS(results, file = file.path(parameter$outpath, paste0(outfile,".Rds")))
+saveRDS(results,
+        file = file.path(parameter$outpath, paste0(outfile, "_", parameter$clustering,".Rds")))
 
 
 
-rmarkdown::render("profileClusters_V2.Rmd", params = list(resultsxx = results))
-file.copy("profileClusters_V2.html", file.path(parameter$outpath, paste0(outfile, ".html")),overwrite = TRUE)
+rmarkdown::render("profileClusters_V2.Rmd",
+                  params = list(resultsxx = results))
+file.copy("profileClusters_V2.html",
+          file.path(parameter$outpath, paste0(outfile,"_", parameter$clustering, ".html")),overwrite = TRUE)
 
 ## create summary.
 
@@ -317,9 +322,11 @@ output1 <- data.frame(
   nr.of.GS.025 = nr.of.GS.025,
   nr.of.GS.01 = nr.of.GS.01,
   median.CV = results$CV.50,
-  median.sd = results$SD.50
+  median.sd = results$SD.50,
+  id.mapping.service = results$id.mapping.service
 )
-write_tsv(output1, file = file.path(parameter$outpath, paste0(outfile, "_", parameter$clustering, '.tsv')))
+
+write_tsv(output1, file = file.path(parameter$outpath, paste0("Summary", outfile, "_", parameter$clustering, '.tsv')))
 
 # GS_zipfilename_clusteringname.txt
 
