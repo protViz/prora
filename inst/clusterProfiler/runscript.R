@@ -20,10 +20,12 @@ if ( length(args) == 0 ) {
 } else if ( length(args) == 1) {
   # read yaml and extract
 } else {
+  print("::::USING COMMAND LINE ARGS:::")
   parameter$inputMQfile <- args[1]
   parameter$organism <- args[2]
   parameter$outpath <- args[3]
   parameter$clustering <- args[4]
+  print(parameter)
 }
 
 
@@ -49,12 +51,18 @@ if (!dir.exists(parameter$outpath)) {
 
 if (parameter$organism == "yeast") {
   orgDB <- "org.Sc.sgd.db"
+  parameter$species <- "Saccharomyces cerevisiae"
 } else if (parameter$organism == "human") {
   orgDB <- "org.Hs.eg.db"
+  parameter$species <-  "Homo sapiens"
 } else if (parameter$organism == "mouse") {
   orgDB <- "org.Mm.eg.db"
+  parameter$species <- "Mus musculus"
+
+
 }
 
+stopifnot(parameter$species %in% msigdbr::msigdbr_species()$species_name)
 
 # Read peptides or proteins
 if (parameter$peptide) {
@@ -174,7 +182,7 @@ clusterHClustEuclideanDistDeepslit <- function(x,  method = "complete"){
 filterforNA <- function(mdata){
   na <- apply(mdata, 1, function(x){sum(is.na(x))})
   nc <- ncol(mdata)
-  mdata <- mdata[na < floor(0.6 * nc),]
+  mdata <- mdata[na < floor(0.5 * nc),]
   return(mdata)
 }
 
@@ -188,9 +196,6 @@ scaledM <- t(scale(t(mdataf),center = parameter$row_center, scale = parameter$ro
 
 
 
-bb <- clusterHClustEuclideanDistDeepslit(scaledM)
-bb$nrCluster
-
 if (parameter$clustering == "hclust") {
   resClust <- clusterHClustEuclideanDist(scaledM,nrCluster = parameter$nrCluster)
 } else if (parameter$clustering == "hclustdeepsplit") {
@@ -203,17 +208,26 @@ results$dendrogram <- resClust$dendrogram
 results$nrCluster <- resClust$nrCluster
 
 
-head(resClust$clusterAssignment)
 clusterAssignment <- prora::get_UniprotID_from_fasta_header(resClust$clusterAssignment, idcolumn = "protein_Id")
-head(clusterAssignment)
-sum(!is.na(clusterAssignment$UniprotID))
 results$dataDims <- c(results$dataDims,  UniprotExtract = sum(!is.na(clusterAssignment$UniprotID)))
-head(clusterAssignment)
-clusterAssignment <- prora::map_ids_uniprot(clusterAssignment)
-head(clusterAssignment)
+
+# map to entriz id's
+.ehandler = function(e){
+  warning("WARN :", e)
+  # return string here
+  as.character(e)
+}
+
+#undebug(prora::map_ids_annotationHub)
+
+clusterAssignment <- tryCatch(prora::map_ids_uniprot(clusterAssignment), error = .ehandler)
+if (is.character(clusterAssignment)) {
+  clusterAssignment <- tryCatch(prora::map_ids_annotationHub(clusterAssignment, species = parameter$species), error = .ehandler)
+}
 
 
-results$dataDims <- c(results$dataDims,  ENTREZGENEID= sum(!is.na(clusterAssignment$P_ENTREZGENEID)))
+
+results$dataDims <- c(results$dataDims,  ENTREZGENEID = sum(!is.na(clusterAssignment$P_ENTREZGENEID)))
 
 
 # clusterProfiler ----
@@ -226,41 +240,41 @@ clusterB <- clusterAssignment %>% filter(!is.na(P_ENTREZGENEID))
 clusterProfilerinput <- split(clusterB$P_ENTREZGENEID, clusterB$Cluster)
 length(clusterProfilerinput)
 
+
+compClust <- function(clusterProfilerinput,
+                      orgDB,
+                      universe, ont="BP" ){
+  clustProf = tryCatch(clusterProfiler::compareCluster(
+    clusterProfilerinput,
+    fun = "enrichGO",
+    OrgDb =  orgDB,
+    ont = ont,
+    universe = universe,
+    pvalueCutoff = 1,
+    qvalueCutoff = 0.2,
+    pAdjustMethod = "BH"), error = .ehandler)
+  return(clustProf)
+
+}
+
 resGOEnrich <- list()
 mt <- "GO Biological Process"
-resGOEnrich$BP <- list(mt = mt,
-                       clustProf = clusterProfiler::compareCluster(
-                         clusterProfilerinput,
-                         fun = "enrichGO",
-                         OrgDb =  orgDB,
-                         ont = "BP",
-                         universe = clusterB$P_ENTREZGENEID,
-                         pvalueCutoff = 1,
-                         qvalueCutoff = 0.2,
-                         pAdjustMethod = "BH"))
+clustProf <- compClust(clusterProfilerinput,orgDB,clusterB$P_ENTREZGENEID,ont = "BP")
+if (!is.character(clustProf)) {
+  resGOEnrich$BP <- list(mt = mt,clustProf = clustProf)
+}
 
 mt <- "GO Molecular Function"
-resGOEnrich$MF <- list(mt = mt, clustProf = clusterProfiler::compareCluster(
-  clusterProfilerinput,
-  fun = "enrichGO",
-  OrgDb =  orgDB,
-  ont = "MF",
-  universe = clusterB$P_ENTREZGENEID,
-  pvalueCutoff = 1,
-  qvalueCutoff = 0.2,
-  pAdjustMethod = "BH"))
-
+clustProf <- compClust(clusterProfilerinput, orgDB, clusterB$P_ENTREZGENEID,ont = "MF")
+if (!is.character(clustProf)) {
+  resGOEnrich$MF <- list(mt = mt, clustProf = clustProf)
+}
 
 mt <- "GO Cellular Component"
-resGOEnrich$CC <- list(mt = mt, clustProf = clusterProfiler::compareCluster(
-  clusterProfilerinput,
-  fun = "enrichGO",
-  OrgDb =  orgDB,
-  ont = "CC",
-  universe = clusterB$P_ENTREZGENEID,
-  pvalueCutoff = 1,
-  qvalueCutoff = 0.2,
-  pAdjustMethod = "BH"))
+clustProf <- compClust(clusterProfilerinput, orgDB, clusterB$P_ENTREZGENEID,ont = "CC")
+if (!is.character(clustProf)) {
+resGOEnrich$CC <- list(mt = mt, clustProf = clustProf)
+}
 
 results$resGOEnrich <- resGOEnrich
 
