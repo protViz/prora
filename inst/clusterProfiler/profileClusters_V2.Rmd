@@ -5,6 +5,7 @@ date: "12/02/2021"
 output: html_document
 params:
   resultsxx : NULL
+  parametersxx: NULL
 editor_options: 
   chunk_output_type: console
 ---
@@ -13,8 +14,25 @@ editor_options:
 
 knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE )
 resultsV2 <- params$resultsxx
-
+parameterV2 <- params$parametersxx
 ```
+
+
+# Run Summary
+
+- zipfile : `r basename(parameterV2$inputMQfile)`
+- clustering : `r parameterV2$clustering`
+- nr.proteins : `r resultsV2$dataDims["nrPort"]`
+- nr.proteins.NA.filtered : `r resultsV2$dataDims["nrPortNoNas"]`
+- nr.UniprotIDs : `r resultsV2$dataDims["UniprotExtract"]`
+- nr.ENTREZIDS : `r resultsV2$dataDims["ENTREZGENEID"]`
+- nr.samples : `r nrow(resultsV2$prot$factors())`
+- nr.of.clusters : `r resultsV2$nrCluster`
+- nr.of.GS.025 : `r resultsV2$nr.of.GS.025`
+- nr.of.GS.01 : `r resultsV2$nr.of.GS.01`
+- median.CV : `r resultsV2$CV.50`
+- median.sd : `r resultsV2$SD.50`
+- id.mapping.service : `r resultsV2$id.mapping.service`
 
 
 # Data QC
@@ -28,16 +46,16 @@ p <- pl$heatmap()
 pc <- pl$heatmap_cor()
 ```
 
-```{r fig.width=10, fig.height=10, fig.cap="Heatamp based on presence and absence (black) of protein measurments"}
+```{r namap, fig.width=10, fig.height=8, fig.cap="Heatamp based on presence and absence (black) of protein measurments"}
 print(pNa)
 ```
 
 
-```{r fig.width=10, fig.height=10, fig.cap = "Heatmap with color coded protein intensities"}
+```{r sampleclusth, fig.width=10, fig.height=8, fig.cap = "Heatmap with color coded protein intensities"}
 print(p)
 ```
 
-```{r fig.cap="PCA plot"}
+```{r pcaplot, fig.cap="PCA plot"}
 pl$pca()
 
 ```
@@ -47,16 +65,14 @@ pl$pca()
 # Cluster proteins
 
 
-Compute distances with jackknife
 
 
-
-```{r compareClusters}
+```{r compareClusters, fig.cap="Cluster dendrogram."}
 plot(resultsV2$dendrogram,leaflab = "none" )
 ```
 
 
-```{r fig.cap="Cluster Profiles.", fig.width=10, fig.height=10}
+```{r clustprofiles, fig.cap="Cluster Profiles", fig.width=10, fig.height=10}
 scaledM <- resultsV2$scaledM
 
 bb <- as_tibble(scaledM,rownames = "protein_Id")
@@ -71,33 +87,78 @@ ggplot(toplot, aes(x=sampleName,y=transformedIntensity,group=protein_Id)) +
 ```
 
 
+# Over Representation Analysis (ORA)
+
 ## GO Biological Process
 
+```{r setupplot1}
 
-```{r compareClustersBP, fig.height=5, fig.width=10}
+figWIncrease <- 0.4
+figHeightIncrease <- 0.1
+
 P <- resultsV2$resGOEnrich$BP
+figwidth <- 10
+figheight <- 5
 if (!is.null(P$clustProf)) {
-  print(dotplot(P$clustProf,title = P$mt))
+  dt <- as.data.frame(P$clustProf)
+  nrOra <- length(unique(dt$ID))
+  nrClust <- length(unique(dt$Cluster))
+  figwidth <- max(figwidth, 6 + nrClust*figWIncrease)
+  figheight <- max(figheight, 3 + nrOra*figHeightIncrease)
+}
+print(c(figwidth,figheight))
+
+```
+
+```{r compareClustersBP, fig.height=figheight, fig.width=figwidth}
+if (!is.null(P$clustProf)) {
+  print(dotplot(P$clustProf,title = P$mt, showCategory	 = nrOra))
   DT::datatable(as.data.frame(P$clustProf),caption = mt)
 }
 ```
 
 ## GO Molecular Function
 
-```{r compareClustersMF,  fig.height=5, fig.width=10}
+```{r setupplot2}
 P <- resultsV2$resGOEnrich$MF
+figwidth <- 10
+figheight <- 5
+if (!is.null(P$clustProf)) {
+  dt <- as.data.frame(P$clustProf)
+  nrOra <- length(unique(dt$ID))
+  nrClust <- length(unique(dt$Cluster))
+  figwidth <- max(figwidth, 6 + nrClust*figWIncrease)
+  figheight <- max(figheight, 3 + nrOra*figHeightIncrease)
+}
+print(c(figwidth,figheight))
+```
+
+
+```{r compareClustersMF,  fig.height=figheight, fig.width=figwidth}
 if (!is.null(P$clustProf)) {
   print(dotplot(P$clustProf,title = P$mt))
-  
-  
   DT::datatable(as.data.frame(P$clustProf),caption = mt)
 }
 ```
 
 # GO Cellular Component
 
-```{r compareClustersCC,  fig.height=5, fig.width=10}
+```{r setupplot3}
 P <- resultsV2$resGOEnrich$CC
+figwidth <- 10
+figheight <- 5
+if (!is.null(P$clustProf)) {
+  dt <- as.data.frame(P$clustProf)
+  nrOra <- length(unique(dt$ID))
+  nrClust <- length(unique(dt$Cluster))
+  figwidth <- max(figwidth, 6 + nrClust*0.5)
+  figheight <- max(figheight, 3 + nrOra*0.2)
+}
+print(c(figwidth,figheight))
+
+```
+
+```{r compareClustersCC,  fig.height=figheight, fig.width=figwidth}
 if (!is.null(P$clustProf)) {
   print(dotplot(P$clustProf,title = P$mt))
   DT::datatable(as.data.frame(P$clustProf),caption = mt)
