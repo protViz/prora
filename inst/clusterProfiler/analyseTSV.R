@@ -25,6 +25,7 @@ for (path in windowpaths[8:length(windowpaths)]) {
 
 path <- "y:/p2621/bfabric/Proteomics/MaxQuant/2018/2018-10/2018-10-05/workunit_175797/721705.zip"
 path <- "y:/p2673/bfabric/Proteomics/MaxQuant/2021/2021-01/2021-01-19/workunit_256172/1792120.zip"
+path <-  "y:/p2954/bfabric/Proteomics/MaxQuant/2019/2019-01/2019-01-09/workunit_187912/1068470.zip"
 arguments <- c("runscript.R", path, "human","blubB" ,"hclust")
 
 commandArgs <- function(...){return(arguments[-1])}
