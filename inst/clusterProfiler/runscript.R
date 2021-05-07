@@ -1,6 +1,7 @@
 library(tidyverse)
 library(prolfqua)
 #library(dendextend)
+library(dynamicTreeCut)
 library(tidyverse)
 library(ggplot2)
 library(clusterProfiler)
@@ -84,7 +85,7 @@ if (parameter$peptide) {
   config <- AnalysisConfiguration$new(atable, anaparam)
 }
 
-tmp$AllSamples <- "AllSamples"
+tmp$AllSamples <- "S"
 tmp$file <- tmp$raw.file
 config$table$factors[["all"]] = "AllSamples"
 config$table$factors[["file"]] = "file"
