@@ -1,18 +1,23 @@
 library(tidyverse)
 library(readr)
 tmp <- readr::read_csv("output_MaxQuant_info_WSpecies.csv")
-names(tmp)
-human <- tmp %>% filter(species == "human" & n_inputs > 4)
+head(tmp)
+tmp$project_ID <-  gsub("/srv/www/htdocs/(p[0-9]{1,5})/bfabric/.*","\\1",tmp$path_to_zip)
 
+human <- tmp %>% filter(species == "human" & n_inputs > 4)
 summary(human$n_inputs)
 hist(human$n_inputs)
-windowpaths <- gsub("/srv/www/htdocs","y:",human$path_to_zip)
 
-for (path in windowpaths[8:length(windowpaths)]) {
+human$windowpaths <- gsub("/srv/www/htdocs","y:",human$path_to_zip)
+
+for (i in 1:nrow(human)) {
+  path <- human$windowpaths[i]
+  workunitid <- human$workunitid[i]
+  projectid <- human$project_ID[i]
   if (!file.exists(path)) {
     print(path)
   } else if (TRUE) {
-    arguments <- c("runscript.R", path, "human","blubA" ,"hclust")
+    arguments <- c("runscript.R", path, "human","blubA" ,"hclust", workunitid, projectid)
     res <- system2("c:/Program Files/R/R-4.0.3/bin/Rscript.exe", args = arguments)
     stopifnot(res == 0)
     if (TRUE) {
