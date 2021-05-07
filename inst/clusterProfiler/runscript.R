@@ -166,12 +166,13 @@ clusterHClustEuclideanDist <- function(x, nrCluster , method = "complete"){
 clusterHClustEuclideanDistDeepslit <- function(x,  method = "complete"){
   distJK <- prora::dist_JK(x)
   bb <- hclust(distJK,method = method)
+  #cat("MIN cluster size ", min(50, nrow(x)/10))
   k <- dynamicTreeCut::cutreeDynamic(
     bb,
     method = "hybrid",
     deepSplit = FALSE,
     distM = as.matrix(distJK),
-    minClusterSize = min(50, nrow(x)/10))
+    minClusterSize = min(50, nrow(x)/10) , verbose = 0)
 
   dend <- as.dendrogram(bb)
   clusterAssignment <- data.frame(protein_Id = rownames(x), Cluster =  k)

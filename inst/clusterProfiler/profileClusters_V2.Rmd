@@ -93,8 +93,8 @@ ggplot(toplot, aes(x=sampleName,y=transformedIntensity,group=protein_Id)) +
 
 ```{r setupplot1}
 
-figWIncrease <- 0.4
-figHeightIncrease <- 0.1
+figWIncrease <- 0.5
+figHeightIncrease <- 0.25
 
 P <- resultsV2$resGOEnrich$BP
 figwidth <- 10
@@ -130,13 +130,12 @@ if (!is.null(P$clustProf)) {
   figwidth <- max(figwidth, 6 + nrClust*figWIncrease)
   figheight <- max(figheight, 3 + nrOra*figHeightIncrease)
 }
-print(c(figwidth,figheight))
 ```
 
 
 ```{r compareClustersMF,  fig.height=figheight, fig.width=figwidth}
 if (!is.null(P$clustProf)) {
-  print(dotplot(P$clustProf,title = P$mt))
+  print(dotplot(P$clustProf,title = P$mt, showCategory	 = nrOra))
   DT::datatable(as.data.frame(P$clustProf),caption = mt)
 }
 ```
@@ -151,16 +150,15 @@ if (!is.null(P$clustProf)) {
   dt <- as.data.frame(P$clustProf)
   nrOra <- length(unique(dt$ID))
   nrClust <- length(unique(dt$Cluster))
-  figwidth <- max(figwidth, 6 + nrClust*0.5)
-  figheight <- max(figheight, 3 + nrOra*0.2)
+  figwidth <- max(figwidth, 6 + nrClust*figWIncrease)
+  figheight <- max(figheight, 3 + nrOra*figHeightIncrease)
 }
-print(c(figwidth,figheight))
 
 ```
 
 ```{r compareClustersCC,  fig.height=figheight, fig.width=figwidth}
 if (!is.null(P$clustProf)) {
-  print(dotplot(P$clustProf,title = P$mt))
+  print(dotplot(P$clustProf,title = P$mt, showCategory	 = nrOra))
   DT::datatable(as.data.frame(P$clustProf),caption = mt)
 }
 
