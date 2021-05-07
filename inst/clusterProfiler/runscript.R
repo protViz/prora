@@ -214,7 +214,9 @@ results$dendrogram <- resClust$dendrogram
 results$nrCluster <- resClust$nrCluster
 
 
-clusterAssignment <- prora::get_UniprotID_from_fasta_header(resClust$clusterAssignment, idcolumn = "protein_Id")
+clusterAssignment <- prora::get_UniprotID_from_fasta_header(
+  resClust$clusterAssignment,
+  idcolumn = "protein_Id")
 results$dataDims <- c(results$dataDims,  UniprotExtract = sum(!is.na(clusterAssignment$UniprotID)))
 
 # map to entriz id's
@@ -226,10 +228,14 @@ results$dataDims <- c(results$dataDims,  UniprotExtract = sum(!is.na(clusterAssi
 
 #undebug(prora::map_ids_annotationHub)
 
-clusterAssignment <- tryCatch(prora::map_ids_uniprot(clusterAssignment), error = .ehandler)
+clusterAssignment <- tryCatch(
+  prora::map_ids_uniprot(clusterAssignment),
+  error = .ehandler)
 results$id.mapping.service <- "UniProt"
 if (is.character(clusterAssignment)) {
-  clusterAssignment <- tryCatch(prora::map_ids_annotationHub(clusterAssignment, species = parameter$species), error = .ehandler)
+  clusterAssignment <- tryCatch(
+    prora::map_ids_annotationHub(clusterAssignment, species = parameter$species),
+    error = .ehandler)
   results$id.mapping.service <- "AnnotationHub"
 }
 
