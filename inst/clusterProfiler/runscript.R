@@ -287,10 +287,6 @@ saveRDS(results,
 
 
 
-rmarkdown::render("profileClusters_V2.Rmd",
-                  params = list(resultsxx = results))
-file.copy("profileClusters_V2.html",
-          file.path(parameter$outpath, paste0(outfile,"_", parameter$clustering, ".html")),overwrite = TRUE)
 
 ## create summary.
 
@@ -320,9 +316,10 @@ output2 <- tibble::add_column(output2,zipfile = basename(parameter$inputMQfile),
                               clustering  = parameter$clustering, .before = 1 )
 
 output2 <- output2 %>% filter(p.adjust < parameter$pthreshold)
-colnames(output2)
-nr.of.GS.025 <- output2 %>% filter(p.adjust < 0.25) %>% nrow
-nr.of.GS.01 <- output2 %>% filter(p.adjust < 0.1) %>% nrow
+
+
+results$nr.of.GS.025 <- output2 %>% filter(p.adjust < 0.25) %>% nrow
+results$nr.of.GS.01 <- output2 %>% filter(p.adjust < 0.1) %>% nrow
 
 
 
@@ -336,8 +333,8 @@ output1 <- data.frame(
   nr.ENTREZIDS = results$dataDims["ENTREZGENEID"],
   nr.samples = nrow(results$prot$factors()),
   nr.of.clusters = results$nrCluster,
-  nr.of.GS.025 = nr.of.GS.025,
-  nr.of.GS.01 = nr.of.GS.01,
+  nr.of.GS.025 = results$nr.of.GS.025,
+  nr.of.GS.01 = results$nr.of.GS.01,
   median.CV = results$CV.50,
   median.sd = results$SD.50,
   id.mapping.service = results$id.mapping.service
@@ -363,4 +360,11 @@ output3 <- results$clusterAssignment
 tmp <- results$prot$to_wide()$data
 output3 <- right_join(output3, tmp, by = "protein_Id")
 readr::write_tsv(output3, file = file.path(parameter$outpath, protfilename))
+
+
+rmarkdown::render("profileClusters_V2.Rmd",
+                  params = list(resultsxx = results, parametersxx = parameter))
+
+file.copy("profileClusters_V2.html",
+          file.path(parameter$outpath, paste0(outfile,"_", parameter$clustering, ".html")),overwrite = TRUE)
 
