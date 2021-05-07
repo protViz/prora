@@ -17,6 +17,8 @@ if ( length(args) == 0 ) {
   parameter$organism <- "yeast" # "human", "mouse"
   parameter$outpath = "dummy"
   parameter$clustering <- "hclustdeepsplit"
+  parameter$projectID <- 3000
+  parameter$workunitID <- 233333
 } else if ( length(args) == 1) {
   # read yaml and extract
 } else {
@@ -25,6 +27,8 @@ if ( length(args) == 0 ) {
   parameter$organism <- args[2]
   parameter$outpath <- args[3]
   parameter$clustering <- args[4]
+  parameter$workunitID <- args[5]
+  parameter$projectID <- args[6]
   print(parameter)
 }
 
@@ -283,8 +287,14 @@ results$resGOEnrich <- resGOEnrich
 
 
 outfile <- tools::file_path_sans_ext(basename(parameter$inputMQfile))
+outfile <- paste0(parameter$projectID,"_",
+                  parameter$workunitID,"_",
+                  outfile,"_",
+                  parameter$clustering)
+
+
 saveRDS(results,
-        file = file.path(parameter$outpath, paste0(outfile, "_", parameter$clustering,".Rds")))
+        file = file.path(parameter$outpath, paste0(outfile,".Rds")))
 
 
 
@@ -313,7 +323,10 @@ output2 <- lapply(results$resGOEnrich,
                   function(x){res <- as.data.frame(x$clustProf); res$GS <- x$mt; res})
 output2 <- bind_rows(output2)
 
-output2 <- tibble::add_column(output2,zipfile = basename(parameter$inputMQfile),
+output2 <- tibble::add_column(output2,
+                              projectID = parameter$projectID,
+                              workunitID = parameter$workunitID,
+                              zipfile = basename(parameter$inputMQfile),
                               clustering  = parameter$clustering, .before = 1 )
 
 output2 <- output2 %>% filter(p.adjust < parameter$pthreshold)
@@ -326,8 +339,12 @@ results$nr.of.GS.01 <- output2 %>% filter(p.adjust < 0.1) %>% nrow
 
 # output :
 output1 <- data.frame(
+  projectID = parameter$projectID,
+  workunitID = parameter$workunitID,
   zipfile = basename(parameter$inputMQfile),
   clustering  = parameter$clustering,
+  projectID = parameter$projectID,
+  workunitID = parameter$workunitID,
   nr.proteins = results$dataDims["nrPort"],
   nr.proteins.NA.filtered = results$dataDims["nrPortNoNas"],
   nr.UniprotIDs = results$dataDims["UniprotExtract"],
@@ -341,12 +358,12 @@ output1 <- data.frame(
   id.mapping.service = results$id.mapping.service
 )
 
-write_tsv(output1, file = file.path(parameter$outpath, paste0("Summary", outfile, "_", parameter$clustering, '.tsv')))
+readr::write_tsv(output1, file = file.path(parameter$outpath, paste0("Summary_", outfile, '.tsv')))
 
 # GS_zipfilename_clusteringname.txt
 
-gsfilename <- paste0("GS_" , outfile, "_", parameter$clustering, '.tsv')
-readr::write_tsv(output2 , file = file.path(parameter$outpath, gsfilename))
+
+readr::write_tsv(output2 , file = file.path(parameter$outpath, paste0("GS_", outfile, ".tsv")))
 
 # Protein_zipfilename_clusteringname.txt
 # 300 - 5000 rows
@@ -356,10 +373,17 @@ readr::write_tsv(output2 , file = file.path(parameter$outpath, gsfilename))
 # cluster assignments
 # Protein intensities sample_Id
 
-protfilename <- paste0("Protein_" , outfile, "_", parameter$clustering, '.tsv')
 output3 <- results$clusterAssignment
+
+output3$projectID = parameter$projectID
+output3$workunitID = parameter$workunitID
+output3$zipfile = basename(parameter$inputMQfile)
+output3$clustering  = parameter$clustering
+
 tmp <- results$prot$to_wide()$data
 output3 <- right_join(output3, tmp, by = "protein_Id")
+
+protfilename <- paste0("Protein_" , outfile, '.tsv')
 readr::write_tsv(output3, file = file.path(parameter$outpath, protfilename))
 
 
@@ -367,5 +391,5 @@ rmarkdown::render("profileClusters_V2.Rmd",
                   params = list(resultsxx = results, parametersxx = parameter))
 
 file.copy("profileClusters_V2.html",
-          file.path(parameter$outpath, paste0(outfile,"_", parameter$clustering, ".html")),overwrite = TRUE)
+          file.path(parameter$outpath, paste0("HTML_",outfile, ".html")),overwrite = TRUE)
 

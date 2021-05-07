@@ -20,6 +20,8 @@ parameterV2 <- params$parametersxx
 
 # Run Summary
 
+- projectID : `r parameter$projectID`
+- workunitID : `r as.character(parameter$workunitID)`
 - zipfile : `r basename(parameterV2$inputMQfile)`
 - clustering : `r parameterV2$clustering`
 - nr.proteins : `r resultsV2$dataDims["nrPort"]`
