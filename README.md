@@ -99,5 +99,24 @@ or ad `<fgczgseaora_path>\run_scripts` to the path on linux and execute
 lfq_2grp_webgestalt_gsea.R --help
 ```
 
+# Related topics
 
 
+(LEGO: a novel method for gene set over-representation analysis by incorporating network-based gene weights)[https://www.nature.com/articles/srep18871]
+
+
+```
+TeaTasting <-
+matrix(c(3, 1, 1, 3),
+       nrow = 2,
+       dimnames = list(Guess = c("Milk", "Tea"),
+                       Truth = c("Milk", "Tea")))
+fisher.test(TeaTasting, alternative = "greater")
+
+matrix(c(6, 2, 2, 6),
+       nrow = 2,
+       dimnames = list(Guess = c("Milk", "Tea"),
+                       Truth = c("Milk", "Tea")))
+fisher.test(TeaTasting, alternative = "greater")
+
+```
