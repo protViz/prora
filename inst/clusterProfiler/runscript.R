@@ -287,7 +287,7 @@ if (!is.character(clustProf)) {
 mt <- "GO Cellular Component"
 clustProf <- compClust(clusterProfilerinput, orgDB, clusterB$P_ENTREZGENEID,ont = "CC")
 if (!is.character(clustProf)) {
-resGOEnrich$CC <- list(mt = mt, clustProf = clustProf)
+  resGOEnrich$CC <- list(mt = mt, clustProf = clustProf)
 }
 
 results$resGOEnrich <- resGOEnrich
@@ -295,8 +295,8 @@ results$resGOEnrich <- resGOEnrich
 
 outfile <- tools::file_path_sans_ext(basename(parameter$inputMQfile))
 outfile <- paste0(parameter$projectID,"_",
-                  parameter$workunitID,"_",
-                  outfile,"_",
+                  as.character(parameter$workunitID),"_",
+                  as.character(outfile),"_",
                   parameter$clustering)
 
 
