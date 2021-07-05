@@ -23,6 +23,7 @@ if (YAML) {
     yamlfile <- "WU260478.yaml"
     yamlfile <- "WU260605.yaml"
     yamlfile <- "WU260784.yaml"
+    yamlfile <- "WU264744.yaml"
   }
   parameters <- yaml::read_yaml(yamlfile)
   basename(parameters$application$input$`MaxQuant - Two Group Analysis Report`)
@@ -66,7 +67,7 @@ dir.create(outdir)
 
 summaries <- list()
 data <- readr::read_tsv(inputData)
-
+dim(data)
 # remove reverse sequences and contaminants
 data <- data %>% filter(!(grepl("^REV__|^zz\\||^CON__", TopProteinName )))
 summaries$nrow_all <- nrow(data)
@@ -101,7 +102,6 @@ if (is.character(data3)) {
 }
 
 mappingtable <- data3 %>% dplyr::select(all_of(c("UniprotID", "P_ENTREZGENEID", "TopProteinName")))
-
 writexl::write_xlsx(mappingtable,
                     path = file.path(outdir,paste0(prefix, "Mapping_" , outname,".xlsx")))
 
@@ -153,7 +153,6 @@ fgseaGSlist <- fgsea_msigdb_collections(C5, species = species)
 fgseaRes <- run_fgsea_for_allGeneSets(rankarray, fgseaGSlist, nperm = 10000  )
 
 allres <- dplyr::bind_rows(fgseaRes)
-
 if (nrow(allres) == 0) {
   # write HTML
   ErrorMessage <- paste0("No results for all GeneSets, please do check if species ",
