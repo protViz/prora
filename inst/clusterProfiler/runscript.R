@@ -17,6 +17,7 @@ if ( length(args) == 0 ) {
   parameter$inputMQfile <-  file.path(datadir, "MAXQuant_ComboCourse_p2691_March_2018_WU183012.zip")
   parameter$organism <- "yeast" # "human", "mouse"
   parameter$outpath = "dummy"
+  #parameter$clustering <- "DPA"
   parameter$clustering <- "hclustdeepsplit"
   parameter$projectID <- 3000
   parameter$workunitID <- 233333
@@ -34,6 +35,23 @@ if ( length(args) == 0 ) {
 }
 
 
+if (parameter$clustering == "DPA"){
+  library(DPAclustR)
+  # Install DPA Python package from local path using reticulate
+  # Prerequisite:
+  #   - install the DPA package globally or in the virtualenv using
+  #     the "Installation" instructions at https://github.com/mariaderrico/DPA.
+  #   - specify "path_to_python_virtualenv" and "path_to_DPA_local_package" below
+  library(reticulate)
+  # Python version configuration (choose one of the three options below):
+  # use_python("path_to_python_binary")
+  # use_condaenv("path_to_conda_environmet")
+  use_virtualenv("path_to_python_virtualenv", required=TRUE)
+  currentwd <- getwd()
+  setwd("path_to_DPA_local_package")
+  DPA <- import_from_path("DPA", path="src/Pipeline/")
+  setwd(currentwd)
+}
 
 
 # related to data preprocessing
@@ -184,6 +202,19 @@ clusterHClustEuclideanDistDeepslit <- function(x,  method = "complete"){
   return(list(dendrogram = dend, clusterAssignment = clusterAssignment, nrCluster = max(k)))
 }
 
+
+clusterDPAEuclideanDist <- function(mdata, Z=1){
+  distJK <- prora::dist_JK(mdata)
+  DPAresult <- runDPAclustering(as.matrix(distJK), Z=Z)
+  k <- DPAresult$labels
+  maxD <- max(DPAresult$density)
+  topography <- DPAresult$topography
+  bb <- plot_dendrogram(k, topography, maxD, popmin=0, method="average")
+  dend <- as.dendrogram(bb)
+  clusterAssignment <- data.frame(protein_Id = rownames(mdata), Cluster =  k)
+  return(list(dendrogram = dend, clusterAssignment = clusterAssignment, nrCluster = max(k)))
+}
+
 # remove porteins with more NA's than in 60% of samples
 filterforNA <- function(mdata){
   na <- apply(mdata, 1, function(x){sum(is.na(x))})
@@ -206,7 +237,10 @@ if (parameter$clustering == "hclust") {
   resClust <- clusterHClustEuclideanDist(scaledM,nrCluster = parameter$nrCluster)
 } else if (parameter$clustering == "hclustdeepsplit") {
   resClust <- clusterHClustEuclideanDistDeepslit(scaledM)
+} else if (parameter$clustering == "DPA"){
+  resClust <- clusterDPAEuclideanDist(scaledM)
 }
+
 
 
 results$scaledM <- scaledM
