@@ -17,8 +17,8 @@ if ( length(args) == 0 ) {
   parameter$inputMQfile <-  file.path(datadir, "MAXQuant_ComboCourse_p2691_March_2018_WU183012.zip")
   parameter$organism <- "yeast" # "human", "mouse"
   parameter$outpath = "dummy"
-  #parameter$clustering <- "DPA"
-  parameter$clustering <- "hclustdeepsplit"
+  parameter$clustering <- "DPA"
+  #parameter$clustering <- "hclustdeepsplit"
   parameter$projectID <- 3000
   parameter$workunitID <- 233333
 } else if ( length(args) == 1) {
@@ -36,6 +36,7 @@ if ( length(args) == 0 ) {
 
 
 if (parameter$clustering == "DPA"){
+  #remotes::install_github("mariaderrico/DPAclustR")
   library(DPAclustR)
   # Install DPA Python package from local path using reticulate
   # Prerequisite:
@@ -46,10 +47,10 @@ if (parameter$clustering == "DPA"){
   # Python version configuration (choose one of the three options below):
   # use_python("path_to_python_binary")
   # use_condaenv("path_to_conda_environmet")
-  use_virtualenv("path_to_python_virtualenv", required=TRUE)
+  #use_virtualenv("path_to_python_virtualenv", required=TRUE)
   currentwd <- getwd()
-  setwd("path_to_DPA_local_package")
-  DPA <- import_from_path("DPA", path="src/Pipeline/")
+  setwd("C:/Users/wolski/__checkout/DPA")
+  DPA <- import_from_path("DPA", path = "src/Pipeline/")
   setwd(currentwd)
 }
 
@@ -130,7 +131,7 @@ if (parameter$peptide & parameter$transform == "log2") {
 
 } else if (parameter$peptide & parameter$transform == "log2scaled") {
   tr <- lfqd$get_Transformer()
-  transformed <- tr$log2_robscale()
+  transformed <- tr$log2()$robscale()
   ag <- transformed$get_Aggregator()
   ag$medpolish()
   prot <- ag$lfq_agg
@@ -160,7 +161,7 @@ if (parameter$peptide & parameter$transform == "log2") {
   results$CV.50 <- median(tmp$CV, na.rm = TRUE)
 
   tr <- lfqd$get_Transformer()
-  prot <- tr$log2_robscale()
+  prot <- tr$log2()$robscale()$lfq
   tmp <- prot$get_Stats()$stats()
 
   results$SD.50 <- median(tmp$sd, na.rm = TRUE)
@@ -171,7 +172,6 @@ results$prot <- prot
 
 wide <- prot$to_wide(as.matrix = TRUE)
 mdata <- wide$data
-dim(mdata)
 
 ### Cluster ----
 # what are possible input/outputs?
@@ -209,7 +209,7 @@ clusterDPAEuclideanDist <- function(mdata, Z=1){
   k <- DPAresult$labels
   maxD <- max(DPAresult$density)
   topography <- DPAresult$topography
-  bb <- plot_dendrogram(k, topography, maxD, popmin=0, method="average")
+  bb <- DPAclustR::plot_dendrogram(k, topography, maxD, popmin=0, method="average")
   dend <- as.dendrogram(bb)
   clusterAssignment <- data.frame(protein_Id = rownames(mdata), Cluster =  k)
   return(list(dendrogram = dend, clusterAssignment = clusterAssignment, nrCluster = max(k)))
@@ -238,6 +238,7 @@ if (parameter$clustering == "hclust") {
 } else if (parameter$clustering == "hclustdeepsplit") {
   resClust <- clusterHClustEuclideanDistDeepslit(scaledM)
 } else if (parameter$clustering == "DPA"){
+  #debug(clusterDPAEuclideanDist)
   resClust <- clusterDPAEuclideanDist(scaledM)
 }
 
