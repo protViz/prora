@@ -35,7 +35,7 @@ if ( length(args) == 0 ) {
 }
 
 
-if (parameter$clustering == "DPA"){
+if (parameter$clustering == "DPA") {
   #remotes::install_github("mariaderrico/DPAclustR")
   library(DPAclustR)
   # Install DPA Python package from local path using reticulate
@@ -44,14 +44,17 @@ if (parameter$clustering == "DPA"){
   #     the "Installation" instructions at https://github.com/mariaderrico/DPA.
   #   - specify "path_to_python_virtualenv" and "path_to_DPA_local_package" below
   library(reticulate)
+
+  #if (dir.exists("/scratch/CLUSTERPORFILER/pythonenv1")) {
+  #  reticulate::use_virtualenv("/scratch/CLUSTERPORFILER/pythonenv1")
+  #}
+
   # Python version configuration (choose one of the three options below):
   # use_python("path_to_python_binary")
   # use_condaenv("path_to_conda_environmet")
   #use_virtualenv("path_to_python_virtualenv", required=TRUE)
-  currentwd <- getwd()
-  setwd("C:/Users/wolski/__checkout/DPA")
-  DPA <- import_from_path("DPA", path = "src/Pipeline/")
-  setwd(currentwd)
+  #py_install("DPA")
+  DPA <- reticulate::import("Pipeline.DPA")
 }
 
 
@@ -237,7 +240,7 @@ if (parameter$clustering == "hclust") {
   resClust <- clusterHClustEuclideanDist(scaledM,nrCluster = parameter$nrCluster)
 } else if (parameter$clustering == "hclustdeepsplit") {
   resClust <- clusterHClustEuclideanDistDeepslit(scaledM)
-} else if (parameter$clustering == "DPA"){
+} else if (parameter$clustering == "DPA") {
   #debug(clusterDPAEuclideanDist)
   resClust <- clusterDPAEuclideanDist(scaledM)
 }
@@ -287,7 +290,6 @@ clusterB <- clusterAssignment %>% filter(!is.na(P_ENTREZGENEID))
 
 #clusterB$clusterID <- paste0("Cluster", clusterB$clusterID)
 clusterProfilerinput <- split(clusterB$P_ENTREZGENEID, clusterB$Cluster)
-length(clusterProfilerinput)
 
 
 compClust <- function(clusterProfilerinput,
