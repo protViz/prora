@@ -2,10 +2,12 @@
 #' @export
 #' @examples
 #' #hallmark$gs_subcat <- "HALLMARK"
-#' C5 <- bind_rows( msigdbr_collections() %>% filter(gs_cat == "C5") %>% filter(grepl("^GO:", gs_subcat)),
-#'                  hallmark,
-#'                  msigdbr_collections() %>% filter(gs_subcat == "CP:KEGG") )
-#' species <- "Mus musculus"
+#' #library(msigdbr)
+#'
+#' #C5 <- dplyr::bind_rows( msigdbr::msigdbr_collections() %>% filter(gs_cat == "C5") %>% filter(grepl("^GO:", gs_subcat)),
+#' #                 hallmark,
+#' #                 msigdbr_collections() %>% filter(gs_subcat == "CP:KEGG") )
+#' #species <- "Mus musculus"
 getMsigdbGenesets <- function(msigCollection, species){
   genesetsC5 <- vector(mode = "list", length = nrow(msigCollection) )
   for (i in 1:nrow(msigCollection)) {
