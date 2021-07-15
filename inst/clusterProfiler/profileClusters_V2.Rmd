@@ -97,30 +97,34 @@ ggplot(toplot, aes(x = sampleName,y = transformedIntensity, group = protein_Id))
 ```{r setupplot1}
 
 figWIncrease <- 0.5
-figHeightIncrease <- 0.25
+figHeightIncrease <- 0.2
 
 P <- resultsV2$resGOEnrich$BP
 figwidth <- 10
 figheight <- 5
 if (!is.null(P$clustProf)) {
   dt <- as.data.frame(P$clustProf)
-  nrOra <- min(50, length(unique(dt$ID)))
+  nrOra <- min(10, length(unique(dt$ID)))
   nrClust <- length(unique(dt$Cluster))
   figwidth <- max(figwidth, 6 + nrClust*figWIncrease)
-  figheight <- max(figheight, 3 + nrOra*figHeightIncrease)
+  figheight <- max(figheight, 3 + nrClust*nrOra*figHeightIncrease)
 }
 print(c(figwidth,figheight))
+isthere <- !is.null(P$clustProf)
 
 ```
 
 
 
-```{r compareClustersBP, fig.height=figheight, fig.width=figwidth}
-if (!is.null(P$clustProf)) {
-  print(dotplot(P$clustProf,title = P$mt, showCategory = nrOra))
-  DT::datatable(as.data.frame(P$clustProf),caption = mt)
-}
+```{r compareClustersBP, fig.height=figheight, fig.width=figwidth, eval = isthere}
+clusterProfiler::dotplot(P$clustProf, title = P$mt, showCategory = nrOra)
 ```
+
+
+```{r, eval = isthere}
+DT::datatable(as.data.frame(P$clustProf),caption = mt)
+```
+
 
 ## GO Molecular Function
 
@@ -130,22 +134,30 @@ figwidth <- 10
 figheight <- 5
 if (!is.null(P$clustProf)) {
   dt <- as.data.frame(P$clustProf)
-  nrOra <- min(50,length(unique(dt$ID)))
+  nrOra <- min(10,length(unique(dt$ID)))
   nrClust <- length(unique(dt$Cluster))
   figwidth <- max(figwidth, 6 + nrClust*figWIncrease)
-  figheight <- max(figheight, 3 + nrOra*figHeightIncrease)
+  figheight <- max(figheight, 3 +  nrClust*nrOra*figHeightIncrease)
 }
+
+isthere <- !is.null(P$clustProf)
 ```
 
 
-```{r compareClustersMF,  fig.height=figheight, fig.width=figwidth}
-if (!is.null(P$clustProf)) {
-  print(dotplot(P$clustProf,title = P$mt, showCategory	 = nrOra))
-  DT::datatable(as.data.frame(P$clustProf),caption = mt)
-}
+```{r compareClustersMF,  fig.height=figheight, fig.width=figwidth, eval = isthere}
+print(nrOra)
+dotplot(P$clustProf,title = P$mt, showCategory	 = nrOra)
+
 ```
 
-# GO Cellular Component
+```{r, eval = isthere}
+DT::datatable(as.data.frame(P$clustProf),caption = mt)
+```
+
+
+## GO Cellular Component
+
+
 
 ```{r setupplot3}
 P <- resultsV2$resGOEnrich$CC
@@ -153,19 +165,22 @@ figwidth <- 10
 figheight <- 5
 if (!is.null(P$clustProf)) {
   dt <- as.data.frame(P$clustProf)
-  nrOra <- min(50,length(unique(dt$ID)))
+  nrOra <- min(10,length(unique(dt$ID)))
   nrClust <- length(unique(dt$Cluster))
   figwidth <- max(figwidth, 6 + nrClust*figWIncrease)
-  figheight <- max(figheight, 3 + nrOra*figHeightIncrease)
+  figheight <- max(figheight, 3 +  nrClust*nrOra*figHeightIncrease)
 }
+
+isthere <- !is.null(P$clustProf)
+```
+
+```{r compareClustersCC,  fig.height=figheight, fig.width=figwidth, eval = isthere}
+dotplot(P$clustProf,title = P$mt, showCategory = nrOra)
 
 ```
 
-```{r compareClustersCC,  fig.height=figheight, fig.width=figwidth}
-if (!is.null(P$clustProf)) {
-  print(dotplot(P$clustProf,title = P$mt, showCategory = nrOra))
-  DT::datatable(as.data.frame(P$clustProf),caption = mt)
-}
+```{r, eval = isthere}
+DT::datatable(as.data.frame(P$clustProf),caption = mt)
 
 ```
 
