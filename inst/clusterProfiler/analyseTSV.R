@@ -20,6 +20,7 @@ if (Sys.info()["sysname"] == "Windows") {
   RscriptExe <- "/usr/bin/Rscript"
 }
 
+i <- 1
 
 for (i in 1:nrow(human)) {
   path <- human$windowpaths[i]
@@ -29,13 +30,15 @@ for (i in 1:nrow(human)) {
     print(path)
   } else if (TRUE) {
     arguments <- c("runscript.R", path, "human", "blubA" , "hclustdeepsplit", workunitid, projectid)
-    res <- system2(RscriptExe, args = arguments)
-    stopifnot(res == 0)
 
-    if (FALSE) {
+    if (TRUE) {
       commandArgs <- function(...){return(arguments[-1])}
       commandArgs()
       source("runscript.R")
+    } else{
+      res <- system2(RscriptExe, args = arguments)
+      stopifnot(res == 0)
+
     }
 
   }

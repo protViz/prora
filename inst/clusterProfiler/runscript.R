@@ -430,7 +430,6 @@ output3 <- right_join(output3, tmp, by = "protein_Id")
 protfilename <- paste0("Protein_" , outfile, '.tsv')
 readr::write_tsv(output3, file = file.path(parameter$outpath, protfilename))
 
-
 rmarkdown::render("profileClusters_V2.Rmd",
                   params = list(resultsxx = results, parametersxx = parameter))
 

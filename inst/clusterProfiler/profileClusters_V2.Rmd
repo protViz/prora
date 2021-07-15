@@ -48,12 +48,12 @@ p <- pl$heatmap()
 pc <- pl$heatmap_cor()
 ```
 
-```{r namap, fig.width=10, fig.height=8, fig.cap="Heatamp based on presence and absence (black) of protein measurments"}
+```{r namap, fig.width=10, fig.height=10, fig.cap="Heatamp based on presence and absence (black) of protein measurments"}
 print(pNa)
 ```
 
 
-```{r sampleclusth, fig.width=10, fig.height=8, fig.cap = "Heatmap with color coded protein intensities"}
+```{r sampleclusth, fig.width=10, fig.height=10, fig.cap = "Heatmap with color coded protein intensities"}
 print(p)
 ```
 
@@ -78,14 +78,15 @@ plot(resultsV2$dendrogram,leaflab = "none" )
 scaledM <- resultsV2$scaledM
 
 bb <- as_tibble(scaledM,rownames = "protein_Id")
-bb <- bb %>% pivot_longer(-"protein_Id",names_to="sampleName", values_to = "transformedIntensity")
+bb <- bb %>% pivot_longer(-"protein_Id", names_to = "sampleName", values_to = "transformedIntensity")
 toplot <- inner_join(resultsV2$clusterAssignment, bb)
 neword <- labels(as.dendrogram(hclust(dist(t(scaledM)))))
 toplot$sampleName <- fct_relevel(toplot$sampleName, neword)
-ggplot(toplot, aes(x=sampleName,y=transformedIntensity,group=protein_Id)) +
-  geom_line(color="lightgrey") + theme_bw() +
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+ggplot(toplot, aes(x = sampleName,y = transformedIntensity, group = protein_Id)) +
+  geom_line(color = "lightgrey") + theme_bw() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)) +
   facet_wrap(~Cluster)
+
 ```
 
 
@@ -103,7 +104,7 @@ figwidth <- 10
 figheight <- 5
 if (!is.null(P$clustProf)) {
   dt <- as.data.frame(P$clustProf)
-  nrOra <- length(unique(dt$ID))
+  nrOra <- min(50, length(unique(dt$ID)))
   nrClust <- length(unique(dt$Cluster))
   figwidth <- max(figwidth, 6 + nrClust*figWIncrease)
   figheight <- max(figheight, 3 + nrOra*figHeightIncrease)
@@ -112,9 +113,11 @@ print(c(figwidth,figheight))
 
 ```
 
+
+
 ```{r compareClustersBP, fig.height=figheight, fig.width=figwidth}
 if (!is.null(P$clustProf)) {
-  print(dotplot(P$clustProf,title = P$mt, showCategory	 = nrOra))
+  print(dotplot(P$clustProf,title = P$mt, showCategory = nrOra))
   DT::datatable(as.data.frame(P$clustProf),caption = mt)
 }
 ```
@@ -127,7 +130,7 @@ figwidth <- 10
 figheight <- 5
 if (!is.null(P$clustProf)) {
   dt <- as.data.frame(P$clustProf)
-  nrOra <- length(unique(dt$ID))
+  nrOra <- min(50,length(unique(dt$ID)))
   nrClust <- length(unique(dt$Cluster))
   figwidth <- max(figwidth, 6 + nrClust*figWIncrease)
   figheight <- max(figheight, 3 + nrOra*figHeightIncrease)
@@ -150,7 +153,7 @@ figwidth <- 10
 figheight <- 5
 if (!is.null(P$clustProf)) {
   dt <- as.data.frame(P$clustProf)
-  nrOra <- length(unique(dt$ID))
+  nrOra <- min(50,length(unique(dt$ID)))
   nrClust <- length(unique(dt$Cluster))
   figwidth <- max(figwidth, 6 + nrClust*figWIncrease)
   figheight <- max(figheight, 3 + nrOra*figHeightIncrease)
@@ -160,7 +163,7 @@ if (!is.null(P$clustProf)) {
 
 ```{r compareClustersCC,  fig.height=figheight, fig.width=figwidth}
 if (!is.null(P$clustProf)) {
-  print(dotplot(P$clustProf,title = P$mt, showCategory	 = nrOra))
+  print(dotplot(P$clustProf,title = P$mt, showCategory = nrOra))
   DT::datatable(as.data.frame(P$clustProf),caption = mt)
 }
 
