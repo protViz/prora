@@ -88,7 +88,7 @@ map_ids_annotationHub <- function(x, ID_col = "UniprotID", species =  c("Homo sa
 
 
 #' map ids two ways
-#' @example
+#' @export
 #'
 map_ids_2ways <- function(clusterAssignment,
                           ID_col = "UniprotID",
