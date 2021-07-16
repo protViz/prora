@@ -20,6 +20,7 @@ LazyData: true
 Imports: AnnotationDbi,
     AnnotationHub,
     BiocStyle,
+    clusterProfiler,
     dplyr,
     DT,
     ggplot2,
@@ -42,7 +43,7 @@ Imports: AnnotationDbi,
     writexl,
     UpSetR
 Remotes:
-    bioc::3.12/clusterProfiler
+    bioc::3.13/clusterProfiler
 RoxygenNote: 7.1.1
 VignetteBuilder: knitr
 Suggests: knitr, rmarkdown, bookdown, slam, BiocStyle, docopt
