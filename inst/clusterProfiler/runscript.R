@@ -189,7 +189,7 @@ RESULTS$dataDims <- c(RESULTS$dataDims,  UniprotExtract = sum(!is.na(clusterAssi
 
 res <- map_ids_2ways(clusterAssignment, species = parameter$species)
 clusterAssignment <- res$clusterAssignment
-RESULTS$id.mapping.service <- res$id.mapping.service
+RESULTS$id.mapping.service <- res$mapping.service
 
 # clusterProfiler ----
 #clusterAssignmentF
@@ -224,7 +224,6 @@ if (!is.character(clustProf)) {
 }
 
 RESULTS$resGOEnrich <- resGOEnrich
-
 
 outfile <- tools::file_path_sans_ext(basename(parameter$inputMQfile))
 outfile <- paste0(parameter$projectID,"_",
