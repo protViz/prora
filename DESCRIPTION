@@ -41,6 +41,8 @@ Imports: AnnotationDbi,
     tidyverse,
     writexl,
     UpSetR
+Remotes:
+    bioc::3.12/clusterProfiler
 RoxygenNote: 7.1.1
 VignetteBuilder: knitr
 Suggests: knitr, rmarkdown, bookdown, slam, BiocStyle, docopt
