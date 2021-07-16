@@ -22,14 +22,14 @@ if (Sys.info()["sysname"] == "Windows") {
 
 i <- 1
 
-for (i in 1:nrow(human)) {
+#for (i in 1:nrow(human)) {
   path <- human$windowpaths[i]
   workunitid <- human$workunitid[i]
   projectid <- human$project_ID[i]
   if (!file.exists(path)) {
     print(path)
   } else if (TRUE) {
-    arguments <- c("runscript.R", path, "human", "blubA" , "hclustdeepsplit", workunitid, projectid)
+    arguments <- c("runscript.R", path, "human", "blubA" , "DPA", workunitid, projectid)
 
     if (TRUE) {
       commandArgs <- function(...){return(arguments[-1])}
@@ -42,7 +42,7 @@ for (i in 1:nrow(human)) {
     }
 
   }
-}
+#}
 
 path <- "y:/p2621/bfabric/Proteomics/MaxQuant/2018/2018-10/2018-10-05/workunit_175797/721705.zip"
 path <- "y:/p2673/bfabric/Proteomics/MaxQuant/2021/2021-01/2021-01-19/workunit_256172/1792120.zip"

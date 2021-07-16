@@ -2,3 +2,4 @@
 *.html
 out_dir/
 *.txt
+*.yaml

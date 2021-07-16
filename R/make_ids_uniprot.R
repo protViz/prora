@@ -87,3 +87,34 @@ map_ids_annotationHub <- function(x, ID_col = "UniprotID", species =  c("Homo sa
 
 
 
+#' map ids two ways
+#' @example
+#'
+map_ids_2ways <- function(clusterAssignment,
+                          ID_col = "UniprotID",
+                          species =  c("Homo sapiens", "Mus musculus"))
+{
+  # map to entriz id's
+  .ehandler = function(e) {
+    warning("WARN :", e)
+    # return string here
+    as.character(e)
+  }
+  #undebug(prora::map_ids_annotationHub)
+  clusterAssignment <- tryCatch(
+    prora::map_ids_uniprot(clusterAssignment, ID_col = ID_col),
+    error = .ehandler)
+
+  id.mapping.service <- "UniProt"
+  if (is.character(clusterAssignment)) {
+    clusterAssignment <- tryCatch(
+      prora::map_ids_annotationHub(clusterAssignment, species = species),
+      error = .ehandler)
+    id.mapping.service <- "AnnotationHub"
+  }
+
+  return( list(clusterAssignment = clusterAssignment, mapping.service = id.mapping.service) )
+
+}
+
+
