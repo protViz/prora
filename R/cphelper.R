@@ -18,19 +18,26 @@ cp_clusterHClustEuclideanDist <- function(x, nrCluster , method = "complete"){
 #' @export
 #'
 cp_clusterHClustEuclideanDistDeepslit <- function(x,  method = "complete"){
-  distJK <- prora::dist_JK(x)
-  bb <- hclust(distJK,method = method)
-  #cat("MIN cluster size ", min(50, nrow(x)/10))
-  k <- dynamicTreeCut::cutreeDynamic(
-    bb,
-    method = "hybrid",
-    deepSplit = FALSE,
-    distM = as.matrix(distJK),
-    minClusterSize = min(50, nrow(x)/10) , verbose = 0)
+  if (nrow(x) <= 2) {
+    dend <- NULL
+    nrCluster <- 1
+    clusterAssignment <- data.frame( protein_Id  = rownames(x), Cluster = rep(1, nrow(x) ))
+  } else {
+    distJK <- prora::dist_JK(x)
+    bb <- hclust(distJK,method = method)
+    #cat("MIN cluster size ", min(50, nrow(x)/10))
+    k <- dynamicTreeCut::cutreeDynamic(
+      bb,
+      method = "hybrid",
+      deepSplit = FALSE,
+      distM = as.matrix(distJK),
+      minClusterSize = min(50, nrow(x)/10) , verbose = 0)
 
-  dend <- as.dendrogram(bb)
-  clusterAssignment <- data.frame(protein_Id = rownames(x), Cluster =  k)
-  return(list(dendrogram = dend, clusterAssignment = clusterAssignment, nrCluster = max(k)))
+    dend <- as.dendrogram(bb)
+    clusterAssignment <- data.frame(protein_Id = rownames(x), Cluster =  k)
+    nrCluster <-  max(k)
+  }
+  return(list(dendrogram = dend, clusterAssignment = clusterAssignment, nrCluster = nrCluster))
 }
 
 #' Cluster using DPA
