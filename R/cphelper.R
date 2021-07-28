@@ -42,12 +42,17 @@ cp_clusterDPAEuclideanDist <- function(mdata, Z = 1){
   k <- DPAresult$labels
   maxD <- max(DPAresult$density)
   topography <- DPAresult$topography
-  bb <- DPAclustR::plot_dendrogram(k,
-                                   topography,
-                                   maxD,
-                                   popmin = 0,
-                                   method = "average")
-  dend <- as.dendrogram(bb)
+  if( nrows(topography) > 0 ){
+    bb <- DPAclustR::plot_dendrogram(k,
+                                     topography,
+                                     maxD,
+                                     popmin = 0,
+                                     method = "average")
+
+    dend <- as.dendrogram(bb)
+  }else{
+    dend <- NULL
+  }
   clusterAssignment <- data.frame(protein_Id = rownames(mdata), Cluster =  k)
   return(list(dendrogram = dend, clusterAssignment = clusterAssignment, nrCluster = max(k)))
 }
