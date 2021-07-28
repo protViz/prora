@@ -21,7 +21,7 @@ cp_clusterHClustEuclideanDistDeepslit <- function(x,  method = "complete"){
   if (nrow(x) <= 2) {
     dend <- NULL
     nrCluster <- 1
-    clusterAssignment <- data.frame( protein_Id  = rownames(x), Cluster = rep(1, nrow(x) ))
+    clusterAssignment <- data.frame( protein_Id  = as.character(rownames(x)), Cluster = rep(1, nrow(x) ))
   } else {
     distJK <- prora::dist_JK(x)
     bb <- hclust(distJK,method = method)
