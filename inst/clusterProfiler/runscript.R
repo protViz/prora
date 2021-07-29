@@ -43,7 +43,6 @@ if (parameter$clustering == "DPA") {
   #   - install the DPA package globally or in the virtualenv using
   #     the "Installation" instructions at https://github.com/mariaderrico/DPA.
   #   - specify "path_to_python_virtualenv" and "path_to_DPA_local_package" below
-  library(reticulate)
 
   #if (dir.exists("/scratch/CLUSTERPORFILER/pythonenv1")) {
   #  reticulate::use_virtualenv("/scratch/CLUSTERPORFILER/pythonenv1")

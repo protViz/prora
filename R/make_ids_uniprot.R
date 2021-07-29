@@ -108,7 +108,7 @@ map_ids_2ways <- function(clusterAssignment,
   id.mapping.service <- "UniProt"
   if (is.character(clusterAssignment)) {
     clusterAssignment <- tryCatch(
-      prora::map_ids_annotationHub(clusterAssignment, species = species),
+      prora::map_ids_annotationHub(clusterAssignment, ID_col = ID_col, species = species),
       error = .ehandler)
     id.mapping.service <- "AnnotationHub"
   }
