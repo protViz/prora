@@ -5,9 +5,14 @@
 #' cluster using hclust
 #' @export
 #'
-cp_clusterHClustEuclideanDist <- function(x, nrCluster , method = "complete"){
-  distJK <- prora::dist_JK(x)
-  bb <- hclust(distJK,method = method)
+cp_clusterHClustEuclideanDist <- function(x, nrCluster , method = "complete", JK = TRUE){
+  distJK <- if (JK) {
+     prora::dist_JK(x)
+  } else {
+    dist(x)
+  }
+
+  bb <- hclust(distJK, method = method)
   k <- cutree(bb, k = nrCluster)
   dend <- as.dendrogram(bb)
   clusterAssignment <- data.frame(protein_Id = rownames(x), Cluster =  k)
@@ -17,9 +22,14 @@ cp_clusterHClustEuclideanDist <- function(x, nrCluster , method = "complete"){
 #' cluster using hclust and deepsplit
 #' @export
 #'
-cp_clusterHClustEuclideanDistDeepslit <- function(x,  method = "complete"){
-  distJK <- prora::dist_JK(x)
-  bb <- hclust(distJK,method = method)
+cp_clusterHClustEuclideanDistDeepslit <- function(x,  method = "complete", JK = TRUE){
+  distJK <- if (JK) {
+    prora::dist_JK(x)
+  } else {
+    dist(x)
+  }
+
+  bb <- hclust(distJK, method = method)
   #cat("MIN cluster size ", min(50, nrow(x)/10))
   k <- dynamicTreeCut::cutreeDynamic(
     bb,
@@ -36,9 +46,13 @@ cp_clusterHClustEuclideanDistDeepslit <- function(x,  method = "complete"){
 #' Cluster using DPA
 #' @export
 #'
-cp_clusterDPAEuclideanDist <- function(mdata, Z = 1){
-  distJK <- prora::dist_JK(mdata)
-  DPAresult <- runDPAclustering(as.matrix(distJK), Z = Z)
+cp_clusterDPAEuclideanDist <- function(mdata, Z = 1, JK = TRUE){
+  distJK <- if (JK) {
+    prora::dist_JK( mdata )
+  } else {
+    mdata
+  }
+  DPAresult <- DPAclustR::runDPAclustering(as.matrix(distJK), Z = Z)
   k <- DPAresult$labels
   maxD <- max(DPAresult$density)
   topography <- DPAresult$topography
@@ -51,6 +65,8 @@ cp_clusterDPAEuclideanDist <- function(mdata, Z = 1){
   clusterAssignment <- data.frame(protein_Id = rownames(mdata), Cluster =  k)
   return(list(dendrogram = dend, clusterAssignment = clusterAssignment, nrCluster = max(k)))
 }
+
+
 
 #' remove proteins with more NA's than in 60% of samples
 #' @export
