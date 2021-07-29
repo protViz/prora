@@ -49,7 +49,7 @@ cp_clusterDPAEuclideanDist <- function(mdata, Z = 1){
   k <- DPAresult$labels
   maxD <- max(DPAresult$density)
   topography <- DPAresult$topography
-  if( nrow(topography) > 0 ){
+  if ( nrow(topography) > 0 ) {
     bb <- DPAclustR::plot_dendrogram(k,
                                      topography,
                                      maxD,
