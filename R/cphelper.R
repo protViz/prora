@@ -22,25 +22,33 @@ cp_clusterHClustEuclideanDist <- function(x, nrCluster , method = "complete", JK
 #' cluster using hclust and deepsplit
 #' @export
 #'
+
 cp_clusterHClustEuclideanDistDeepslit <- function(x,  method = "complete", JK = TRUE){
-  distJK <- if (JK) {
-    prora::dist_JK(x)
+  if (nrow(x) <= 2) {
+    dend <- NULL
+    nrCluster <- 1
+    clusterAssignment <- data.frame( protein_Id  = as.character(rownames(x)), Cluster = rep(1, nrow(x) ))
   } else {
-    dist(x)
+    distJK <- if (JK) {
+      prora::dist_JK(x)
+    } else {
+      dist(x)
+    }
+
+    bb <- hclust(distJK,method = method)
+    #cat("MIN cluster size ", min(50, nrow(x)/10))
+    k <- dynamicTreeCut::cutreeDynamic(
+      bb,
+      method = "hybrid",
+      deepSplit = FALSE,
+      distM = as.matrix(distJK),
+      minClusterSize = min(50, nrow(x)/10) , verbose = 0)
+
+    dend <- as.dendrogram(bb)
+    clusterAssignment <- data.frame(protein_Id = rownames(x), Cluster =  k)
+    nrCluster <-  max(k)
   }
-
-  bb <- hclust(distJK, method = method)
-  #cat("MIN cluster size ", min(50, nrow(x)/10))
-  k <- dynamicTreeCut::cutreeDynamic(
-    bb,
-    method = "hybrid",
-    deepSplit = FALSE,
-    distM = as.matrix(distJK),
-    minClusterSize = min(50, nrow(x)/10) , verbose = 0)
-
-  dend <- as.dendrogram(bb)
-  clusterAssignment <- data.frame(protein_Id = rownames(x), Cluster =  k)
-  return(list(dendrogram = dend, clusterAssignment = clusterAssignment, nrCluster = max(k)))
+  return(list(dendrogram = dend, clusterAssignment = clusterAssignment, nrCluster = nrCluster))
 }
 
 #' Cluster using DPA
@@ -56,12 +64,17 @@ cp_clusterDPAEuclideanDist <- function(mdata, Z = 1, JK = TRUE){
   k <- DPAresult$labels
   maxD <- max(DPAresult$density)
   topography <- DPAresult$topography
-  bb <- DPAclustR::plot_dendrogram(k,
-                                   topography,
-                                   maxD,
-                                   popmin = 0,
-                                   method = "average")
-  dend <- as.dendrogram(bb)
+  if( nrow(topography) > 0 ){
+    bb <- DPAclustR::plot_dendrogram(k,
+                                     topography,
+                                     maxD,
+                                     popmin = 0,
+                                     method = "average")
+
+    dend <- as.dendrogram(bb)
+  }else{
+    dend <- NULL
+  }
   clusterAssignment <- data.frame(protein_Id = rownames(mdata), Cluster =  k)
   return(list(dendrogram = dend, clusterAssignment = clusterAssignment, nrCluster = max(k)))
 }
