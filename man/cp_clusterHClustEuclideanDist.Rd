@@ -4,7 +4,7 @@
 \alias{cp_clusterHClustEuclideanDist}
 \title{cluster using hclust}
 \usage{
-cp_clusterHClustEuclideanDist(x, nrCluster, method = "complete")
+cp_clusterHClustEuclideanDist(x, nrCluster, method = "complete", JK = TRUE)
 }
 \description{
 cluster using hclust

@@ -58,13 +58,13 @@ cp_clusterDPAEuclideanDist <- function(mdata, Z = 1, JK = TRUE){
   distJK <- if (JK) {
     prora::dist_JK( mdata )
   } else {
-    mdata
+    dist(mdata)
   }
   DPAresult <- DPAclustR::runDPAclustering(as.matrix(distJK), Z = Z)
   k <- DPAresult$labels
   maxD <- max(DPAresult$density)
   topography <- DPAresult$topography
-  if( nrow(topography) > 0 ){
+  if ( nrow(topography) > 0 ) {
     bb <- DPAclustR::plot_dendrogram(k,
                                      topography,
                                      maxD,
@@ -72,11 +72,11 @@ cp_clusterDPAEuclideanDist <- function(mdata, Z = 1, JK = TRUE){
                                      method = "average")
 
     dend <- as.dendrogram(bb)
-  }else{
+  } else {
     dend <- NULL
   }
   clusterAssignment <- data.frame(protein_Id = rownames(mdata), Cluster =  k)
-  return(list(dendrogram = dend, clusterAssignment = clusterAssignment, nrCluster = max(k)))
+  return( list(dendrogram = dend, clusterAssignment = clusterAssignment, nrCluster = max(k)) )
 }
 
 

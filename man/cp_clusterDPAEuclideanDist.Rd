@@ -4,7 +4,7 @@
 \alias{cp_clusterDPAEuclideanDist}
 \title{Cluster using DPA}
 \usage{
-cp_clusterDPAEuclideanDist(mdata, Z = 1)
+cp_clusterDPAEuclideanDist(mdata, Z = 1, JK = TRUE)
 }
 \description{
 Cluster using DPA
