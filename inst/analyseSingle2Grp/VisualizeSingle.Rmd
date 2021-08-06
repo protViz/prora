@@ -85,7 +85,7 @@ if (nrow(relevantResult) > 0) {
     DT_makeURLfor(relevantResult$pathway, path = "https://www.gsea-msigdb.org/gsea/msigdb/cards/")
   
   relevantResult$leadingEdge <-
-    lapply( relevantResult$leadingEdge, DT_makeURLfor, path ="https://www.ncbi.nlm.nih.gov/gene/")
+    lapply( relevantResult$leadingEdge, DT_makeURLfor, path = "https://www.ncbi.nlm.nih.gov/gene/")
   
   DT::datatable(relevantResult, caption = caption, escape = FALSE) %>% 
     formatSignif('NES',2) %>%
@@ -106,7 +106,7 @@ if (nrow(mainPathways) > 0) {
     DT_makeURLfor(mainPathways2$pathway, path = "https://www.gsea-msigdb.org/gsea/msigdb/cards/")
   
   mainPathways2$leadingEdge <-
-    lapply( mainPathways2$leadingEdge, DT_makeURLfor, path ="https://www.ncbi.nlm.nih.gov/gene/")
+    lapply( mainPathways2$leadingEdge, DT_makeURLfor, path = "https://www.ncbi.nlm.nih.gov/gene/")
   
   DT::datatable(mainPathways2, caption = caption, escape = FALSE) %>%
     formatSignif('NES',2) %>%
