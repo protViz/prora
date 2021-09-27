@@ -4,7 +4,18 @@
 \alias{cp_clusterDPAEuclideanDist}
 \title{Cluster using DPA}
 \usage{
-cp_clusterDPAEuclideanDist(mdata, Z = 1, JK = TRUE)
+cp_clusterDPAEuclideanDist(mdata, Z = 1, metric = "euclidean", JK = TRUE)
+}
+\arguments{
+\item{mdata, }{input data}
+
+\item{Z, }{the number of standard deviations fixing the level of
+statistical confidence at which one decides to consider
+a cluster meaningful. Default value is set to 1.}
+
+\item{metric, }{string, valid metrics are "precomputed", "euclidean".
+If metric is "precomputed", data is assumed to be a distance matrix.
+Default is "euclidean".}
 }
 \description{
 Cluster using DPA
