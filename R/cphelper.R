@@ -116,3 +116,27 @@ cp_compClust <- function(clusterProfilerinput,
   return(clustProf)
 }
 
+
+#' add uris to to cp table outputs
+#' @export
+cp_addurls <- function(data, caption, coreEnrichment = "core_enrichment",
+                    signif2  = c('NES', 'pvalue', 'FDR'),
+                    gocarts = "http://amigo.geneontology.org/amigo/term/",
+                    genecarts = "https://www.ncbi.nlm.nih.gov/gene/"
+                    ){
+  relevantResult <- data.frame(data)
+  rownames(relevantResult) <- NULL
+  relevantResult <- dplyr::rename(relevantResult, FDR = p.adjust)
+  relevantResult$ID <-
+    prora::DT_makeURLfor(relevantResult$ID, path = gocarts)
+
+  relevantResult$core_enrichment <-
+    lapply( strsplit(relevantResult[[coreEnrichment]], split = "/"),
+            prora::DT_makeURLfor,
+            path = genecarts)
+
+  dt <-  DT::datatable(relevantResult, caption = caption, escape = FALSE) %>%
+    DT::formatSignif(signif2,2)
+  return(dt)
+}
+

@@ -4,7 +4,7 @@
 \alias{cp_clusterHClustEuclideanDistDeepslit}
 \title{cluster using hclust and deepsplit}
 \usage{
-cp_clusterHClustEuclideanDistDeepslit(x, method = "complete")
+cp_clusterHClustEuclideanDistDeepslit(x, method = "complete", JK = TRUE)
 }
 \description{
 cluster using hclust and deepsplit
