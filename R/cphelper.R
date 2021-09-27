@@ -52,15 +52,23 @@ cp_clusterHClustEuclideanDistDeepslit <- function(x,  method = "complete", JK = 
 }
 
 #' Cluster using DPA
+#'
+#' @param mdata, input data
+#' @param Z, the number of standard deviations fixing the level of
+#'            statistical confidence at which one decides to consider
+#'            a cluster meaningful. Default value is set to 1.
+#' @param metric, string, valid metrics are "precomputed", "euclidean".
+#'            If metric is "precomputed", data is assumed to be a distance matrix.
+#'            Default is "euclidean".
 #' @export
 #'
-cp_clusterDPAEuclideanDist <- function(mdata, Z = 1, JK = TRUE){
+cp_clusterDPAEuclideanDist <- function(mdata, Z = 1, metric = "euclidean", JK = TRUE){
   distJK <- if (JK) {
     prora::dist_JK( mdata )
   } else {
-    mdata
+    dist(mdata)
   }
-  DPAresult <- DPAclustR::runDPAclustering(as.matrix(distJK), Z = Z)
+  DPAresult <- DPAclustR::runDPAclustering(as.matrix(distJK), Z = Z, metric = metric)
   k <- DPAresult$labels
   maxD <- max(DPAresult$density)
   topography <- DPAresult$topography
@@ -72,11 +80,11 @@ cp_clusterDPAEuclideanDist <- function(mdata, Z = 1, JK = TRUE){
                                      method = "average")
 
     dend <- as.dendrogram(bb)
-  }else{
+  } else {
     dend <- NULL
   }
   clusterAssignment <- data.frame(protein_Id = rownames(mdata), Cluster =  k)
-  return(list(dendrogram = dend, clusterAssignment = clusterAssignment, nrCluster = max(k)))
+  return( list(dendrogram = dend, clusterAssignment = clusterAssignment, nrCluster = max(k)) )
 }
 
 
