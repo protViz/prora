@@ -39,7 +39,7 @@ parameterV2 <- params$parametersxx
 
 # Data QC
 
-```{r}
+```{r makeHeatmaps}
 prot <- resultsV2$prot
 pl <- prot$get_Plotter()
 pl$intensity_distribution_density()
@@ -66,15 +66,19 @@ pl$pca()
 
 # Cluster proteins
 
+```{r checkNRClust}
+isclust <- if(resultsV2$nrCluster > 1) {TRUE} else {FALSE}
+validScaledM <- if(nrow(resultsV2$scaledM) > 1) {TRUE} else {FALSE}
 
-
-
-```{r compareClusters, fig.cap="Cluster dendrogram."}
-plot(resultsV2$dendrogram,leaflab = "none" )
 ```
 
 
-```{r clustprofiles, fig.cap="Cluster Profiles", fig.width=10, fig.height=10}
+```{r compareClusters, fig.cap="Cluster dendrogram", eval = isclust}
+plot(resultsV2$dendrogram, leaflab = "none" )
+```
+
+
+```{r clustprofiles, fig.cap="Cluster Profiles", fig.width=10, fig.height=10, eval = validScaledM}
 scaledM <- resultsV2$scaledM
 
 bb <- as_tibble(scaledM,rownames = "protein_Id")
@@ -121,7 +125,7 @@ clusterProfiler::dotplot(P$clustProf, title = P$mt, showCategory = nrOra)
 ```
 
 
-```{r, eval = isthere}
+```{r dataTableClustProfBP, eval = isthere}
 DT::datatable(as.data.frame(P$clustProf),caption = mt)
 ```
 
@@ -150,7 +154,7 @@ dotplot(P$clustProf,title = P$mt, showCategory	 = nrOra)
 
 ```
 
-```{r, eval = isthere}
+```{r dataTableclustProfMF, eval = isthere}
 DT::datatable(as.data.frame(P$clustProf),caption = mt)
 ```
 
@@ -179,7 +183,7 @@ dotplot(P$clustProf,title = P$mt, showCategory = nrOra)
 
 ```
 
-```{r, eval = isthere}
+```{r dataTableclustProfCC, eval = isthere}
 DT::datatable(as.data.frame(P$clustProf),caption = mt)
 
 ```

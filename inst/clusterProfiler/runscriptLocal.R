@@ -11,13 +11,22 @@ args = commandArgs(trailingOnly = TRUE)
 
 parameter <- list()
 
+parameter$pthreshold <- 0.2
+parameter$nrCluster <- 10
+parameter$row_scale <- TRUE
+parameter$row_center <- TRUE
+parameter$transform = "log2scaled" # "log2"
+parameter$peptide  = FALSE
+parameter$JK = TRUE
+
+
 if ( length(args) == 0 ) {
   # parameters
   datadir <- file.path(find.package("prolfquaData") , "quantdata")
   parameter$inputMQfile <-  file.path(datadir, "MAXQuant_ComboCourse_p2691_March_2018_WU183012.zip")
   parameter$organism <- "yeast" # "human", "mouse"
   parameter$outpath = "dummy"
-  parameter$clustering <- "DPA"
+  parameter$clustering <- "DPA" #
   #parameter$clustering <- "hclustdeepsplit"
   parameter$projectID <- 3000
   parameter$workunitID <- 233333
@@ -31,7 +40,10 @@ if ( length(args) == 0 ) {
   parameter$clustering <- args[4]
   parameter$workunitID <- args[5]
   parameter$projectID <- args[6]
+  parameter$peptide <- as.logical(args[7])
+  parameter$JK <- as.logical(args[8])
   print(parameter)
+  print("::::END OF PARAMS::::")
 }
 
 
@@ -43,6 +55,7 @@ if (parameter$clustering == "DPA") {
   #   - install the DPA package globally or in the virtualenv using
   #     the "Installation" instructions at https://github.com/mariaderrico/DPA.
   #   - specify "path_to_python_virtualenv" and "path_to_DPA_local_package" below
+  library(reticulate)
 
   #if (dir.exists("/scratch/CLUSTERPORFILER/pythonenv1")) {
   #  reticulate::use_virtualenv("/scratch/CLUSTERPORFILER/pythonenv1")
@@ -53,20 +66,15 @@ if (parameter$clustering == "DPA") {
   # use_condaenv("path_to_conda_environmet")
   #use_virtualenv("path_to_python_virtualenv", required=TRUE)
   #py_install("DPA")
+  use_virtualenv("/scratch/CLUSTERPROFILER/pythonenv2", required = TRUE)
   DPA <- reticulate::import("Pipeline.DPA")
 }
 
 
 # related to data preprocessing
-parameter$peptide  = FALSE
-parameter$transform = "log2scaled" # "log2"
 
-parameter$row_center <- TRUE
-parameter$row_scale <- TRUE
 
 # related to clustering
-parameter$nrCluster <- 10
-parameter$pthreshold <- 0.2
 
 
 # RESULTS will be saved as rds file
@@ -156,22 +164,37 @@ mdata <- wide$data
 
 RESULTS$dataDims <- c(nrPort = nrow(mdata))
 
+
+
+
+
+cp_filterforNA  <- function(mdata)
+{
+    na <- apply(mdata, 1, function(x) {
+        sum(is.na(x))
+    })
+    nc <- ncol(mdata)
+    mdata <- mdata[na < floor(0.5 * nc) - 1, ]
+    return(mdata)
+}
+
+
+
 mdataf <- cp_filterforNA(mdata)
 RESULTS$dataDims <- c(RESULTS$dataDims, nrPortNoNas = nrow(mdataf))
 
 # scale matrix rows
 scaledM <- t(scale(t(mdataf),center = parameter$row_center, scale = parameter$row_scale))
-# ' some alternatives
-
-
+# drop rows with NA produced because of zero variance.
+scaledM <- scaledM[!(rowSums(is.na(scaledM))==ncol(scaledM)),]
 
 
 if (parameter$clustering == "hclust") {
-  resClust <- cp_clusterHClustEuclideanDist(scaledM,nrCluster = parameter$nrCluster)
+  resClust <- cp_clusterHClustEuclideanDist(scaledM,nrCluster = parameter$nrCluster, JK = parameter$JK)
 } else if (parameter$clustering == "hclustdeepsplit") {
-  resClust <- cp_clusterHClustEuclideanDistDeepslit(scaledM)
+  resClust <- cp_clusterHClustEuclideanDistDeepslit(scaledM, JK = parameter$JK)
 } else if (parameter$clustering == "DPA") {
-  resClust <- cp_clusterDPAEuclideanDist(scaledM)
+  resClust <- cp_clusterDPAEuclideanDist(round(scaledM,10)[!duplicated(round(scaledM,10)),], metric = "precomputed", JK = parameter$JK)
 }
 
 RESULTS$scaledM <- scaledM
@@ -225,9 +248,9 @@ if (!is.character(clustProf)) {
 RESULTS$resGOEnrich <- resGOEnrich
 
 outfile <- tools::file_path_sans_ext(basename(parameter$inputMQfile))
-outfile <- paste0(parameter$projectID,"_",
-                  as.character(parameter$workunitID),"_",
-                  as.character(outfile),"_",
+outfile <- paste0(parameter$projectID, "_",
+                  as.character(parameter$workunitID), "_",
+                  as.character(outfile), "_",
                   parameter$clustering)
 
 
@@ -254,8 +277,11 @@ saveRDS(RESULTS,
 # TODO in output 2 and 3.
 #ClusterId use integers.
 
+
 output2 <- lapply(RESULTS$resGOEnrich,
                   function(x){res <- as.data.frame(x$clustProf); res$GS <- x$mt; res})
+
+if(length(output2) > 0){
 output2 <- dplyr::bind_rows(output2)
 
 output2 <- tibble::add_column(output2,
@@ -265,10 +291,15 @@ output2 <- tibble::add_column(output2,
                               clustering  = parameter$clustering, .before = 1 )
 
 output2 <- output2 %>% filter(p.adjust < parameter$pthreshold)
+readr::write_tsv(output2 , file = file.path(parameter$outpath, paste0("GS_", outfile, ".tsv")))
 
 
-RESULTS$nr.of.GS.025 <- output2 %>% filter(p.adjust < 0.25) %>% nrow
+RESULTS[[paste0("nr.of.GS.",parameters$pthreshold)]] <- output2 %>% filter(p.adjust < parameters$pthreshold) %>% nrow
 RESULTS$nr.of.GS.01 <- output2 %>% filter(p.adjust < 0.1) %>% nrow
+} else {
+	RESULTS$nr.of.GS.025 <- 0 
+	RESULTS$nr.of.GS.01 <- 0
+}
 
 # output :
 output1 <- data.frame(
@@ -278,6 +309,8 @@ output1 <- data.frame(
   clustering  = parameter$clustering,
   projectID = parameter$projectID,
   workunitID = parameter$workunitID,
+  peptide = as.character(parameter$peptide),
+  JK = as.character(parameter$JK),
   nr.proteins = RESULTS$dataDims["nrPort"],
   nr.proteins.NA.filtered = RESULTS$dataDims["nrPortNoNas"],
   nr.UniprotIDs = RESULTS$dataDims["UniprotExtract"],
@@ -294,7 +327,7 @@ output1 <- data.frame(
 readr::write_tsv(output1, file = file.path(parameter$outpath, paste0("Summary_", outfile, '.tsv')))
 # GS_zipfilename_clusteringname.txt
 
-readr::write_tsv(output2 , file = file.path(parameter$outpath, paste0("GS_", outfile, ".tsv")))
+
 
 # Protein_zipfilename_clusteringname.txt
 # 300 - 5000 rows
@@ -310,6 +343,8 @@ output3$projectID = parameter$projectID
 output3$workunitID = parameter$workunitID
 output3$zipfile = basename(parameter$inputMQfile)
 output3$clustering  = parameter$clustering
+output3$peptide = as.character(parameter$peptide)
+output3$JK = as.character(parameter$JK)
 
 tmp <- RESULTS$prot$to_wide()$data
 output3 <- right_join(output3, tmp, by = "protein_Id")
@@ -317,9 +352,14 @@ output3 <- right_join(output3, tmp, by = "protein_Id")
 protfilename <- paste0("Protein_" , outfile, '.tsv')
 readr::write_tsv(output3, file = file.path(parameter$outpath, protfilename))
 
-rmarkdown::render("profileClusters_V2.Rmd",
+filermd <- paste0("tmp_profileC",paste(sample(LETTERS, 5, TRUE), collapse=""))
+file.copy("profileClusters_V2.Rmd", paste0(filermd,".Rmd"), overwrite = TRUE)
+
+rmarkdown::render(paste0(filermd,".Rmd"),
                   params = list(resultsxx = RESULTS, parametersxx = parameter))
 
-file.copy("profileClusters_V2.html",
+file.copy(paste0(filermd,".html"),
           file.path(parameter$outpath, paste0("HTML_",outfile, ".html")),overwrite = TRUE)
+
+file.remove(paste0(filermd,".Rmd"),paste0(filermd,".html"))
 
