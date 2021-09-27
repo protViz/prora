@@ -1,4 +1,4 @@
-# author W Wolski
+# Author W Wolski
 # this script analyses all projects in file output_MaxQuant_info_WSpecies.csv
 
 library(tidyverse)
@@ -22,7 +22,7 @@ human <- tmp %>% filter(species == "human" & n_inputs >= 4)
 
 if (Sys.info()["sysname"] == "Windows") {
   human$windowpaths <- gsub("/srv/www/htdocs", "y:", human$path_to_zip)
-  RscriptExe <- "c:/Program Files/R/R-4.1.0/bin/Rscript.exe"
+  RscriptExe <- "c:/Program Files/R/R-4.1.1/bin/Rscript.exe"
   stopifnot(file.exists(RscriptExe))
   rscriptlocation <- "runscript.R"
 }else{
@@ -39,7 +39,15 @@ for (i in 1:nrow(human)) {
   if (!file.exists(path)) {
     print(path)
   } else if (TRUE) {
-    arguments <- c(rscriptlocation, path, "human", parameters$outfolder , parameters$clustalg , workunitid, projectid, parameters$peptide, parameters$JK)
+    arguments <- c(rscriptlocation,
+                   path,
+                   "human",
+                   parameters$outfolder,
+                   parameters$clustalg,
+                   workunitid,
+                   projectid,
+                   parameters$peptide,
+                   parameters$JK)
 
       res <- system2(RscriptExe, args = arguments)
       if (res > 0) {

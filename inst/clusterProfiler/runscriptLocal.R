@@ -1,3 +1,8 @@
+# Author Witold Wolski
+# RscriptExe <- "c:/Program Files/R/R-4.1.0/bin/Rscript.exe"
+# arguments <- c(rscriptlocation, path, "human", parameters$outfolder , parameters$clustalg , workunitid, projectid, parameters$peptide, parameters$JK)
+# res <- system2(RscriptExe, args = arguments)
+
 library(tidyverse)
 library(prolfqua)
 #library(dendextend)
@@ -297,7 +302,7 @@ readr::write_tsv(output2 , file = file.path(parameter$outpath, paste0("GS_", out
 RESULTS[[paste0("nr.of.GS.",parameters$pthreshold)]] <- output2 %>% filter(p.adjust < parameters$pthreshold) %>% nrow
 RESULTS$nr.of.GS.01 <- output2 %>% filter(p.adjust < 0.1) %>% nrow
 } else {
-	RESULTS$nr.of.GS.025 <- 0 
+	RESULTS$nr.of.GS.025 <- 0
 	RESULTS$nr.of.GS.01 <- 0
 }
 
@@ -338,7 +343,6 @@ readr::write_tsv(output1, file = file.path(parameter$outpath, paste0("Summary_",
 # Protein intensities sample_Id
 
 output3 <- RESULTS$clusterAssignment
-
 output3$projectID = parameter$projectID
 output3$workunitID = parameter$workunitID
 output3$zipfile = basename(parameter$inputMQfile)
@@ -352,7 +356,9 @@ output3 <- right_join(output3, tmp, by = "protein_Id")
 protfilename <- paste0("Protein_" , outfile, '.tsv')
 readr::write_tsv(output3, file = file.path(parameter$outpath, protfilename))
 
-filermd <- paste0("tmp_profileC",paste(sample(LETTERS, 5, TRUE), collapse=""))
+
+
+filermd <- paste0("tmp_profileC",paste(sample(LETTERS, 5, TRUE), collapse = ""))
 file.copy("profileClusters_V2.Rmd", paste0(filermd,".Rmd"), overwrite = TRUE)
 
 rmarkdown::render(paste0(filermd,".Rmd"),
