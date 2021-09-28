@@ -14,9 +14,7 @@ library(prora)
 
 prora::copy_bfabric_ClusterProfiler()
 
-#args = commandArgs(trailingOnly = TRUE)
-args <- list()
-args$l1 <- 1
+args = commandArgs(trailingOnly = TRUE)
 parameter <- list()
 
 parameter$nrCluster <- 10
@@ -42,9 +40,9 @@ if ( length(args) == 0 ) {
   parameter$projectID <- 3000
   parameter$workunitID <- 233333
 } else if ( length(args) == 1) {
-  parameters <- yaml::read_yaml("WU268998.yaml")
-  parameters <- yaml::read_yaml("WU269043.yaml")
-  parameters <- yaml::read_yaml("WU269045.yaml")
+  parameters <- yaml::read_yaml(args[1])
+  #parameters <- yaml::read_yaml("WU269043.yaml")
+  #parameters <- yaml::read_yaml("WU269045.yaml")
 
   print("::::: USING YAML FILE ::::")
 
