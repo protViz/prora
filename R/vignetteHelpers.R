@@ -46,15 +46,25 @@ copy_ora_report <- function(workdir = getwd()){
 
   .scriptCopyHelperVec(runscripts, workdir = workdir)
 }
+
 #' copy all files needed to generate a bfabric report
 #'
 #' @param workdir directory where to copy file - default is current working directory.
 #' @export
 #'
-copy_bfabric_2grp <- function(workdir = getwd()){
+copy_bfabric_2grpGSEA <- function(workdir = getwd()){
+  runscripts <- c("analyseSingle2GrpGSEA/VisualizeSingle.Rmd",
+                  "analyseSingle2GrpGSEA/ErrorMessage.Rmd")
+  .scriptCopyHelperVec(runscripts, workdir = workdir)
+}
 
-  runscripts <- c("analyseSingle2Grp/VisualizeSingle.Rmd",
-                  "analyseSingle2Grp/ErrorMessage.Rmd")
+#' copy all files needed to generate a bfabric report for cluster profiling
+#'
+#' @param workdir directory where to copy file - default is current working directory.
+#' @export
+#'
+copy_bfabric_ClusterProfiler <- function(workdir = getwd()){
+  runscripts <- c("clusterProfiler/profileClusters_V2.Rmd")
   .scriptCopyHelperVec(runscripts, workdir = workdir)
 }
 

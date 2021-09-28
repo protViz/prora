@@ -51,7 +51,7 @@ if (YAML) {
 
 outdir <- "out_dir"
 
-prora::copy_bfabric_2grp()
+prora::copy_bfabric_2grpGSEA()
 
 #if (dir.exists(outdir)) {
 #  unlink(outdir,recursive = TRUE)

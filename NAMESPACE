@@ -2,7 +2,8 @@
 
 export(DT_makeURLfor)
 export(checkIDmappingEfficiency)
-export(copy_bfabric_2grp)
+export(copy_bfabric_2grpGSEA)
+export(copy_bfabric_ClusterProfiler)
 export(copy_gsea_report)
 export(copy_multigroup_GSEA)
 export(copy_ora_report)

@@ -12,11 +12,13 @@ library(ggplot2)
 library(clusterProfiler)
 library(prora)
 
-args = commandArgs(trailingOnly = TRUE)
+prora::copy_bfabric_ClusterProfiler()
 
+#args = commandArgs(trailingOnly = TRUE)
+args <- list()
+args$l1 <- 1
 parameter <- list()
 
-parameter$pthreshold <- 0.2
 parameter$nrCluster <- 10
 parameter$row_scale <- TRUE
 parameter$row_center <- TRUE
@@ -25,6 +27,10 @@ parameter$peptide  = FALSE
 parameter$JK = TRUE
 
 
+map_species <- function(thisname){
+  if (thisname == "Homo sapiens") {return("human")}
+  if (thisname == "Mus musculus") {return("mouse")}
+}
 if ( length(args) == 0 ) {
   # parameters
   datadir <- file.path(find.package("prolfquaData") , "quantdata")
@@ -36,6 +42,22 @@ if ( length(args) == 0 ) {
   parameter$projectID <- 3000
   parameter$workunitID <- 233333
 } else if ( length(args) == 1) {
+  parameters <- yaml::read_yaml("WU268998.yaml")
+  parameters <- yaml::read_yaml("WU269043.yaml")
+  parameters <- yaml::read_yaml("WU269045.yaml")
+
+  print("::::: USING YAML FILE ::::")
+
+  parameter$inputMQfile <- basename(parameters$application$input$MaxQuant)
+  parameter$organism <- map_species(parameters$application$parameters$Species)
+  parameter$outpath <- "out_dir"
+  parameter$pthreshold <- as.numeric(parameters$application$parameters$FDRthreshold)
+  parameter$clustering <- parameters$application$parameters$ClustAlg
+  parameter$workunitID <- parameters$job_configuration$workunit_id
+  parameter$projectID <- gsub(".*htdocs/(p[0-9]{3,8})/bfabric.*","\\1",parameters$application$output)
+  parameter$peptide <- parameters$application$parameters$MQInputFile == "peptide.txt"
+  parameter$JK <- "euclidean_JK" == parameters$application$parameters$Distance
+  print(parameter)
   # read yaml and extract
 } else {
   print("::::USING COMMAND LINE ARGS:::")
@@ -77,6 +99,7 @@ if (parameter$clustering == "DPA") {
 
 
 # related to data preprocessing
+
 
 
 # related to clustering
@@ -170,17 +193,14 @@ mdata <- wide$data
 RESULTS$dataDims <- c(nrPort = nrow(mdata))
 
 
-
-
-
 cp_filterforNA  <- function(mdata)
 {
-    na <- apply(mdata, 1, function(x) {
-        sum(is.na(x))
-    })
-    nc <- ncol(mdata)
-    mdata <- mdata[na < floor(0.5 * nc) - 1, ]
-    return(mdata)
+  na <- apply(mdata, 1, function(x) {
+    sum(is.na(x))
+  })
+  nc <- ncol(mdata)
+  mdata <- mdata[na < floor(0.5 * nc) - 1, ]
+  return(mdata)
 }
 
 
@@ -191,12 +211,12 @@ RESULTS$dataDims <- c(RESULTS$dataDims, nrPortNoNas = nrow(mdataf))
 # scale matrix rows
 scaledM <- t(scale(t(mdataf),center = parameter$row_center, scale = parameter$row_scale))
 # drop rows with NA produced because of zero variance.
-scaledM <- scaledM[!(rowSums(is.na(scaledM))==ncol(scaledM)),]
+scaledM <- scaledM[!(rowSums(is.na(scaledM)) == ncol(scaledM)),]
 
 
 if (parameter$clustering == "hclust") {
   resClust <- cp_clusterHClustEuclideanDist(scaledM,nrCluster = parameter$nrCluster, JK = parameter$JK)
-} else if (parameter$clustering == "hclustdeepsplit") {
+} else if (parameter$clustering == "hclust_deepsplit") {
   resClust <- cp_clusterHClustEuclideanDistDeepslit(scaledM, JK = parameter$JK)
 } else if (parameter$clustering == "DPA") {
   resClust <- cp_clusterDPAEuclideanDist(round(scaledM,10)[!duplicated(round(scaledM,10)),], metric = "precomputed", JK = parameter$JK)
@@ -259,52 +279,36 @@ outfile <- paste0(parameter$projectID, "_",
                   parameter$clustering)
 
 
-saveRDS(RESULTS,
-        file = file.path(parameter$outpath, paste0(outfile,".Rds")))
+#saveRDS(RESULTS,
+#        file = file.path(parameter$outpath, paste0(outfile,".Rds")))
 
 
 ## create summary.
 
-# input zip organizm outpath
-
-# zipfilename_clusteringname.txt
-## 1 row per zip
-# Zipfile,
-# name of the clustering algorithm
-# nr. proteins,
-# nr. of samples,
-# nr. of protein clusters,
-# NR of GS with padj < 0.25
-# NR of GS with padj < 0.1
-# median CV coefficient of variation for raw data
-# median SD after normalizations
-
-# TODO in output 2 and 3.
-#ClusterId use integers.
-
+EXCEL_RESULTS <- list()
 
 output2 <- lapply(RESULTS$resGOEnrich,
                   function(x){res <- as.data.frame(x$clustProf); res$GS <- x$mt; res})
 
-if(length(output2) > 0){
-output2 <- dplyr::bind_rows(output2)
+if (length(output2) > 0) {
+  output2 <- dplyr::bind_rows(output2)
 
-output2 <- tibble::add_column(output2,
-                              projectID = parameter$projectID,
-                              workunitID = parameter$workunitID,
-                              zipfile = basename(parameter$inputMQfile),
-                              clustering  = parameter$clustering, .before = 1 )
+  output2 <- tibble::add_column(output2,
+                                projectID = parameter$projectID,
+                                workunitID = parameter$workunitID,
+                                zipfile = basename(parameter$inputMQfile),
+                                clustering  = parameter$clustering, .before = 1 )
 
-output2 <- output2 %>% filter(p.adjust < parameter$pthreshold)
-readr::write_tsv(output2 , file = file.path(parameter$outpath, paste0("GS_", outfile, ".tsv")))
+  #output2 <- output2 %>% filter(p.adjust < parameter$pthreshold)
+  #readr::write_tsv(output2 , file = file.path(parameter$outpath, paste0("GS_", outfile, ".tsv")))
+  EXCEL_RESULTS$GS <- output2
 
-
-RESULTS[[paste0("nr.of.GS.",parameters$pthreshold)]] <- output2 %>% filter(p.adjust < parameters$pthreshold) %>% nrow
-RESULTS$nr.of.GS.01 <- output2 %>% filter(p.adjust < 0.1) %>% nrow
+  RESULTS$nr.of.GS <- output2 %>% filter(p.adjust < parameter$pthreshold) %>% nrow
 } else {
-	RESULTS$nr.of.GS.025 <- 0
-	RESULTS$nr.of.GS.01 <- 0
+  RESULTS$nr.of.GS <- 0
 }
+
+
 
 # output :
 output1 <- data.frame(
@@ -312,8 +316,6 @@ output1 <- data.frame(
   workunitID = parameter$workunitID,
   zipfile = basename(parameter$inputMQfile),
   clustering  = parameter$clustering,
-  projectID = parameter$projectID,
-  workunitID = parameter$workunitID,
   peptide = as.character(parameter$peptide),
   JK = as.character(parameter$JK),
   nr.proteins = RESULTS$dataDims["nrPort"],
@@ -322,15 +324,15 @@ output1 <- data.frame(
   nr.ENTREZIDS = RESULTS$dataDims["ENTREZGENEID"],
   nr.samples = nrow(RESULTS$prot$factors()),
   nr.of.clusters = RESULTS$nrCluster,
-  nr.of.GS.025 = RESULTS$nr.of.GS.025,
-  nr.of.GS.01 = RESULTS$nr.of.GS.01,
+  FDRThreshold = parameter$pthreshold,
+  nr.of.GS.025 = RESULTS$nr.of.GS,
   median.CV = RESULTS$CV.50,
   median.sd = RESULTS$SD.50,
   id.mapping.service = RESULTS$id.mapping.service
 )
 
-readr::write_tsv(output1, file = file.path(parameter$outpath, paste0("Summary_", outfile, '.tsv')))
-# GS_zipfilename_clusteringname.txt
+EXCEL_RESULTS$summary <- output1
+
 
 
 
@@ -354,8 +356,8 @@ tmp <- RESULTS$prot$to_wide()$data
 output3 <- right_join(output3, tmp, by = "protein_Id")
 
 protfilename <- paste0("Protein_" , outfile, '.tsv')
-readr::write_tsv(output3, file = file.path(parameter$outpath, protfilename))
 
+EXCEL_RESULTS$proteinData <- output3
 
 
 filermd <- paste0("tmp_profileC",paste(sample(LETTERS, 5, TRUE), collapse = ""))
@@ -369,3 +371,4 @@ file.copy(paste0(filermd,".html"),
 
 file.remove(paste0(filermd,".Rmd"),paste0(filermd,".html"))
 
+writexl::write_xlsx(EXCEL_RESULTS, path = file.path(parameter$outpath, paste0("",outfile, ".xlsx")))
