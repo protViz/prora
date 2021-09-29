@@ -15,6 +15,7 @@ library(prora)
 prora::copy_bfabric_ClusterProfiler()
 
 args = commandArgs(trailingOnly = TRUE)
+
 parameter <- list()
 
 parameter$nrCluster <- 10
@@ -25,29 +26,16 @@ parameter$peptide  = FALSE
 parameter$JK = TRUE
 
 
-map_species <- function(thisname){
-  if (thisname == "Homo sapiens") {return("human")}
-  if (thisname == "Mus musculus") {return("mouse")}
-}
+
+
 if ( length(args) == 0 ) {
-  # parameters
-  datadir <- file.path(find.package("prolfquaData") , "quantdata")
-  parameter$inputMQfile <-  file.path(datadir, "MAXQuant_ComboCourse_p2691_March_2018_WU183012.zip")
-  parameter$organism <- "yeast" # "human", "mouse"
-  parameter$outpath = "dummy"
-  parameter$clustering <- "DPA" #
-  #parameter$clustering <- "hclustdeepsplit"
-  parameter$projectID <- 3000
-  parameter$workunitID <- 233333
+  args <- "WU269045.yaml"
 } else if ( length(args) == 1) {
   parameters <- yaml::read_yaml(args[1])
-  #parameters <- yaml::read_yaml("WU269043.yaml")
-  #parameters <- yaml::read_yaml("WU269045.yaml")
-
   print("::::: USING YAML FILE ::::")
 
   parameter$inputMQfile <- basename(parameters$application$input$MaxQuant)
-  parameter$organism <- map_species(parameters$application$parameters$Species)
+  parameter$species <- parameters$application$parameters$Species
   parameter$outpath <- "out_dir"
   parameter$pthreshold <- as.numeric(parameters$application$parameters$FDRthreshold)
   parameter$clustering <- parameters$application$parameters$ClustAlg
@@ -112,15 +100,12 @@ if (!dir.exists(parameter$outpath)) {
 }
 
 # Set up species
-if (parameter$organism == "yeast") {
+if (  parameter$species == "Saccharomyces cerevisiae") {
   orgDB <- "org.Sc.sgd.db"
-  parameter$species <- "Saccharomyces cerevisiae"
-} else if (parameter$organism == "human") {
+} else if (parameter$species ==  "Homo sapiens") {
   orgDB <- "org.Hs.eg.db"
-  parameter$species <-  "Homo sapiens"
-} else if (parameter$organism == "mouse") {
+} else if (parameter$species == "Mus musculus") {
   orgDB <- "org.Mm.eg.db"
-  parameter$species <- "Mus musculus"
 }
 
 stopifnot(parameter$species %in% msigdbr::msigdbr_species()$species_name)

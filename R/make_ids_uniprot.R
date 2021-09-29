@@ -16,7 +16,7 @@
 #' fc_estimates <- prora::exampleContrastData
 #'
 #' filtered_dd <- get_UniprotID_from_fasta_header(fc_estimates, idcolumn = "protein_Id")
-#' debug(map_ids_uniprot)
+#' # debug(map_ids_uniprot)
 #' map_ids_uniprot( filtered_dd )
 #'
 #'
