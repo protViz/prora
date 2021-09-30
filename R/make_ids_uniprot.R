@@ -36,7 +36,16 @@ map_ids_uniprot <- function(data,
     query = paste(ids_to_map, collapse = " ")
   )
 
-  r <- httr::POST(url, body = params, encode = "form")
+  if (Sys.info()["sysname"] == "Windows") {
+    r <- httr::POST(url, body = params, encode = "form")
+  } else {
+    # This code was added to handle SSL issues
+    # https://github.com/r-lib/httr/issues/669
+    httr_config <- httr::config(ssl_cipher_list = "DEFAULT@SECLEVEL=1")
+    r <- httr::with_config(config = httr_config, httr::POST(url, body = params, encode = "form"))
+  }
+
+  #r <- httr::POST(url, body = params, encode = "form")
   bb <- httr::content(r)
   class(bb)
   mapping <- readr::read_tsv(bb)
