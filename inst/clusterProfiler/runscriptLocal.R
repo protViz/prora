@@ -202,7 +202,7 @@ if (parameter$clustering == "hclust") {
 } else if (parameter$clustering == "hclust_deepsplit") {
   resClust <- cp_clusterHClustEuclideanDistDeepslit(scaledM, JK = parameter$JK)
 } else if (parameter$clustering == "DPA") {
-  resClust <- cp_clusterDPAEuclideanDist(round(scaledM,10)[!duplicated(round(scaledM,10)),], metric = "precomputed", JK = parameter$JK)
+  resClust <- cp_clusterDPAEuclideanDist(round(scaledM,10)[!duplicated(round(scaledM,10)),], JK = parameter$JK)
 }
 
 RESULTS$scaledM <- scaledM
