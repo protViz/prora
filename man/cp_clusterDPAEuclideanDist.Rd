@@ -4,7 +4,7 @@
 \alias{cp_clusterDPAEuclideanDist}
 \title{Cluster using DPA}
 \usage{
-cp_clusterDPAEuclideanDist(mdata, Z = 1, metric = "euclidean", JK = TRUE)
+cp_clusterDPAEuclideanDist(mdata, Z = 1, JK = TRUE)
 }
 \arguments{
 \item{mdata, }{input data}
@@ -13,9 +13,14 @@ cp_clusterDPAEuclideanDist(mdata, Z = 1, metric = "euclidean", JK = TRUE)
 statistical confidence at which one decides to consider
 a cluster meaningful. Default value is set to 1.}
 
-\item{metric, }{string, valid metrics are "precomputed", "euclidean".
-If metric is "precomputed", data is assumed to be a distance matrix.
-Default is "euclidean".}
+\item{JK}{jack knive resampling (default TRUE)}
+}
+\value{
+\itemize{
+\item dendrogram - instance of class dendrogram
+\item cluster assignments
+\item nrCluster number of clusters
+}
 }
 \description{
 Cluster using DPA

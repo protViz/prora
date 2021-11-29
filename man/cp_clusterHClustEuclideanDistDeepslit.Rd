@@ -6,6 +6,13 @@
 \usage{
 cp_clusterHClustEuclideanDistDeepslit(x, method = "complete", JK = TRUE)
 }
+\arguments{
+\item{x}{matrix with data}
+
+\item{method}{linkage method (hclust argument)}
+
+\item{JK}{should jack knife resampling be used (defaul TRUE)}
+}
 \description{
 cluster using hclust and deepsplit
 }

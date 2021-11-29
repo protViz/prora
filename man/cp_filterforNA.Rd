@@ -2,10 +2,10 @@
 % Please edit documentation in R/cphelper.R
 \name{cp_filterforNA}
 \alias{cp_filterforNA}
-\title{remove proteins with more NA's than in 60% of samples}
+\title{remove proteins with more NA's than in 60\% of samples}
 \usage{
 cp_filterforNA(mdata)
 }
 \description{
-remove proteins with more NA's than in 60% of samples
+remove proteins with more NA's than in 60\% of samples
 }
