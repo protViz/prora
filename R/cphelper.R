@@ -24,8 +24,15 @@ cp_clusterHClustEuclideanDist <- function(x,
 
 #' cluster using hclust and deepsplit
 #' @export
-#'
-
+#' @param x matrix with data
+#' @param method linkage method (hclust argument)
+#' @param JK should jack knife resampling be used (defaul TRUE)
+#' @value list
+#' \itemize{
+#' \item dendrogram - instance of class dendrogram
+#' \item cluster assignments
+#' \item nrCluster number of clusters
+#' }
 cp_clusterHClustEuclideanDistDeepslit <- function(x,  method = "complete", JK = TRUE){
   if (nrow(x) <= 2) {
     dend <- NULL
@@ -60,6 +67,13 @@ cp_clusterHClustEuclideanDistDeepslit <- function(x,  method = "complete", JK = 
 #' @param Z, the number of standard deviations fixing the level of
 #'            statistical confidence at which one decides to consider
 #'            a cluster meaningful. Default value is set to 1.
+#' @param JK jack knive resampling (default TRUE)
+#' @return
+#' \itemize{
+#' \item dendrogram - instance of class dendrogram
+#' \item cluster assignments
+#' \item nrCluster number of clusters
+#' }
 #' @export
 #'
 cp_clusterDPAEuclideanDist <- function(mdata, Z = 1, JK = TRUE){
