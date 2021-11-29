@@ -60,18 +60,15 @@ cp_clusterHClustEuclideanDistDeepslit <- function(x,  method = "complete", JK = 
 #' @param Z, the number of standard deviations fixing the level of
 #'            statistical confidence at which one decides to consider
 #'            a cluster meaningful. Default value is set to 1.
-#' @param metric, string, valid metrics are "precomputed", "euclidean".
-#'            If metric is "precomputed", data is assumed to be a distance matrix.
-#'            Default is "euclidean".
 #' @export
 #'
-cp_clusterDPAEuclideanDist <- function(mdata, Z = 1, metric = "euclidean", JK = TRUE){
+cp_clusterDPAEuclideanDist <- function(mdata, Z = 1, JK = TRUE){
   distJK <- if (JK) {
     prora::dist_JK( mdata )
   } else {
     dist(mdata)
   }
-  DPAresult <- DPAclustR::runDPAclustering(as.matrix(distJK), Z = Z, metric = metric)
+  DPAresult <- DPAclustR::runDPAclustering(as.matrix(distJK), Z = Z, metric = "precomputed")
   k <- DPAresult$labels
   maxD <- max(DPAresult$density)
   topography <- DPAresult$topography
