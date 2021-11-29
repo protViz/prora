@@ -6,6 +6,13 @@
 \usage{
 dist_JK(m, method = "euclidean", p = 2)
 }
+\arguments{
+\item{m}{matrix with data}
+
+\item{method}{distance method default euclidean}
+
+\item{p}{power of minkowski distance}
+}
 \description{
 JK resampling for dist function
 }

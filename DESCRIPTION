@@ -17,34 +17,38 @@ Depends: R (>= 3.5), WebGestaltR (>= 0.4)
 License: GPL-2
 Encoding: UTF-8
 LazyData: true
-Imports: AnnotationDbi,
-    AnnotationHub,
-    BiocStyle,
-    clusterProfiler,
-    dplyr,
-    DT,
-    ggplot2,
-    GO.db,
-    dynamicTreeCut,
-    fgsea,
-    httr,
-    magrittr,
-    msigdbr,
-    org.Hs.eg.db,
-    reactome.db,
-    readr,
-    rlang,
-    S4Vectors,
-    sigora,
-    slam,
-    tibble,
-    tidyr,
-    tidyverse,
-    writexl,
-    UpSetR
+Imports: 
+  AnnotationDbi,
+  AnnotationHub,
+  clusterProfiler,
+  dplyr,
+  DT,
+  ggplot2,
+  GO.db,
+  dynamicTreeCut,
+  fgsea,
+  httr,
+  magrittr,
+  msigdbr,
+  org.Hs.eg.db,
+  reactome.db,
+  readr,
+  rlang,
+  S4Vectors,
+  sigora,
+  slam,
+  tibble,
+  tidyr,
+  tidyverse,
+  writexl,
+  UpSetR
 Remotes:
-    bioc::3.13/clusterProfiler
+  bioc::3.13/clusterProfiler
+Suggests: 
+  knitr,
+  rmarkdown,
+  bookdown,
+  docopt
 RoxygenNote: 7.1.2
 VignetteBuilder: knitr
-Suggests: knitr, rmarkdown, bookdown, slam, BiocStyle, docopt
 biocViews: MassSpectrometryData, ReproducibleResearch

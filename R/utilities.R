@@ -1,6 +1,8 @@
 #' JK resampling for dist function
 #' @export
-#' @param
+#' @param m matrix with data
+#' @param method distance method default euclidean
+#' @param p power of minkowski distance
 dist_JK <- function(m,  method = "euclidean",  p = 2){
   alldst <- list()
 
@@ -17,6 +19,14 @@ dist_JK <- function(m,  method = "euclidean",  p = 2){
 
 #' plot cluster
 #' @export
+#' @param scaledM matrix with data
+#' @param k cluster assignment (same as nrow(scaledM))
+#' @param idx index of cluster
+#' @examples
+#' bb <- matrix(rnorm(100), ncol=5, nrow = 20)
+#' k <- sample(1:3,20, replace = TRUE)
+#' plotK(bb, k, idx = 3)
+#'
 plotK <- function(scaledM, k , idx ){
   scM <- scaledM[ k == idx,, drop = FALSE]
   matplot(t(scM), col = "lightgray", type = "l", main = paste0("cluster ", idx))
@@ -26,7 +36,9 @@ plotK <- function(scaledM, k , idx ){
 
 
 #' helper function mapping clusters
+#'
 #' @export
+#'
 mapthe <- function(scaledM, cluster){
   background <- data.frame(SW = rownames(scaledM))
   cluster <- data.frame(SW = rownames(cluster))

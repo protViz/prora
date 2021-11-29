@@ -5,7 +5,10 @@
 #' cluster using hclust
 #' @export
 #'
-cp_clusterHClustEuclideanDist <- function(x, nrCluster , method = "complete", JK = TRUE){
+cp_clusterHClustEuclideanDist <- function(x,
+                                          nrCluster,
+                                          method = "complete",
+                                          JK = TRUE){
   distJK <- if (JK) {
      prora::dist_JK(x)
   } else {
@@ -89,7 +92,7 @@ cp_clusterDPAEuclideanDist <- function(mdata, Z = 1, metric = "euclidean", JK = 
 
 
 
-#' remove proteins with more NA's than in 60% of samples
+#' remove proteins with more NA's than in 60\% of samples
 #' @export
 #'
 cp_filterforNA <- function(mdata){

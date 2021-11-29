@@ -6,6 +6,19 @@
 \usage{
 plotK(scaledM, k, idx)
 }
+\arguments{
+\item{scaledM}{matrix with data}
+
+\item{k}{cluster assignment (same as nrow(scaledM))}
+
+\item{idx}{index of cluster}
+}
 \description{
 plot cluster
+}
+\examples{
+bb <- matrix(rnorm(100), ncol=5, nrow = 20)
+k <- sample(1:3,20, replace = TRUE)
+plotK(bb, k, idx = 3)
+
 }
