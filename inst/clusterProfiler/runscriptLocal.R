@@ -16,8 +16,8 @@ prora::copy_bfabric_ClusterProfiler()
 
 args = commandArgs(trailingOnly = TRUE)
 
-parameter <- list()
 
+parameter <- list()
 parameter$nrCluster <- 10
 parameter$row_scale <- TRUE
 parameter$row_center <- TRUE
@@ -26,11 +26,8 @@ parameter$peptide  = FALSE
 parameter$JK = TRUE
 
 
-
-
-if ( length(args) == 0 ) {
-  args <- "WU269045.yaml"
-} else if ( length(args) == 1) {
+#  args <- "WU269045.yaml"
+if ( length(args) == 1) {
   parameters <- yaml::read_yaml(args[1])
   print("::::: USING YAML FILE ::::")
 
@@ -45,11 +42,30 @@ if ( length(args) == 0 ) {
   parameter$JK <- "euclidean_JK" == parameters$application$parameters$Distance
   print(parameter)
   # read yaml and extract
-} else {
+} else if (length(args) > 1) {
+  print(args)
   print("::::USING COMMAND LINE ARGS:::")
   parameter$inputMQfile <- args[1]
-  parameter$organism <- args[2]
+  parameter$species <- gsub("_"," ",args[2]) # for compatibility with R script arguments - they can't have spaces
   parameter$outpath <- args[3]
+  parameter$pthreshold <- 0.25
+  parameter$clustering <- args[4]
+  parameter$workunitID <- args[5]
+  parameter$projectID <- args[6]
+  parameter$peptide <- as.logical(args[7])
+  parameter$JK <- as.logical(args[8])
+  print(parameter)
+  print("::::END OF PARAMS::::")
+} else {
+  args <- c(rsrcipt = "runscriptLocal.R", path2zip = "y:/p2192/bfabric/Proteomics/MaxQuant/2019/2019-06/2019-06-27/workunit_200425/1293562.zip",
+    organizm = "Homo_sapiens", outfolder = "testing", clustalg = "hclust_deepsplit",
+    wunitID = "200425", projektID = "p2192", ispeptide = "TRUE",
+    jackknife = "TRUE")
+  args <- args[-1]
+  parameter$inputMQfile <- args[1]
+  parameter$species <- gsub("_"," ",args[2]) # for compatibility with R script arguments - they can't have spaces
+  parameter$outpath <- args[3]
+  parameter$pthreshold <- 0.25
   parameter$clustering <- args[4]
   parameter$workunitID <- args[5]
   parameter$projectID <- args[6]
@@ -282,8 +298,6 @@ if (length(output2) > 0) {
                                 zipfile = basename(parameter$inputMQfile),
                                 clustering  = parameter$clustering, .before = 1 )
 
-  #output2 <- output2 %>% filter(p.adjust < parameter$pthreshold)
-  #readr::write_tsv(output2 , file = file.path(parameter$outpath, paste0("GS_", outfile, ".tsv")))
   EXCEL_RESULTS$GS <- output2
 
   RESULTS$nr.of.GS <- output2 %>% filter(p.adjust < parameter$pthreshold) %>% nrow

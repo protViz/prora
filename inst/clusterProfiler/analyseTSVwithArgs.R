@@ -6,10 +6,10 @@
 #Rscript analyseTSVwithArgs.R DPAprotein_dist_JK DPA FALSE TRUE  &> log_analyseTSVproteinDPA_dist_JK.log &
 #Rscript analyseTSVwithArgs.R DPApeptide_dist_JK DPA TRUE TRUE  &> log_analyseTSVpeptideDPA_dist_JK.log &
 
-#Rscript analyseTSVwithArgs.R HCpeptide_dist hclustdeepsplit TRUE FALSE  &> log_analyseTSVpeptideHCLUST_dist.log &
-#Rscript analyseTSVwithArgs.R HCprotein_dist hclustdeepsplit FALSE FALSE  &> log_analyseTSVproteinHCLUST_dist.log &
-#Rscript analyseTSVwithArgs.R HCpeptide_dist_JK hclustdeepsplit TRUE TRUE  &> log_analyseTSVpeptideHCLUST_dist_JK.log &
-#Rscript analyseTSVwithArgs.R HCprotein_dist_JK hclustdeepsplit FALSE TRUE  &> log_analyseTSVproteinHCLUST_dist_JK.log &
+#Rscript analyseTSVwithArgs.R HCpeptide_dist hclust_deepsplit TRUE FALSE  &> log_analyseTSVpeptideHCLUST_dist.log &
+#Rscript analyseTSVwithArgs.R HCprotein_dist hclust_deepsplit FALSE FALSE  &> log_analyseTSVproteinHCLUST_dist.log &
+#Rscript analyseTSVwithArgs.R HCpeptide_dist_JK hclust_deepsplit TRUE TRUE  &> log_analyseTSVpeptideHCLUST_dist_JK.log &
+#Rscript analyseTSVwithArgs.R HCprotein_dist_JK hclust_deepsplit FALSE TRUE  &> log_analyseTSVproteinHCLUST_dist_JK.log &
 
 
 library(tidyverse)
@@ -26,7 +26,7 @@ if (length(args) == 4) {
   print(parameters)
 }else{
   parameters$outfolder <- "testing"
-  parameters$clustalg <- "hclustdeepsplit"
+  parameters$clustalg <- "hclust_deepsplit"
   parameters$peptide <- TRUE
   parameters$JK <- TRUE
 }
@@ -48,7 +48,7 @@ if (Sys.info()["sysname"] == "Windows") {
 }
 
 
-for (i in 1:nrow(human)) {
+for (i in seq_len(nrow(human))) {
   i <- 1
 
   path <- human$windowpaths[i]
@@ -60,7 +60,7 @@ for (i in 1:nrow(human)) {
   } else if (TRUE) {
     arguments <- c(rsrcipt = rscriptlocation,
                    path2zip = path,
-                   organizm = "human",
+                   organizm =  "Homo_sapiens",
                    outfolder = parameters$outfolder,
                    clustalg = parameters$clustalg,
                    wunitID = workunitid,
@@ -68,6 +68,7 @@ for (i in 1:nrow(human)) {
                    ispeptide = parameters$peptide,
                    jackknife = parameters$JK)
 
+    dput(arguments, file = "args.R")
     res <- system2(RscriptExe, args = arguments)
 
     if (res > 0) {
