@@ -7,12 +7,12 @@ dist_JK <- function(m,  method = "euclidean",  p = 2){
   alldst <- list()
 
   for (i in 1:ncol(m)) {
-    alldst[[i]] <- dist(m[,-i], method = method, p = p)
+    alldst[[i]] <- stats::dist(m[,-i], method = method, p = p)
   }
 
   xx <- Reduce("cbind",alldst)
   xx <- matrixStats::rowMedians(xx, na.rm = TRUE)
-  res <- dist(m, method = method, p = p)
+  res <- stats::dist(m, method = method, p = p)
   res[1:length(res)] <- xx
   return(res)
 }
@@ -29,8 +29,8 @@ dist_JK <- function(m,  method = "euclidean",  p = 2){
 #'
 plotK <- function(scaledM, k , idx ){
   scM <- scaledM[ k == idx,, drop = FALSE]
-  matplot(t(scM), col = "lightgray", type = "l", main = paste0("cluster ", idx))
-  lines(1:ncol(scaledM), apply(scM,2, mean, na.rm = TRUE), lwd = 2 )
+  graphics::matplot(t(scM), col = "lightgray", type = "l", main = paste0("cluster ", idx))
+  graphics::lines(1:ncol(scaledM), apply(scM,2, mean, na.rm = TRUE), lwd = 2 )
   return(scM)
 }
 

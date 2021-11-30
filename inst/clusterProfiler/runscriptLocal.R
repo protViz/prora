@@ -299,8 +299,9 @@ if (length(output2) > 0) {
                                 clustering  = parameter$clustering, .before = 1 )
 
   EXCEL_RESULTS$GS <- output2
-
-  RESULTS$nr.of.GS <- output2 %>% filter(p.adjust < parameter$pthreshold) %>% nrow
+  RESULTS$nr.of.GS <- output2 %>%
+    filter(.data$p.adjust < parameter$pthreshold) %>%
+    nrow
 } else {
   RESULTS$nr.of.GS <- 0
 }

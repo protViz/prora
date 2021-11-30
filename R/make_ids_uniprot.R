@@ -88,7 +88,7 @@ map_ids_uniprot <- function(data,
 map_ids_annotationHub <- function(x, ID_col = "UniprotID", species =  c("Homo sapiens", "Mus musculus")){
   species <- match.arg(species)
   res <- .get_species_mapping_AnnotationHub(species)
-  res <- res %>% dplyr::select(!!ID_col := UNIPROT, P_ENTREZGENEID = ENTREZID  )
+  res <- res %>% dplyr::select(!!ID_col := .data$UNIPROT, P_ENTREZGENEID = .data$ENTREZID  )
   res <- na.omit(res)
   res <- right_join(res,  x,  by = ID_col)
   return(res)

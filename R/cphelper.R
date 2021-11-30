@@ -12,12 +12,12 @@ cp_clusterHClustEuclideanDist <- function(x,
   distJK <- if (JK) {
      prora::dist_JK(x)
   } else {
-    dist(x)
+    stats::dist(x)
   }
 
-  bb <- hclust(distJK, method = method)
-  k <- cutree(bb, k = nrCluster)
-  dend <- as.dendrogram(bb)
+  bb <- stats::hclust(distJK, method = method)
+  k <- stats::cutree(bb, k = nrCluster)
+  dend <- stats::as.dendrogram(bb)
   clusterAssignment <- data.frame(protein_Id = rownames(x), Cluster =  k)
   return(list(dendrogram = dend, clusterAssignment = clusterAssignment, nrCluster = nrCluster))
 }
@@ -42,10 +42,10 @@ cp_clusterHClustEuclideanDistDeepslit <- function(x,  method = "complete", JK = 
     distJK <- if (JK) {
       prora::dist_JK(x)
     } else {
-      dist(x)
+      stats::dist(x)
     }
 
-    bb <- hclust(distJK,method = method)
+    bb <- stats::hclust(distJK,method = method)
     #cat("MIN cluster size ", min(50, nrow(x)/10))
     k <- dynamicTreeCut::cutreeDynamic(
       bb,
@@ -54,7 +54,7 @@ cp_clusterHClustEuclideanDistDeepslit <- function(x,  method = "complete", JK = 
       distM = as.matrix(distJK),
       minClusterSize = min(50, nrow(x)/10) , verbose = 0)
 
-    dend <- as.dendrogram(bb)
+    dend <- stats::as.dendrogram(bb)
     clusterAssignment <- data.frame(protein_Id = rownames(x), Cluster =  k)
     nrCluster <-  max(k)
   }
@@ -80,7 +80,7 @@ cp_clusterDPAEuclideanDist <- function(mdata, Z = 1, JK = TRUE){
   distJK <- if (JK) {
     prora::dist_JK( mdata )
   } else {
-    dist(mdata)
+    stats::dist(mdata)
   }
   DPAresult <- DPAclustR::runDPAclustering(as.matrix(distJK), Z = Z, metric = "precomputed")
   k <- DPAresult$labels
@@ -93,7 +93,7 @@ cp_clusterDPAEuclideanDist <- function(mdata, Z = 1, JK = TRUE){
                                      popmin = 0,
                                      method = "average")
 
-    dend <- as.dendrogram(bb)
+    dend <- stats::as.dendrogram(bb)
   } else {
     dend <- NULL
   }
@@ -107,7 +107,7 @@ cp_clusterDPAEuclideanDist <- function(mdata, Z = 1, JK = TRUE){
 #' @param mdata data matrix
 #' @export
 #'
-cp_filterforNA <- function(mdata){
+cp_filterforNA <- function(mdata) {
   na <- apply(mdata, 1, function(x){sum(is.na(x))})
   nc <- ncol(mdata)
   mdata <- mdata[na < floor(0.5 * nc),]
@@ -119,7 +119,7 @@ cp_filterforNA <- function(mdata){
 #'
 cp_compClust <- function(clusterProfilerinput,
                          orgDB,
-                         universe, ont="BP" ){
+                         universe, ont="BP" ) {
   # map to entriz id's
   .ehandler = function(e) {
     warning("WARN :", e)
@@ -146,10 +146,10 @@ cp_addurls <- function(data, caption, coreEnrichment = "core_enrichment",
                     signif2  = c('NES', 'pvalue', 'FDR'),
                     gocarts = "http://amigo.geneontology.org/amigo/term/",
                     genecarts = "https://www.ncbi.nlm.nih.gov/gene/"
-                    ){
+                    ) {
   relevantResult <- data.frame(data)
   rownames(relevantResult) <- NULL
-  relevantResult <- dplyr::rename(relevantResult, FDR = p.adjust)
+  relevantResult <- dplyr::rename(relevantResult, FDR = .data$p.adjust)
   relevantResult$ID <-
     prora::DT_makeURLfor(relevantResult$ID, path = gocarts)
 

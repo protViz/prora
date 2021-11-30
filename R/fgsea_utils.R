@@ -35,8 +35,8 @@ fgsea_rank_contrasts <-
 #' @export
 #'
 fgsea_msigdb <- function(msigdbgeneset){
-  x1 <- msigdbgeneset %>% dplyr::select(gs_name, entrez_gene)
-  x1 <- x1 %>% group_by(gs_name) %>% nest()
+  x1 <- msigdbgeneset %>% dplyr::select(.data$gs_name, .data$entrez_gene)
+  x1 <- x1 %>% dplyr::group_by(.data$gs_name) %>% tidyr::nest()
   geneset <- lapply(x1$data , function(x){as.character(x[[1]])})
   names(geneset) <- x1$gs_name
   return(geneset)
@@ -46,7 +46,7 @@ fgsea_msigdb <- function(msigdbgeneset){
 #' @export
 fgsea_msigdb_collections <- function(
   msigCollection,
-  species = "Homo sapiens"){
+  species = "Homo sapiens") {
   genesetsC5 <- vector(mode = "list", length = nrow(msigCollection) )
   for (i in 1:nrow(msigCollection)) {
     genesetsC5[[i]] <- msigdbr::msigdbr(species = species,
@@ -125,13 +125,13 @@ run_fgsea_for_allGeneSets <- function(allrnk,
       next()
     }
     fgseaResult$GS <-  names(geneSets)[i]
-    relevantResult <- fgseaResult %>%
-      dplyr::relocate(nMoreExtreme ,
-                      pval,
-                      ES,
-                      leadingEdge,
-                      .after = size)
-    fgseaResult <- dplyr::relocate(fgseaResult, GS, .before = pathway)
+    relevantResult <-
+      dplyr::relocate(fgseaResult, .data$nMoreExtreme ,
+                      .data$pval,
+                      .data$ES,
+                      .data$leadingEdge,
+                      .after = .data$size)
+    fgseaResult <- dplyr::relocate(fgseaResult, .data$GS, .before = .data$pathway)
     #fgseaResult <- dplyr::mutate(fgseaResult, FDR = padj)
     fgseaRes[[i]] <- fgseaResult
 
