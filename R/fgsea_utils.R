@@ -48,7 +48,7 @@ fgsea_msigdb_collections <- function(
   species = "Homo sapiens"){
   genesetsC5 <- vector(mode = "list", length = nrow(msigCollection) )
   for (i in 1:nrow(msigCollection)) {
-    genesetsC5[[i]] <- msigdbr(species = species,
+    genesetsC5[[i]] <- msigdbr::msigdbr(species = species,
                                category = msigCollection$gs_cat[i],
                                subcategory = msigCollection$gs_subcat[i])
   }
@@ -56,6 +56,9 @@ fgsea_msigdb_collections <- function(
   fgseaGSlist <- lapply(genesetsC5 , fgsea_msigdb)
   return(fgseaGSlist)
 }
+
+
+
 
 #' convert leading edge column to char for writing to file
 #' @export

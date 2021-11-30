@@ -19,7 +19,7 @@
 getMsigdbGenesets <- function(msigCollection, species){
   genesetsC5 <- vector(mode = "list", length = nrow(msigCollection) )
   for (i in 1:nrow(msigCollection)) {
-    genesetsC5[[i]] <- msigdbr(species = species,
+    genesetsC5[[i]] <- msigdbr::msigdbr(species = species,
                                category = msigCollection$gs_cat[i],
                                subcategory = msigCollection$gs_subcat[i])
   }

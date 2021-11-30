@@ -22,13 +22,14 @@ Imports:
   AnnotationHub,
   clusterProfiler,
   dplyr,
+  DPAclustR,
   DT,
-  ggplot2,
   GO.db,
   dynamicTreeCut,
   fgsea,
   httr,
   magrittr,
+  matrixStats,
   msigdbr,
   org.Hs.eg.db,
   reactome.db,
@@ -36,19 +37,20 @@ Imports:
   rlang,
   S4Vectors,
   sigora,
-  slam,
   tibble,
   tidyr,
-  tidyverse,
-  writexl,
   UpSetR
 Remotes:
   bioc::3.13/clusterProfiler
-Suggests: 
+Suggests:
+  docopt,
+  bookdown,
+  DPAclustR,
   knitr,
   rmarkdown,
-  bookdown,
-  docopt
+  slam,
+  tidyverse,
+  writexl
 RoxygenNote: 7.1.2
 VignetteBuilder: knitr
 biocViews: MassSpectrometryData, ReproducibleResearch
