@@ -62,8 +62,8 @@ runSIGORA <-
     outdir <- paste0(outdir, "_", target)
     rmarkdownPath <- file.path(outdir, "sigora.Rmd")
 
-    if(!DEBUG){
-      if(!dir.exists(outdir)){
+    if (!DEBUG){
+      if (!dir.exists(outdir)){
         dir.create(outdir)
       }
 

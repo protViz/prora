@@ -127,10 +127,8 @@ sigoraWrappR <-
 #'
 sigora_upsetR <- function(sigora_res, GPStable, ...) {
   df <- .mergeR(sigora_res, GPStable)
-
   if (any(dim(df) == 0))
     return(NULL)
-
   toplot <- df %>%
     dplyr::select(!!sym("pathwayId"),!!sym("gene")) %>%
     dplyr::mutate(ID = seq_len(nrow(df))) %>%
@@ -141,6 +139,5 @@ sigora_upsetR <- function(sigora_res, GPStable, ...) {
 
   if (length(toplot) == 1)
     stop("UpSetR plot cannot be displayed. Only one pathway enriched.")
-
   UpSetR::upset(UpSetR::fromList(toplot), mb.ratio = c(0.7, 0.3), ... = ...)
 }
