@@ -22,7 +22,6 @@ Imports:
   AnnotationHub,
   clusterProfiler,
   dplyr,
-  DPAclustR,
   DT,
   GO.db,
   dynamicTreeCut,
