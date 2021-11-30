@@ -49,7 +49,7 @@ if (Sys.info()["sysname"] == "Windows") {
 
 
 for (i in seq_len(nrow(human))) {
-  i <- 1
+  print(i)
 
   path <- human$windowpaths[i]
   workunitid <- human$workunitid[i]
