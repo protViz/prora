@@ -6,6 +6,9 @@
 \usage{
 cp_filterforNA(mdata)
 }
+\arguments{
+\item{mdata}{data matrix}
+}
 \description{
 remove proteins with more NA's than in 60\% of samples
 }

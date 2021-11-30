@@ -56,19 +56,22 @@ sigoraWrappR <-
            greater_than = TRUE,
            idmap = sigora::idmap) {
     enriched <- NULL
-    if(greater_than) {
-      enriched <- data[data[, score_col] >= threshold,]
+    if (greater_than) {
+      enriched <- data[data[, score_col] >= threshold, ]
     } else {
-      enriched <- data[data[, score_col] < threshold,]
+      enriched <- data[data[, score_col] < threshold, ]
     }
     sigora_res <-
-      sigora::sigora(GPSrepo = GPSrepos,
-             level = 2,
-             queryList = enriched$UniprotID,
-             idmap = idmap)
+      sigora::sigora(
+        GPSrepo = GPSrepos,
+        level = 2,
+        queryList = enriched$UniprotID,
+        idmap = idmap
+      )
     ora_res <-
       sigora::ora(geneList = enriched$UniprotID,
-          GPSrepo = GPSrepos, idmap = idmap)
+                  GPSrepo = GPSrepos,
+                  idmap = idmap)
 
     output <- list(
       sigora = sigora_res,
@@ -90,7 +93,8 @@ sigoraWrappR <-
   colnames(tab1)[1] <- "pathwayId"
   colnames(tab2) <- c("gene", "fc")
   tab3 <- dplyr::inner_join(GPStable, tab1)
-  tab4 <- dplyr::inner_join(tab3, tab2) %>% filter(!!sym("Bonferroni") < 0.05)
+  tab4 <-
+    dplyr::inner_join(tab3, tab2) %>% filter(!!sym("Bonferroni") < 0.05)
   return(tab4)
 }
 
@@ -124,19 +128,19 @@ sigoraWrappR <-
 sigora_upsetR <- function(sigora_res, GPStable, ...) {
   df <- .mergeR(sigora_res, GPStable)
 
-  if(any(dim(df)==0)) return(NULL)
+  if (any(dim(df) == 0))
+    return(NULL)
 
   toplot <- df %>%
-    dplyr::select(!!sym("pathwayId"), !!sym("gene")) %>%
+    dplyr::select(!!sym("pathwayId"),!!sym("gene")) %>%
     dplyr::mutate(ID = seq_len(nrow(df))) %>%
-    tidyr::spread(!!sym("pathwayId"), !!sym("gene")) %>%
+    tidyr::spread(!!sym("pathwayId"),!!sym("gene")) %>%
     dplyr::select(-!!sym("ID")) %>%
     as.list() %>%
     lapply(na.omit)
 
-  if(length(toplot)==1) stop("UpSetR plot cannot be displayed. Only one pathway enriched.")
+  if (length(toplot) == 1)
+    stop("UpSetR plot cannot be displayed. Only one pathway enriched.")
 
-  UpSetR::fromList(toplot) %>%
-    UpSetR::upset(mb.ratio = c(0.7, 0.3), ...=...)
+  UpSetR::upset(UpSetR::fromList(toplot), mb.ratio = c(0.7, 0.3), ... = ...)
 }
-

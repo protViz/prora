@@ -31,6 +31,7 @@ fgsea_rank_contrasts <-
 
 
 #' converts msigdb geneset to fgsea compatible
+#' @param msigdbgeneset msigdb geneset
 #' @export
 #'
 fgsea_msigdb <- function(msigdbgeneset){

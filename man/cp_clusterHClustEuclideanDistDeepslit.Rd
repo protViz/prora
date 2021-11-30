@@ -13,6 +13,14 @@ cp_clusterHClustEuclideanDistDeepslit(x, method = "complete", JK = TRUE)
 
 \item{JK}{should jack knife resampling be used (defaul TRUE)}
 }
+\value{
+list
+\itemize{
+\item dendrogram - instance of class dendrogram
+\item cluster assignments
+\item nrCluster number of clusters
+}
+}
 \description{
 cluster using hclust and deepsplit
 }

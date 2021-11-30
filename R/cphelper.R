@@ -27,7 +27,7 @@ cp_clusterHClustEuclideanDist <- function(x,
 #' @param x matrix with data
 #' @param method linkage method (hclust argument)
 #' @param JK should jack knife resampling be used (defaul TRUE)
-#' @value list
+#' @return list
 #' \itemize{
 #' \item dendrogram - instance of class dendrogram
 #' \item cluster assignments
@@ -104,6 +104,7 @@ cp_clusterDPAEuclideanDist <- function(mdata, Z = 1, JK = TRUE){
 
 
 #' remove proteins with more NA's than in 60\% of samples
+#' @param mdata data matrix
 #' @export
 #'
 cp_filterforNA <- function(mdata){

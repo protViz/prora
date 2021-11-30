@@ -6,6 +6,9 @@
 \usage{
 fgsea_msigdb(msigdbgeneset)
 }
+\arguments{
+\item{msigdbgeneset}{msigdb geneset}
+}
 \description{
 converts msigdb geneset to fgsea compatible
 }
