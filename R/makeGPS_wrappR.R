@@ -102,7 +102,7 @@ makeGPS_wrappR <- function(ids, keytype = "UNIPROT",
   gp_db <- org.Hs.eg.db
   target_column <- "PATH"
 
-  pn_table <- sigora::kegH$pathwaydescriptions %>%
+  pn_table <- sigora::load_data('kegH')$pathwaydescriptions %>%
     dplyr::rename(pathwayID = !!sym("pwys"), pathwayName = !!sym("nms")) %>%
     mutate(pathwayID = substr(!!sym("pathwayID"), start = 4, stop = 8))
 

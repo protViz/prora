@@ -51,7 +51,7 @@ sigoraWrappR <-
   function(data,
            threshold = 0.5,
            score_col = "",
-           GPSrepos = sigora::kegH,
+           GPSrepos = sigora::load_data('kegH'),
            db = "",
            greater_than = TRUE,
            idmap = sigora::idmap) {

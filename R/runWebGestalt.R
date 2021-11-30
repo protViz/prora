@@ -43,7 +43,8 @@ runWebGestaltGSEA <- function(data,
                     contrast_name = fpath)
 {
   outdir <- file.path(outdir, target)
-  fpath <- WebGestaltR:::sanitizeFileName(fpath)
+
+  fpath <- gsub("[[:punct:]]", "_", fpath)
 
   if (!dir.exists(outdir)) {
     dir.create(outdir, recursive = TRUE)
@@ -69,7 +70,7 @@ runWebGestaltGSEA <- function(data,
   message("storing ranktable to file: ")
   readr::write_tsv(ranktable, file = rankTable, col_names = FALSE)
 
-  if(is.null(GSEA_res)){
+  if (is.null(GSEA_res)) {
     warning("!!! no results returned by WebGestaltR !!!", GSEA_res)
     return(NULL)
   }
