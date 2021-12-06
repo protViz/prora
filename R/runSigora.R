@@ -2,10 +2,11 @@
 #' @param data data
 #' @param ID_col column name containing IDs
 #' @param score_col column name containing estimates
-#' @param fc_threshold threshold for estimate
+#' @param threshold threshold for estimate
 #' @param greater flag whether to filter > threshold or < threshold
 #' @param target target database, default: "GO"
 #' @param outdir output directory
+#' @param DEBUG defualt FALSE, if TRUE, skip markdown generation
 #' @export
 #'
 #' @examples
@@ -30,10 +31,10 @@ runSIGORA <-
            outdir = "sigORA",
            greater = TRUE,
            myGPSrepo = NULL,
-           DEBUG=FALSE
+           DEBUG = FALSE
            ) {
 
-    if(is.null(myGPSrepo)){
+    if (is.null(myGPSrepo)) {
       myGPSrepo <-
         makeGPS_wrappR(data[[ID_col]], target = target)
     }
@@ -62,8 +63,8 @@ runSIGORA <-
     outdir <- paste0(outdir, "_", target)
     rmarkdownPath <- file.path(outdir, "sigora.Rmd")
 
-    if (!DEBUG){
-      if (!dir.exists(outdir)){
+    if (!DEBUG) {
+      if (!dir.exists(outdir)) {
         dir.create(outdir)
       }
 
@@ -71,10 +72,10 @@ runSIGORA <-
         find.package("prora"),
         "rmarkdown_reports/sigora.Rmd"
       )
-      if(!file.copy(rmarkdownPath_src,
+      if (!file.copy(rmarkdownPath_src,
                     rmarkdownPath,
                     overwrite = TRUE
-      )){
+      )) {
         warning("could not copy",rmarkdownPath_src, "to ", rmarkdownPath)
       }
 

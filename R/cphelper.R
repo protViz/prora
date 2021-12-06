@@ -114,7 +114,11 @@ cp_filterforNA <- function(mdata) {
   return(mdata)
 }
 
-#' compute clusters
+#' same as clusterProfiler::compareCluster but with defaults and error handling
+#' @param clusterProfilerinput
+#' @param orgDB organizm db
+#' @param universe see \code{\link[clusterProfiler]{compareCluster}}
+#' @param ont see \code{\link[clusterProfiler]{compareCluster}}
 #' @export
 #'
 cp_compClust <- function(clusterProfilerinput,
@@ -141,8 +145,14 @@ cp_compClust <- function(clusterProfilerinput,
 
 
 #' add uris to to cp table outputs
+#' @param data dataframe
+#' @param caption table caption
+#' @param coreEnrichment column with core enrichments
+#' @param signif2 which columns contains digits to round to significance 2.
+#' @param gocarts default http://amigo.geneontology.org/amigo/term/
+#' @param genecarts default https://www.ncbi.nlm.nih.gov/gene/
 #' @export
-cp_addurls <- function(data, caption, coreEnrichment = "core_enrichment",
+cp_addurls_GO <- function(data, caption, coreEnrichment = "core_enrichment",
                     signif2  = c('NES', 'pvalue', 'FDR'),
                     gocarts = "http://amigo.geneontology.org/amigo/term/",
                     genecarts = "https://www.ncbi.nlm.nih.gov/gene/"

@@ -1,7 +1,7 @@
 #' map_ids_uniprot
 #'
 #' Access to uniprot web API. For more detail see https://www.uniprot.org/help/uploadlists
-#'
+#' @family id_mapping
 #' @param data data
 #' @param ID_col column name containing id's
 #' @param from id type
@@ -72,9 +72,13 @@ map_ids_uniprot <- function(data,
 }
 
 #' map id Annotation Hub
-#'
+#' @family id_mapping
+#' @param x data frame
+#' @param ID_col column with ID's
+#' @param species default "Homo sapiens"
 #' @export
 #' @examples
+#'
 #'
 #' library(tidyverse)
 #' fc_estimates <- prora::exampleContrastData
@@ -97,8 +101,11 @@ map_ids_annotationHub <- function(x, ID_col = "UniprotID", species =  c("Homo sa
 
 
 #' map ids two ways
+#' @family id_mapping
 #' @export
-#'
+#' @param clusterAssignment data.frame
+#' @param ID_col column with IDS
+#' @param species default "Homo sapiens"
 map_ids_2ways <- function(clusterAssignment,
                           ID_col = "UniprotID",
                           species =  c("Homo sapiens", "Mus musculus"))

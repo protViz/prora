@@ -30,6 +30,19 @@ NULL
 #' @usage data(GPStab)
 NULL
 
+#' Examplary GPS repository
+#' @docType data
+#' @name myGPSrepo
+#' @usage data(myGPSrepo)
+NULL
+
+#' Examplary GPS repository
+#' @docType data
+#' @name myGPSrepo
+#' @usage data(myGPSrepo)
+NULL
+
+
 #' Exemplary GSEA output
 #'
 #' GSEA output from the \code{run_GSEA.R} script provided in the \code{inst/RunScripts/} directory
@@ -65,3 +78,4 @@ NULL
 #' @name sigora_example
 #' @usage data(sigora_example)
 NULL
+

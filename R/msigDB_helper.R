@@ -1,12 +1,13 @@
 #' getMsigdbGenesets
 #' @export
 #' @examples
-#'
+#' library(tidyverse)
+#' library(msigdbr)
 #' msigdbr::msigdbr_species()
 #' species <- "Homo sapiens"
 #' species <- "Mus musculus"
 #'
-#' hallmark <- {msigdbr_collections() %>% filter(.data$gs_cat == "H")}
+#' hallmark <- msigdbr_collections() %>% filter(.data$gs_cat == "H")
 #'
 #' #hallmark$gs_subcat <- "HALLMARK"
 #' C5 <- bind_rows( {msigdbr_collections() %>% filter(.data$gs_cat == "C5") %>% filter(grepl("^GO:", .data$gs_subcat))},

@@ -161,6 +161,8 @@ runWebGestaltGSEA <- function(data,
 #' @param outdir output directory
 #' @param greater indicating direction of threshold
 #' @param interestGeneType what type of identifier default : "uniprotswissprot"
+#' @param subdir subdirectory name
+#' @param contrast_name default fpath
 #'
 #' @importFrom WebGestaltR WebGestaltR
 #' @export
@@ -178,12 +180,12 @@ runWebGestaltORA <- function(data,
                              interestGeneType = "uniprotswissprot",
                              contrast_name = fpath) {
 
-  if(is.null(subdir_name)){
+  if (is.null(subdir_name)) {
     subdir_name <- paste0("fc_threshold_",abs(threshold),"_is_greater_",greater)
   }
   subdir_path <- file.path(outdir, subdir_name)
 
-  if(!dir.exists(subdir_path)){
+  if (!dir.exists(subdir_path)) {
     message("created directory : ", subdir_path, "\n\n")
     dir.create(subdir_path)
   }

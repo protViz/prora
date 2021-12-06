@@ -1,5 +1,9 @@
 #' get fgsea compatible rank list from data.frame
 #' @export
+#' @family fgsea
+#' @param df data frame
+#' @param ids column with ids
+#' @param score column with scores
 fgsea_rank <- function(df,
                        ids = "X1",
                        score = "X2"){
@@ -11,6 +15,11 @@ fgsea_rank <- function(df,
 
 #' convert data frame into list of ranks
 #' @export
+#' @family fgsea
+#' @param df data frame
+#' @param ids column with ids
+#' @param score column with scores
+#' @param contrast column with contrast name.
 fgsea_rank_contrasts <-
   function(df,
            ids = "X1",
@@ -33,7 +42,7 @@ fgsea_rank_contrasts <-
 #' converts msigdb geneset to fgsea compatible
 #' @param msigdbgeneset msigdb geneset
 #' @export
-#'
+#' @family fgsea
 fgsea_msigdb <- function(msigdbgeneset){
   x1 <- msigdbgeneset %>% dplyr::select(.data$gs_name, .data$entrez_gene)
   x1 <- x1 %>% dplyr::group_by(.data$gs_name) %>% tidyr::nest()
@@ -44,6 +53,11 @@ fgsea_msigdb <- function(msigdbgeneset){
 
 #' retrieve several msigdbr collections as fgsea compatible lists
 #' @export
+#' @family fgsea
+#' @param msigCollection msigdb collection
+#' @param species species default "Homo sapiens"
+#' @return list of colletions
+#'
 fgsea_msigdb_collections <- function(
   msigCollection,
   species = "Homo sapiens") {
@@ -62,6 +76,9 @@ fgsea_msigdb_collections <- function(
 
 
 #' convert leading edge column to char for writing to file
+#' @param xdata data.frame
+#' @param column column name
+#' @family fgsea
 #' @export
 fgsea_leading_edge_too_char <- function(xdata, column = "leadingEdge"){
   xdata <- xdata %>% mutate(!! column :=
@@ -73,6 +90,7 @@ fgsea_leading_edge_too_char <- function(xdata, column = "leadingEdge"){
 
 #' run for all contrasts
 #' @export
+#' @family fgsea
 #' @param allrnk list of rank arrays
 #' @param geneSet single list geneset (e.g. )
 #' @param nperm number permutations
@@ -102,6 +120,7 @@ run_fgsea_for_allContrasts <- function(allrnk,
 
 #' used to analyse a single contrast with various genesets
 #' @export
+#' @family fgsea
 #' @param allrnk ranklist
 #' @param geneSets list of gene sets
 #' @param nperm number of permutations
