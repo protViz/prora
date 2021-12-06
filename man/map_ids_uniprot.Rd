@@ -36,3 +36,10 @@ map_ids_uniprot( filtered_dd )
 
 
 }
+\seealso{
+Other id_mapping: 
+\code{\link{map_ids_2ways}()},
+\code{\link{map_ids_annotationHub}()},
+\code{\link{mapthe}()}
+}
+\concept{id_mapping}

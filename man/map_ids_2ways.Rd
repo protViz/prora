@@ -10,6 +10,20 @@ map_ids_2ways(
   species = c("Homo sapiens", "Mus musculus")
 )
 }
+\arguments{
+\item{clusterAssignment}{data.frame}
+
+\item{ID_col}{column with IDS}
+
+\item{species}{default "Homo sapiens"}
+}
 \description{
 map ids two ways
 }
+\seealso{
+Other id_mapping: 
+\code{\link{map_ids_annotationHub}()},
+\code{\link{map_ids_uniprot}()},
+\code{\link{mapthe}()}
+}
+\concept{id_mapping}

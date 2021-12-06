@@ -6,6 +6,11 @@
 \usage{
 DT_makeURLfor(x, path)
 }
+\arguments{
+\item{x}{eg. uniprot id's P94485}
+
+\item{path}{e.g. https://www.uniprot.org/uniprot/}
+}
 \description{
 create url for data table
 }

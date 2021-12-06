@@ -12,3 +12,13 @@ fgsea_msigdb(msigdbgeneset)
 \description{
 converts msigdb geneset to fgsea compatible
 }
+\seealso{
+Other fgsea: 
+\code{\link{fgsea_leading_edge_too_char}()},
+\code{\link{fgsea_msigdb_collections}()},
+\code{\link{fgsea_rank_contrasts}()},
+\code{\link{fgsea_rank}()},
+\code{\link{run_fgsea_for_allContrasts}()},
+\code{\link{run_fgsea_for_allGeneSets}()}
+}
+\concept{fgsea}

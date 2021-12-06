@@ -6,6 +6,24 @@
 \usage{
 fgsea_msigdb_collections(msigCollection, species = "Homo sapiens")
 }
+\arguments{
+\item{msigCollection}{msigdb collection}
+
+\item{species}{species default "Homo sapiens"}
+}
+\value{
+list of colletions
+}
 \description{
 retrieve several msigdbr collections as fgsea compatible lists
 }
+\seealso{
+Other fgsea: 
+\code{\link{fgsea_leading_edge_too_char}()},
+\code{\link{fgsea_msigdb}()},
+\code{\link{fgsea_rank_contrasts}()},
+\code{\link{fgsea_rank}()},
+\code{\link{run_fgsea_for_allContrasts}()},
+\code{\link{run_fgsea_for_allGeneSets}()}
+}
+\concept{fgsea}

@@ -24,3 +24,12 @@ list
 \description{
 cluster using hclust and deepsplit
 }
+\seealso{
+Other clusterProfiler: 
+\code{\link{cp_addurls_GO}()},
+\code{\link{cp_clusterDPAEuclideanDist}()},
+\code{\link{cp_clusterHClustEuclideanDist}()},
+\code{\link{cp_compClust}()},
+\code{\link{cp_filterforNA}()}
+}
+\concept{clusterProfiler}

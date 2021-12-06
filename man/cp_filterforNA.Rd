@@ -12,3 +12,12 @@ cp_filterforNA(mdata)
 \description{
 remove proteins with more NA's than in 60\% of samples
 }
+\seealso{
+Other clusterProfiler: 
+\code{\link{cp_addurls_GO}()},
+\code{\link{cp_clusterDPAEuclideanDist}()},
+\code{\link{cp_clusterHClustEuclideanDistDeepslit}()},
+\code{\link{cp_clusterHClustEuclideanDist}()},
+\code{\link{cp_compClust}()}
+}
+\concept{clusterProfiler}

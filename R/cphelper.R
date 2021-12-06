@@ -3,6 +3,11 @@
 # dendrogram
 
 #' cluster using hclust
+#' @family clusterProfiler
+#' @param x data matrix
+#' @param nrCluster number of clusters
+#' @param method default complete
+#' @param JK jack knife resmapling default TRUE
 #' @export
 #'
 cp_clusterHClustEuclideanDist <- function(x,
@@ -23,6 +28,7 @@ cp_clusterHClustEuclideanDist <- function(x,
 }
 
 #' cluster using hclust and deepsplit
+#' @family clusterProfiler
 #' @export
 #' @param x matrix with data
 #' @param method linkage method (hclust argument)
@@ -62,7 +68,7 @@ cp_clusterHClustEuclideanDistDeepslit <- function(x,  method = "complete", JK = 
 }
 
 #' Cluster using DPA
-#'
+#' @family clusterProfiler
 #' @param mdata, input data
 #' @param Z, the number of standard deviations fixing the level of
 #'            statistical confidence at which one decides to consider
@@ -104,6 +110,7 @@ cp_clusterDPAEuclideanDist <- function(mdata, Z = 1, JK = TRUE){
 
 
 #' remove proteins with more NA's than in 60\% of samples
+#' @family clusterProfiler
 #' @param mdata data matrix
 #' @export
 #'
@@ -115,6 +122,7 @@ cp_filterforNA <- function(mdata) {
 }
 
 #' same as clusterProfiler::compareCluster but with defaults and error handling
+#' @family clusterProfiler
 #' @param clusterProfilerinput
 #' @param orgDB organizm db
 #' @param universe see \code{\link[clusterProfiler]{compareCluster}}
@@ -145,6 +153,7 @@ cp_compClust <- function(clusterProfilerinput,
 
 
 #' add uris to to cp table outputs
+#' @family clusterProfiler
 #' @param data dataframe
 #' @param caption table caption
 #' @param coreEnrichment column with core enrichments

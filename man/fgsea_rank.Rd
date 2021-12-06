@@ -6,6 +6,23 @@
 \usage{
 fgsea_rank(df, ids = "X1", score = "X2")
 }
+\arguments{
+\item{df}{data frame}
+
+\item{ids}{column with ids}
+
+\item{score}{column with scores}
+}
 \description{
 get fgsea compatible rank list from data.frame
 }
+\seealso{
+Other fgsea: 
+\code{\link{fgsea_leading_edge_too_char}()},
+\code{\link{fgsea_msigdb_collections}()},
+\code{\link{fgsea_msigdb}()},
+\code{\link{fgsea_rank_contrasts}()},
+\code{\link{run_fgsea_for_allContrasts}()},
+\code{\link{run_fgsea_for_allGeneSets}()}
+}
+\concept{fgsea}

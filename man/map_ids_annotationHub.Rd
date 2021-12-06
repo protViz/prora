@@ -10,10 +10,18 @@ map_ids_annotationHub(
   species = c("Homo sapiens", "Mus musculus")
 )
 }
+\arguments{
+\item{x}{data frame}
+
+\item{ID_col}{column with ID's}
+
+\item{species}{default "Homo sapiens"}
+}
 \description{
 map id Annotation Hub
 }
 \examples{
+
 
 library(tidyverse)
 fc_estimates <- prora::exampleContrastData
@@ -25,3 +33,10 @@ tmp <- map_ids_annotationHub(filtered_dd, species = "Homo sapiens")
 sum(is.na(tmp$P_ENTREZGENEID ))
 
 }
+\seealso{
+Other id_mapping: 
+\code{\link{map_ids_2ways}()},
+\code{\link{map_ids_uniprot}()},
+\code{\link{mapthe}()}
+}
+\concept{id_mapping}

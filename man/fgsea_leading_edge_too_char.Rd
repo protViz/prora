@@ -6,6 +6,21 @@
 \usage{
 fgsea_leading_edge_too_char(xdata, column = "leadingEdge")
 }
+\arguments{
+\item{xdata}{data.frame}
+
+\item{column}{column name}
+}
 \description{
 convert leading edge column to char for writing to file
 }
+\seealso{
+Other fgsea: 
+\code{\link{fgsea_msigdb_collections}()},
+\code{\link{fgsea_msigdb}()},
+\code{\link{fgsea_rank_contrasts}()},
+\code{\link{fgsea_rank}()},
+\code{\link{run_fgsea_for_allContrasts}()},
+\code{\link{run_fgsea_for_allGeneSets}()}
+}
+\concept{fgsea}

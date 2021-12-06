@@ -25,11 +25,13 @@ runSIGORA(
 
 \item{ID_col}{column name containing IDs}
 
+\item{threshold}{threshold for estimate}
+
 \item{outdir}{output directory}
 
 \item{greater}{flag whether to filter > threshold or < threshold}
 
-\item{fc_threshold}{threshold for estimate}
+\item{DEBUG}{defualt FALSE, if TRUE, skip markdown generation}
 }
 \description{
 workflow for sigORA

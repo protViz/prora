@@ -2,10 +2,26 @@
 % Please edit documentation in R/cphelper.R
 \name{cp_compClust}
 \alias{cp_compClust}
-\title{compute clusters}
+\title{same as clusterProfiler::compareCluster but with defaults and error handling}
 \usage{
 cp_compClust(clusterProfilerinput, orgDB, universe, ont = "BP")
 }
-\description{
-compute clusters
+\arguments{
+\item{orgDB}{organizm db}
+
+\item{universe}{see \code{\link[clusterProfiler]{compareCluster}}}
+
+\item{ont}{see \code{\link[clusterProfiler]{compareCluster}}}
 }
+\description{
+same as clusterProfiler::compareCluster but with defaults and error handling
+}
+\seealso{
+Other clusterProfiler: 
+\code{\link{cp_addurls_GO}()},
+\code{\link{cp_clusterDPAEuclideanDist}()},
+\code{\link{cp_clusterHClustEuclideanDistDeepslit}()},
+\code{\link{cp_clusterHClustEuclideanDist}()},
+\code{\link{cp_filterforNA}()}
+}
+\concept{clusterProfiler}

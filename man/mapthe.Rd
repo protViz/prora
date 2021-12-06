@@ -6,6 +6,16 @@
 \usage{
 mapthe(scaledM, cluster)
 }
+\arguments{
+\item{matrix}{with rownames which will be mapped}
+}
 \description{
 helper function mapping clusters
 }
+\seealso{
+Other id_mapping: 
+\code{\link{map_ids_2ways}()},
+\code{\link{map_ids_annotationHub}()},
+\code{\link{map_ids_uniprot}()}
+}
+\concept{id_mapping}

@@ -10,9 +10,9 @@ makeGPS_wrappR(ids, keytype = "UNIPROT", target = c("KEGG", "GO", "reactome"))
 \arguments{
 \item{ids}{Character vector of gene symbols (experimental background)}
 
-\item{target}{Character, database to be used to generate GPS repository ("KEGG", "GO", "reactome")}
+\item{keytype}{default UNIPROT}
 
-\item{dev}{Logical, if \code{TRUE} the function returns the \code{data.frame} \code{makeGPS} needs as input}
+\item{target}{Character, database to be used to generate GPS repository ("KEGG", "GO", "reactome")}
 }
 \value{
 A GPS repository based on the self specified background in \code{ids}, see \code{\link[sigora]{makeGPS}} for more information.

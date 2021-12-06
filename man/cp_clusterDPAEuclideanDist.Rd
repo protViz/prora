@@ -25,3 +25,12 @@ a cluster meaningful. Default value is set to 1.}
 \description{
 Cluster using DPA
 }
+\seealso{
+Other clusterProfiler: 
+\code{\link{cp_addurls_GO}()},
+\code{\link{cp_clusterHClustEuclideanDistDeepslit}()},
+\code{\link{cp_clusterHClustEuclideanDist}()},
+\code{\link{cp_compClust}()},
+\code{\link{cp_filterforNA}()}
+}
+\concept{clusterProfiler}

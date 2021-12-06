@@ -26,3 +26,13 @@ run_fgsea_for_allGeneSets(
 \description{
 used to analyse a single contrast with various genesets
 }
+\seealso{
+Other fgsea: 
+\code{\link{fgsea_leading_edge_too_char}()},
+\code{\link{fgsea_msigdb_collections}()},
+\code{\link{fgsea_msigdb}()},
+\code{\link{fgsea_rank_contrasts}()},
+\code{\link{fgsea_rank}()},
+\code{\link{run_fgsea_for_allContrasts}()}
+}
+\concept{fgsea}
