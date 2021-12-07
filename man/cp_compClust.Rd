@@ -4,9 +4,11 @@
 \alias{cp_compClust}
 \title{same as clusterProfiler::compareCluster but with defaults and error handling}
 \usage{
-cp_compClust(clusterProfilerinput, orgDB, universe, ont = "BP")
+cp_compClust(geneClusters, orgDB, universe, ont = "BP")
 }
 \arguments{
+\item{geneClusters}{a list of entrez gene id.}
+
 \item{orgDB}{organizm db}
 
 \item{universe}{see \code{\link[clusterProfiler]{compareCluster}}}

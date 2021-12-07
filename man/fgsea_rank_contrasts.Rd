@@ -24,6 +24,7 @@ Other fgsea:
 \code{\link{fgsea_msigdb_collections}()},
 \code{\link{fgsea_msigdb}()},
 \code{\link{fgsea_rank}()},
+\code{\link{getMsigdbGenesets}()},
 \code{\link{run_fgsea_for_allContrasts}()},
 \code{\link{run_fgsea_for_allGeneSets}()}
 }

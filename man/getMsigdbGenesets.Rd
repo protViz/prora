@@ -6,6 +6,11 @@
 \usage{
 getMsigdbGenesets(msigCollection, species)
 }
+\arguments{
+\item{msigCollection}{data.frema with columns gs_cat, gs_subcat}
+
+\item{species}{e.g. "Homo sapiens"}
+}
 \description{
 getMsigdbGenesets
 }
@@ -27,3 +32,14 @@ C5
 fgseaGSlist <- prora::getMsigdbGenesets(C5, species)
 
 }
+\seealso{
+Other fgsea: 
+\code{\link{fgsea_leading_edge_too_char}()},
+\code{\link{fgsea_msigdb_collections}()},
+\code{\link{fgsea_msigdb}()},
+\code{\link{fgsea_rank_contrasts}()},
+\code{\link{fgsea_rank}()},
+\code{\link{run_fgsea_for_allContrasts}()},
+\code{\link{run_fgsea_for_allGeneSets}()}
+}
+\concept{fgsea}

@@ -1,4 +1,7 @@
 #' getMsigdbGenesets
+#' @family fgsea
+#' @param msigCollection data.frema with columns gs_cat, gs_subcat
+#' @param species e.g. "Homo sapiens"
 #' @export
 #' @examples
 #' library(tidyverse)

@@ -7,7 +7,9 @@
 mapthe(scaledM, cluster)
 }
 \arguments{
-\item{matrix}{with rownames which will be mapped}
+\item{scaledM}{matrix with rownames which will be mapped}
+
+\item{cluster}{array with names which will be mapped}
 }
 \description{
 helper function mapping clusters

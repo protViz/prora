@@ -31,7 +31,9 @@ runSIGORA(
 
 \item{greater}{flag whether to filter > threshold or < threshold}
 
-\item{DEBUG}{defualt FALSE, if TRUE, skip markdown generation}
+\item{myGPSrepo}{gps repository}
+
+\item{DEBUG}{default FALSE, if TRUE, skip markdown generation}
 }
 \description{
 workflow for sigORA

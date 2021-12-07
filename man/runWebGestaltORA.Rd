@@ -41,11 +41,11 @@ runWebGestaltORA(
 
 \item{outdir}{output directory}
 
+\item{subdir_name}{subdirectory name}
+
 \item{interestGeneType}{what type of identifier default : "uniprotswissprot"}
 
 \item{contrast_name}{default fpath}
-
-\item{subdir}{subdirectory name}
 }
 \description{
 workflow for ORA

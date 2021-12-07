@@ -37,8 +37,8 @@ plotK <- function(scaledM, k , idx ){
 
 #' helper function mapping clusters
 #' @family id_mapping
-#' @param matrix with rownames which will be mapped
-#' @param cluster
+#' @param scaledM matrix with rownames which will be mapped
+#' @param cluster array with names which will be mapped
 #' @export
 #'
 mapthe <- function(scaledM, cluster){

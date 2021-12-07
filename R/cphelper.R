@@ -123,13 +123,13 @@ cp_filterforNA <- function(mdata) {
 
 #' same as clusterProfiler::compareCluster but with defaults and error handling
 #' @family clusterProfiler
-#' @param clusterProfilerinput
+#' @param geneClusters a list of entrez gene id.
 #' @param orgDB organizm db
 #' @param universe see \code{\link[clusterProfiler]{compareCluster}}
 #' @param ont see \code{\link[clusterProfiler]{compareCluster}}
 #' @export
 #'
-cp_compClust <- function(clusterProfilerinput,
+cp_compClust <- function(geneClusters,
                          orgDB,
                          universe, ont="BP" ) {
   # map to entriz id's
@@ -140,7 +140,7 @@ cp_compClust <- function(clusterProfilerinput,
   }
 
   clustProf = tryCatch(clusterProfiler::compareCluster(
-    clusterProfilerinput,
+    geneClusters,
     fun = "enrichGO",
     OrgDb =  orgDB,
     ont = ont,

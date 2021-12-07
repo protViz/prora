@@ -161,7 +161,7 @@ runWebGestaltGSEA <- function(data,
 #' @param outdir output directory
 #' @param greater indicating direction of threshold
 #' @param interestGeneType what type of identifier default : "uniprotswissprot"
-#' @param subdir subdirectory name
+#' @param subdir_name subdirectory name
 #' @param contrast_name default fpath
 #'
 #' @importFrom WebGestaltR WebGestaltR

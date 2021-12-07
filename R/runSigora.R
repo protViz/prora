@@ -6,7 +6,8 @@
 #' @param greater flag whether to filter > threshold or < threshold
 #' @param target target database, default: "GO"
 #' @param outdir output directory
-#' @param DEBUG defualt FALSE, if TRUE, skip markdown generation
+#' @param myGPSrepo gps repository
+#' @param DEBUG default FALSE, if TRUE, skip markdown generation
 #' @export
 #'
 #' @examples
