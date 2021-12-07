@@ -14,8 +14,10 @@
 #'
 #' data("exampleUniprotIDs", package = "prora")
 #' myGPSrepo <- makeGPS_wrappR(ids = exampleUniprotIDs)
+#' \dontrun{
 #' myGPSrepo <- makeGPS_wrappR(ids = exampleUniprotIDs, target = "GO")
 #' myGPSrepo <- makeGPS_wrappR(ids = exampleUniprotIDs, target = "react")
+#' }
 makeGPS_wrappR <- function(ids, keytype = "UNIPROT",
                            target = c("KEGG", "GO", "reactome")) {
   target <- match.arg(target)
@@ -44,8 +46,8 @@ makeGPS_wrappR <- function(ids, keytype = "UNIPROT",
 .get_tables_ractome_GO <- function(ids, keytype = "UNIPROT", target = c("reactome",  "GO")) {
   target <- match.arg(target)
   if (target == "reactome") {
-    gp_db <- reactome.db
-    pn_db <- reactome.db
+    gp_db <- reactome.db::reactome.db
+    pn_db <- reactome.db::reactome.db
 
     ids <- AnnotationDbi::mapIds(
       org.Hs.eg.db,
@@ -60,7 +62,9 @@ makeGPS_wrappR <- function(ids, keytype = "UNIPROT",
     k1 = "PATHID"
     k2 = "PATHNAME"
   } else if (target == "GO") {
+    library(org.Hs.eg.db)
     gp_db <- org.Hs.eg.db
+    library(GO.db)
     pn_db <- GO.db
 
     target_column = "GO"

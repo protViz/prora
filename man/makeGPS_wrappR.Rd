@@ -25,8 +25,10 @@ Function for generating background GPS repository for sigora and ora
 
 data("exampleUniprotIDs", package = "prora")
 myGPSrepo <- makeGPS_wrappR(ids = exampleUniprotIDs)
+\dontrun{
 myGPSrepo <- makeGPS_wrappR(ids = exampleUniprotIDs, target = "GO")
 myGPSrepo <- makeGPS_wrappR(ids = exampleUniprotIDs, target = "react")
+}
 }
 \seealso{
 \code{\link[sigora]{makeGPS}}
