@@ -10,12 +10,31 @@ editor_options:
   chunk_output_type: console
 ---
 
+<style type="text/css">
+  body{
+    font-size: 12pt;
+    }
+</style>
+
 ```{r setup, include=FALSE}
 
 knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE )
 resultsV2 <- params$resultsxx
 parameterV2 <- params$parametersxx
 ```
+
+Cluster profiling aims to group the proteins based on protein expression information. More biological conditions in your dataset lead to more informative clusterings.
+
+```{r warnings, results="asis"}
+
+if (nrow(resultsV2$prot$factors()) < 8){
+	cat('<font color="red">WARNING: the number of samples in your dataset is less than 8, possibly because the number of conditions is low.\n Although the clustering algorithm will still produce clusters, these will arise because of random correlation among the proteins.</font>\n\n')
+} else cat("")
+if (resultsV2$nrCluster == 1 || resultsV2$dataDims["nrPortNoNas"] < 2000){
+	cat('<font color="red">WARNING: be aware that the clustering algorithm can not explain all data variability, if the number of proteins is not enough to get statistically significant results.\n If the clustering results do not discriminate between the expected classes consider to increase the number of proteins if possible.</font>\n\n')
+} else cat("")
+```
+
 
 
 # Run Summary
