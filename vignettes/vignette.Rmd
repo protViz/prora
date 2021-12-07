@@ -16,7 +16,6 @@ vignette: >
 
 
 ```{r setup, include=FALSE}
-library(BiocStyle)
 library(tidyverse)
 library(prora)
 knitr::opts_chunk$set(
@@ -37,11 +36,11 @@ options(width = 80)
 A plethora of R packages exist on CRAN and Bioconductor to perform over-representation 
 analysis (ORA) and gene set enrichment analysis (GSEA). However, consistency in the 
 underlying nomenclature for specific analyses and user friendly implementation is 
-still lacking. `prora` aims at unifying ID mapping and enrichment analysis 
+still lacking. _prora_ aims at unifying ID mapping and enrichment analysis 
 in a syntactically coherent and intuitive way, while ensuring reproducibility of 
-results. `prora` primarily consists of wrapper functions around the 
-`r CRANpkg("sigora")` and `r CRANpkg("WebGestaltR")` packages from CRAN and 
-`r CRANpkg("rmarkdown")` based reports for visualisation and contextualisation 
+results. _prora_ primarily consists of wrapper functions around the 
+_sigora_ and _WebGestaltR_ packages from CRAN and 
+_rmarkdown_ based reports for visualisation and contextualisation 
 of analysis results.
 
 
@@ -54,9 +53,9 @@ and computations, ranging from the application of Fisher's exact test in ORA and
 extensions to gene pairs [@Foroushani2013] to more complex statistical procdures
 in gene set enrichment analysis [@Subramanian15545] and network based procedures
 [@glaab2012enrichnet]. Almost all methods come with their own implementation as 
-an _R_ package, _i.e._ ORA in both `r CRANpkg("sigora")` and 
-`r CRANpkg("WebGestaltR")`, network based gene enrichment analysis in 
-`r CRANpkg("enrichnet")` and the list keeps going on. Naturally, different 
+an _R_ package, _i.e._ ORA in both _sigora_ and 
+_WebGestaltR_, network based gene enrichment analysis in 
+_enrichnet_ and the list keeps going on. Naturally, different 
 implementations come with different -- and often inconsistent -- features, such 
 as ID mapping or demand a lot of knowledge from the user in setting up appropriate
 data structures and other preconditions. `prora` aims at providing a 
@@ -140,7 +139,7 @@ and results should be interpreted with care.
 
 Good reporting and reproducibility of all intermediate and final results is key
 to good scientific practice. In this spirit, `prora` provides a reproducible, 
-`r CRANpkg("rmarkdown")` based reports for each method. To highlight the most 
+_rmarkdown_ based reports for each method. To highlight the most 
 important targets, settings and parameters, a walkthrough is given in this part 
 of the vignette.
 
@@ -226,7 +225,7 @@ sapply(target_SIGORA, function(x) {
 
 In the following the `runGSEA()` function's inner workings will be discussed in 
 more detail. After creating the output directory `outdir` the provided data is 
-fed into `r CRANpkg("WebGestaltR")`'s `WebGestaltR(..., enrichMethod = "GSEA")`. 
+fed into _WebGestaltR_'s `WebGestaltR(..., enrichMethod = "GSEA")`. 
 The results are then used to generate the report provided by the `prora` 
 package^[The source files for all reports can be found in 
 `system.file("rmarkdown_reports", package = "fgczgseaora")`]. All `WebGestaltR` 
@@ -235,7 +234,7 @@ and `prora` results can then be found in the output directory.
 # Command line tools
 
 The enrichment methods in this package (ORA, GSEA sigORA) come with a 
-`r CRANpkg("docopt")` based command line tool to facilitate analysing batches of
+_docopt_ based command line tool to facilitate analysing batches of
 files^[Those scripts can be found in 
 `system.file("run_scripts", package = "prora")`]. 
 The main advantage of docopt is that all tools have to come with a thorough 
