@@ -1,10 +1,6 @@
 #' Translate Fasta header to UniprotSwissprot ID
 #'
 #' @export
-#' @importFrom dplyr filter select right_join
-#' @importFrom tidyr separate
-#' @importFrom magrittr %>%
-#' @importFrom rlang sym
 #'
 #' @param df \code{data.frame} with FASTA headers in first column
 #' @param idcolumn Column name containing the IDs

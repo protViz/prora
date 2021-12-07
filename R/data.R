@@ -60,6 +60,12 @@ NULL
 #' @usage data(GSEA)
 NULL
 
+#' examplary GSEA output
+#' @docType data
+#' @name GSEAex1
+#' @usage data(GSEAex1)
+NULL
+
 #' Exemplary sigora output
 #'
 #' sigora output from the \code{\link{sigoraWrappR}} function containing the following entries

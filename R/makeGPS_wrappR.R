@@ -3,14 +3,6 @@
 #'
 #' @export makeGPS_wrappR makeGPS_wrappR
 #'
-#' @importFrom org.Hs.eg.db org.Hs.eg.db
-#' @importFrom GO.db GO.db
-#' @importFrom reactome.db reactome.db
-#' @importFrom dplyr inner_join
-#' @importFrom sigora makeGPS
-#' @importFrom S4Vectors na.omit
-#' @importFrom AnnotationDbi mapIds
-#' @importFrom magrittr %>%
 #' @param ids Character vector of gene symbols (experimental background)
 #' @param target Character, database to be used to generate GPS repository ("KEGG", "GO", "reactome")
 #' @param keytype default UNIPROT

@@ -20,6 +20,7 @@ Returns a data.frame containing information of mapping efficiency on GO, ENTREZ 
 Checks mapping efficiency for IDs on the most commonly used ID types
 }
 \examples{
+library(org.Hs.eg.db)
 data("exampleContrastData", package = "prora")
 df <- get_UniprotID_from_fasta_header(exampleContrastData)
 checkIDmappingEfficiency(df$UniprotID, keytype = "UNIPROT")

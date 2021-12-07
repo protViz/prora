@@ -1,7 +1,5 @@
 # Helper functions for run scripts
 
-#' @importFrom rlang sym
-#' @importFrom dplyr filter
 .apply_threshold <-
   function(df, th, col = "Score", greater = TRUE) {
     if (greater) {
@@ -26,9 +24,6 @@
 #' @param outdir output directory
 #' @param interestGeneType what type of identifier default : "uniprotswissprot"
 #' @param contrast_name for pretty printing
-#' @importFrom WebGestaltR WebGestaltR
-#' @importFrom readr read_delim
-#' @importFrom tidyr separate_rows
 #' @export
 #'
 runWebGestaltGSEA <- function(data,

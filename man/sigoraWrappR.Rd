@@ -61,9 +61,10 @@ res <- sigoraWrappR(df,score_col = "estimate", GPSrepos = myGPSrepo$gps,
 myGPSrepoGO <- makeGPS_wrappR(df$UniprotID, target = "GO")
 res <- sigoraWrappR(df,score_col = "estimate", GPSrepos = myGPSrepoGO$gps,
                      threshold = 0.5)
-res$ora
+\dontrun{
+  res$ora
 res$sigora$summary_results
 res$data
 GPSrepo <-  myGPSrepoGO$gps
-
+}
 }

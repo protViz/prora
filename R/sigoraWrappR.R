@@ -28,7 +28,6 @@
 #'    \item \code{proteinsAfterFiltering}: numeric, number of proteins after fc filtering
 #' }
 #'
-#' @importFrom sigora sigora ora
 #' @export sigoraWrappR sigoraWrappR
 #'
 #' @examples
@@ -42,11 +41,12 @@
 #' myGPSrepoGO <- makeGPS_wrappR(df$UniprotID, target = "GO")
 #' res <- sigoraWrappR(df,score_col = "estimate", GPSrepos = myGPSrepoGO$gps,
 #'                      threshold = 0.5)
-#' res$ora
+#' \dontrun{
+#'   res$ora
 #' res$sigora$summary_results
 #' res$data
 #' GPSrepo <-  myGPSrepoGO$gps
-#'
+#' }
 sigoraWrappR <-
   function(data,
            threshold = 0.5,
@@ -104,12 +104,6 @@ sigoraWrappR <-
 #' @param GPStable Object returned by \code{\link{makeGPS_wrappR}} function, setting \code{dev=TRUE}
 #' @param ... other parameters to \code{upset}
 #'
-#' @importFrom UpSetR fromList upset
-#' @importFrom dplyr inner_join filter select mutate
-#' @importFrom tidyr spread
-#' @importFrom S4Vectors na.omit
-#' @importFrom magrittr %>%
-#' @importFrom rlang .data
 #' @export
 #' @examples
 #' sigora_res <- prora::sigora_example

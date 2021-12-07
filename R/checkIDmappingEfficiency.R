@@ -2,16 +2,13 @@
 #' @param IDs character vector of IDs
 #' @param keytype corresponding keytype
 #' @param db database object, default org.Hs.eg.db
-#' @importFrom AnnotationDbi mapIds
-#' @importFrom S4Vectors na.omit
-#' @importFrom dplyr distinct
-#' @importFrom tibble enframe
 #' @return Returns a data.frame containing information of mapping efficiency on GO, ENTREZ and KEGG IDs
 #'
 #'
 #' @export checkIDmappingEfficiency
 #'
 #' @examples
+#' library(org.Hs.eg.db)
 #' data("exampleContrastData", package = "prora")
 #' df <- get_UniprotID_from_fasta_header(exampleContrastData)
 #' checkIDmappingEfficiency(df$UniprotID, keytype = "UNIPROT")
