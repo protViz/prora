@@ -25,7 +25,10 @@ map id Annotation Hub
 
 library(tidyverse)
 fc_estimates <- prora::exampleContrastData
-#fc_estimates \%>\% filter(!(grepl("^REV_", protein_Id) | grepl("^zz", protein_Id) | grepl("^CON__", protein_Id)))
+\dontrun{
+fc_estimates \%>\%
+ filter(!(grepl("^REV_", protein_Id) | grepl("^zz", protein_Id) | grepl("^CON__", protein_Id)))
+}
 fc_estimates <- fc_estimates \%>\% filter(!(grepl("^REV_|^zz|^CON__", protein_Id)))
 filtered_dd <- get_UniprotID_from_fasta_header(fc_estimates, idcolumn = "protein_Id")
 dim(filtered_dd)

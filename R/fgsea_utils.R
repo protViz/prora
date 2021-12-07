@@ -12,7 +12,6 @@ fgsea_rank <- function(df,
   return(ranks)
 }
 
-
 #' convert data frame into list of ranks
 #' @export
 #' @family fgsea

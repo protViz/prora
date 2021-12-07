@@ -13,9 +13,11 @@
 #' hallmark <- msigdbr_collections() %>% filter(.data$gs_cat == "H")
 #'
 #' #hallmark$gs_subcat <- "HALLMARK"
-#' C5 <- bind_rows( {msigdbr_collections() %>% filter(.data$gs_cat == "C5") %>% filter(grepl("^GO:", .data$gs_subcat))},
-#'                  hallmark,
-#'                  {msigdbr_collections() %>% filter(.data$gs_subcat == "CP:KEGG")} )
+#' C5 <- bind_rows( {msigdbr_collections() %>%
+#'  filter(.data$gs_cat == "C5") %>%
+#'  filter(grepl("^GO:", .data$gs_subcat))},
+#'  hallmark,
+#'  {msigdbr_collections() %>% filter(.data$gs_subcat == "CP:KEGG")} )
 #'
 #' C5
 #' fgseaGSlist <- prora::getMsigdbGenesets(C5, species)

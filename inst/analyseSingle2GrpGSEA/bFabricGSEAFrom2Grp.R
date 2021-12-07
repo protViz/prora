@@ -31,7 +31,6 @@ if (YAML) {
   inputData <- basename(parameters$application$input$`MaxQuant - Two Group Analysis Report`)[1]
   FDR_threshold <- as.numeric(parameters$application$parameters$FDRthreshold)
   useLog2FC <- if (parameters$application$parameters$RankByScore == "log2FC") {TRUE} else {FALSE}
-
   species <- parameters$application$parameters$Species
   outname <- gsub("\\.txt","",basename(inputData))
 
