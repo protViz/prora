@@ -49,6 +49,12 @@ myGPSrepo <- makeGPS_wrappR(filtered_dd$UniprotID, target = "GO")
 undebug(runSIGORA)
 undebug(sigoraWrappR)
 res <- runSIGORA(filtered_dd, myGPSrepo = prora::myGPSrepo, DEBUG=TRUE)
-#rmarkdown::render(res$rmarkdownPath,bookdown::html_document2(number_sections = FALSE),params = res$sigoraData,clean = TRUE)
+
+\dontrun{
+rmarkdown::render(res$rmarkdownPath,
+bookdown::html_document2(number_sections = FALSE),
+params = res$sigoraData,
+clean = TRUE)
+}
 
 }
