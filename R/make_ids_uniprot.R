@@ -34,7 +34,7 @@ map_ids_uniprot <- function(data,
     query = paste(ids_to_map, collapse = " ")
   )
 
-  if (Sys.info()["sysname"] == "Windows") {
+  if (Sys.info()["sysname"] %in% c("Windows","Darwin")) {
     r <- httr::POST(url, body = params, encode = "form")
   } else {
     # This code was added to handle SSL issues
